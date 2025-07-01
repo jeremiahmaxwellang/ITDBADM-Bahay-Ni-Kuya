@@ -1,0 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+/* General Body Styling */
+body {
+    font-family: 'Montserrat', Times New Roman, serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;  /* Stacks elements vertically */
+    align-items: center;
+    justify-content: center; /* Centers the content vertically and horizontally */
+    height: 100vh;
+    position: relative;
+}
+
+/* Top Panel for ITmosys Header */
+.top-panel {
+    width: 100%;
+    background-color: #507c93;
+    text-align: center;
+    padding: 20px 0; /* Padding on top and bottom */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10; /* Ensures it stays on top */
+}
+
+/* ITmosys Header Styling */
+.itmosys-header {
+    font-size: 24px;
+    font-family: 'Montserrat';
+    color: white;
+    margin: 0;
+}
+
+/* Main Container Styling */
+.container, .enrollment_container, .viewEAF_container, .courseOffer_container, .addClass_container {
+    position: relative;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    width: 700px; /* Adjust container width as necessary */
+    text-align: left;
+}
+
+.courseOffer_container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    text-align: center;
+    width: 95%;
+    padding: 20px;
+}   
+
+.courseOffer_container h2.title-header {
+    align-self: flex-start; 
+    text-align: left;        
+    width: 100%;            
+    margin-left: 0;                       
+}
+
+.addClass_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    width: 95%;    
+    padding: 20px;
+}
+
+.viewEAF_container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left; 
+    text-align: left;
+    width: 95%;
+    padding: 20px;
+}
+
+/* Form Layout */
+form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.courseOffering-form {
+    display: flex;
+    flex-direction: column; /* Stack input and button vertically */
+    align-items: flex-start; /* Align form elements to the left */
+    gap: 10px;
+    width: 100%; /* Adjust width of the form */
+}
+
+.courseOffering-form input[type="text"] {
+    width: 100%; /* Full-width input field */
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* Title Header Styling */
+.title-header, .sub-header{
+    font-family: 'Montserrat';
+    color: #333;
+    font-size: 24px;
+    margin: 0;
+    text-align: left;
+}
+
+.sub-header {
+    margin-top: 40px;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* Separator Line Styling */
+.separator { 
+    border-top: 2px solid #ccc; 
+    display: flex; 
+    width: 95%; 
+    margin-bottom: 10px;
+    margin: 10px auto; /* Centers the separator horizontally */
+    justify-content: center;
+
+}
+
+/* Button Styling */
+.main-button {
+    font-size: 16px;
+    background-color: #5b8ba4;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    font-family: "Times New Roman", serif;
+}
+
+/* Button Hover Effect */
+.main-button:hover {
+    background-color: #497285;
+}
+
+.courseOffering-button {
+    width: 300px;
+}
+
+/* Enrollment button container styling */
+.enrollment-btn {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px; 
+    margin: 0 auto; 
+}
+
+/* Add Class*/
+.addclass-btn {
+    
+    height: 10px; 
+    font-size: 14px;
+    width: 100px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+/* Logout Button Styling */
+.logout-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 150px;
+    font-size: 16px;
+    background-color: #a34849;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Logout Button Hover Effect */
+.logout-btn:hover {
+    background-color: #703232;
+}
+
+/* Table Styling */
+table {
+    border: 1px solid black;
+    font-size: 14px;  /* Keep the table font size smaller */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    border-collapse: collapse;
+    width: 90%; /* Adjust width as necessary */
+    table-layout: auto; /* Allow the table to adjust column width based on content */
+}
+
+/* Table Header Text Styling */
+th {
+    border: 1px solid black;
+    font-weight: bold; /* Make the header text bold */
+    padding: 8px;      /* Reduce padding to make it smaller */
+    text-align: left;  /* Left-align the header text */
+    font-size: 12px;   /* Smaller header text size */
+    white-space: nowrap; /* Force text to stay in one line */
+}
+
+/* Table Cell Styling */
+td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;  /* Left-align the cell text */
+    font-size: 12px;   /* Smaller text size for the cells */
+    white-space: nowrap; /* Prevent text from wrapping in cells as well */
+}
+
+/* Start of Login CSS */
+.login_container { 
+    position: relative; 
+    text-align: left; 
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    height:fit-content;
+    margin-top: 40px;
+    flex-direction: column;
+}
+
+.login-body {
+    background-image: url('pages/Background.jpg'); /* Adjusted relative path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Montserrat', Times New Roman, serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+}
+
+.login_title {
+    position: absolute;
+    top: 10px;
+    font-size: 36px;
+    font-family: fantasy;
+    color: #5b8ba4;
+    margin-top: 150px;
+    z-index: 1;
+}
+
+.login_subtitle {
+    margin: 0;
+    padding-bottom: 10px;
+    color: #333;
+    font-family: 'Montserrat', Times New Roman, serif;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+}
+
+.login_separator {
+    border-top: 2px solid #ccc;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.login_button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    margin-top: 5px;
+    font-size: 16px;
+    font-family: "Times New Roman", serif;
+    border: none;
+    border-radius: 5px;
+    background-color: #5b8ba4;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login_button:hover {
+    background-color: #497285;
+}
+
+.login_input[type="text"],
+.login_input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+}
+
+.login_label {
+    font-family: 'Montserrat', Times New Roman, serif;
+    margin-top: 10px;
+    display: block;
+}
+
+.login_formDiv {
+    margin-top: 20px;
+}
+
+.login_form {
+    display: flex;  /* Use flexbox for layout */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: flex-start; /* Align items to the left */
+    gap: 0px; /* Space between form elements */
+    width: 100%; /* Full width of the parent container */
+}
+/* End of Login CSS */

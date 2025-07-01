@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+/* General Body Styling */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+.content {
+    margin-left: 80px; /* Default sidebar collapsed width */
+    background: none;
+    padding: 2%;
+    border-radius: 10px;
+    transition: margin-left 0.3s ease; /* Match the transition timing */
+    z-index: 0;
+}
+
+.content.shifted {
+    margin-left: 280px;
+    background: none;
+    padding: 2%;
+    border-radius: 10px;
+    transition: margin-left 0.3s ease;
+    z-index: 0;
+}
+/* Sidebar Styling */
+.sidebar {
+    height: 100vh;
+    width: 80px; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #5b8ba4;
+    padding-top: 20px;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    overflow: hidden;
+    font-family: Times New Roman;
+}
+
+.sidebar:hover {
+    width: 18rem; /* Expand width */
+}
+
+/* Sidebar Button Styling */
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px 20px;
+    font-size: 20px;
+    color: white;
+    background: none;
+    border: none;
+    width: 90%;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 10px auto;
+    border-radius: 8px;
+    text-align: left;
+    font-family: Times New Roman;
+}
+
+.sidebar-btn i {
+    font-size: 30px; /* Larger icon size */
+    color: white;
+    margin-right: 15px;
+}
+
+.sidebar-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #f4f4f4;
+}
+
+.sidebar:hover .link-text {
+    display: inline;
+    margin-left: 10px;
+}
+
+/* Initially hide text */
+.link-text {
+    display: none;
+    white-space: nowrap;
+    font-family: Times New Roman;
+}
+
+.hamburger {
+    color: white;
+    position: fixed;
+    top: 15px;
+    left: 25px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* Logout Button Styling */
+.logout-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #a34849;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, width 0.6s ease;
+    width: 90%;
+    white-space: nowrap;
+}
+
+.logout-btn i {
+    font-size: 28px;
+    color: white;
+    margin-right: 10px;
+}
+
+.sidebar:hover .logout-btn .link-text {
+    display: inline;
+}
+
+.logout-btn:hover {
+    background-color: #703232;
+}
+
+.logout-btn:hover i {
+    color: #481f1f;
+}
+
+.logout-btn:hover .link-text {
+    color: #f4f4f4;
+}
+
+
+
