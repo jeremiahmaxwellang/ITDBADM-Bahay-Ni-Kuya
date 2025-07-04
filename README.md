@@ -40,7 +40,7 @@ the file location of the xampp folder.
 
 * On your browser, enter the following URL to access the Bahay Ni Kuya login page
 ```
-localhost/ITDBADM-Bahay-Ni-Kuya/views/login.php
+localhost/ITDBADM-Bahay-Ni-Kuya-main/views/login.php
 ```
 
 ## Help
