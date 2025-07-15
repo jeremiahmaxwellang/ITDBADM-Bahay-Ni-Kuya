@@ -13,10 +13,22 @@ Only 1 login page needed for all 3 roles
     <link rel="stylesheet" href="../assets/css/style.css">
 
 </head>
-<body style="background-image: url('../assets/images/Client.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+<body style="background-image: url('../assets/images/pbb house.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    
+    <div style="
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 40px;
+        font-family: 'Times New Roman', serif;
+        color: CornflowerBlue;
+        font-weight: bold;">
+        <img src="../assets/images/pbb logo.png" alt="Logo" style="height: 40px; margin-right: 15px; margin-top: 5px">
+        BAHAY NI KUYA
+    </div>
 
     <div class="login_container">
-        <h2 class="login_subtitle">LOGIN</h2>
+        <h2 class="login_subtitle">LOGIN WITH YOUR <span style="color: CornflowerBlue;">BAHAY NI KUYA</span> ACCOUNT</h2>
 
         <div class="login_separator"></div>
 
@@ -75,6 +87,7 @@ Only 1 login page needed for all 3 roles
                 <label for="password" class="login_label">Password:</label>
                 <input type="password" id="password" name="password" class="login_input" required>
                 <button type="submit" class="login_button">Sign In</button>
+                <p class="register_prompt">Don't have an account yet? <a href="register.php" class="register_link">Register</a> </p>
             </form>
         </div>
     </div>

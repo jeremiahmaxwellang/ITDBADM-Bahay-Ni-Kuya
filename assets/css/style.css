@@ -228,9 +228,9 @@ td {
     text-align: left; 
     background-color: white;
     padding: 30px;
-    border-radius: 10px;
+    border-radius: 50px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-    width: 350px;
+    width: 550px;
     height:fit-content;
     margin-top: 40px;
     flex-direction: column;
@@ -280,41 +280,44 @@ td {
 
 .login_button {
     display: block;
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    margin-top: 5px;
+    width: 200px;                     /* Shorter width */
+    padding: 12px;                    /* Slightly smaller padding */
+    margin: 10px auto 0 auto;         /* Center horizontally */
     font-size: 16px;
     font-family: "Times New Roman", serif;
     border: none;
     border-radius: 5px;
-    background-color: #5b8ba4;
-    color: white;
+    background-color: yellow;
+    color: black;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    border-radius: 50px;
 }
 
+
 .login_button:hover {
-    background-color: #497285;
+    background-color: #8da553;
 }
 
 .login_input[type="text"],
 .login_input[type="password"] {
-    width: 100%;
+    width: 60%;               /* Slightly shorter than 100% */
     padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
+    margin: 5px auto 15px auto; /* Top, auto (left/right for centering), bottom */
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
     font-family: "Times New Roman", serif;
     font-size: 16px;
+    display: block;           /* Needed for margin auto to work */
 }
 
 .login_label {
     font-family: 'Montserrat', Times New Roman, serif;
+    margin: 3px auto 15px auto; /* Top, auto (left/right for centering), bottom */
     margin-top: 10px;
     display: block;
+    font-weight: bold;
 }
 
 .login_formDiv {
@@ -328,4 +331,22 @@ td {
     gap: 0px; /* Space between form elements */
     width: 100%; /* Full width of the parent container */
 }
+
+.register_prompt {
+    text-align: center;
+    margin-top: 15px;
+    font-family: "Times New Roman", serif;
+    font-size: 15px;
+    margin-left: 170px;
+}
+
+.register_link {
+    color: CornflowerBlue;
+    text-decoration: none;
+}
+
+.register_link:hover {
+    text-decoration: underline;
+}
+
 /* End of Login CSS */
