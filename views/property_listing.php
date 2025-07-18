@@ -55,8 +55,8 @@ $conn->close();
 
     <nav>
         <ul>
-            <li><a class="topNavBar" href="#">Home</a></li>
-            <li><a class="topNavBar" href="#">Properties</a></li>
+            <li><a class="topNavBar" href="shopping_cart.php">Shopping Cart</a></li>
+            <li><a class="topNavBar" href="checkout.php">Checkout Page</a></li>
             <li><a class="topNavBar" href="#">About Us</a></li>
             <li><a class="topNavBar" href="#">Contact</a></li>
         </ul>
