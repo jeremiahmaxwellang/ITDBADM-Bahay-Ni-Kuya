@@ -1,3 +1,44 @@
+<?php
+    // Database configuration
+    require_once('../includes/dbconfig.php');
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Collect and sanitize user input
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $first_name = trim($_POST['first_name']);
+        $last_name = trim($_POST['last_name']);
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            $error = "Invalid email format";
+        }
+
+        elseif($password !== $confirm_password){
+            $error = "Passwords do not match";
+        }
+
+        else{
+            // Prepare SQL statement to insert new Customer (C)
+            $stmt = $conn->prepare("INSERT INTO users(email, first_name, last_name, password_hash, role) VALUES (?, ?, ?, ?, 'C')");
+            // Bind four strings to the ?, ?, ?, ?
+            $stmt->bind_param("ssss", $email, $first_name, $last_name, $password);
+
+            if($stmt->execute()){
+                $success = "Account created successfully!";
+            }
+
+            else $error = "Error: " . $stmt->error;
+
+            $stmt->close();
+        }
+
+        $conn->close();
+
+    } 
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,6 +62,18 @@
     <div class="register_container">
         <h2 class="register_subtitle">REGISTER YOUR <span style="color: CornflowerBlue;">BAHAY NI KUYA</span> ACCOUNT</h2>
         <div class="register_separator"></div>
+
+        <?php
+        // Redirect to Login page if successful
+        if(isset($success)){
+            header("Location: login.php");
+            exit();
+        }
+
+        elseif(isset($error)){
+            echo "<p class='error-message'>{$error}</p>";
+        }
+        ?>
 
         <form method="post" action="">
             <div class="register_name_row">

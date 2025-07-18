@@ -3,8 +3,14 @@
     // http://localhost/phpmyadmin
     
     // Database connection
-    $servername = "localhost";
-    $username = "root"; // Change if necessary
-    $password = ""; // Change if necessary
-    $dbname = ""; //TODO: add DB name
+    define('DB_SERVER', 'localhost');
+    define('DB_USERNAME', 'root');
+    define('DB_PASSWORD', '');
+    define('DB_NAME', 'bahaynikuya_db');
+
+    $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+    if($conn->connect_error)
+        die("Connection failed: ". $conn->connect_error)
+    
 ?>

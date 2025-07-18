@@ -1,25 +1,23 @@
 <?php
-session_start();
+    // Database configuration
+    require_once('../includes/dbconfig.php');
 
-// Redirect if already logged in
-if (isset($_SESSION['user_email'])) {
-    if ($_SESSION['user_role'] === 'A') {
-        header("Location: admin.php");
-        exit();
-    } elseif ($_SESSION['user_role'] === 'S') {
-        header("Location: staff_dashboard.php");
-        exit();
-    } else {
-        header("Location: property_listing.php");
-        exit();
+    session_start();
+
+    // Redirect if already logged in
+    if (isset($_SESSION['user_email'])) {
+        if ($_SESSION['user_role'] === 'A') {
+            header("Location: admin.php");
+            exit();
+        } elseif ($_SESSION['user_role'] === 'S') {
+            header("Location: staff_dashboard.php");
+            exit();
+        } else {
+            header("Location: property_listing.php");
+            exit();
+        }
     }
-}
 
-// Database configuration
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'bahaynikuya_db');
 ?>
 
 <!DOCTYPE html>
@@ -28,20 +26,7 @@ define('DB_NAME', 'bahaynikuya_db');
     <title>Login Page - Bahay ni Kuya</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        .error-message {
-            color: red;
-            text-align: center;
-            margin-bottom: 15px;
-            font-family: 'Lato', sans-serif;
-        }
-        .success-message {
-            color: green;
-            text-align: center;
-            margin-bottom: 15px;
-            font-family: 'Lato', sans-serif;
-        }
-    </style>
+
 </head>
 <body style="background-image: url('../assets/images/pbb house.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="login-bg-gradient"></div>
