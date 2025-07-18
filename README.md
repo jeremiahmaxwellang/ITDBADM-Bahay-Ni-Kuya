@@ -18,14 +18,24 @@ Bahay Ni Kuya is a website where users can purchase houses and view pertinent de
 * To find the htdocs folder, open your XAMPP Control Panel and press [Explorer] to open
 the file location of the xampp folder.
 
-### Running the DB Script
-1. Under the database/models subfolder, find the [TBA] file
+### Running the CREATE SCHEMA SQL script
+1. Under the database/db-design subfolder, find the [bnk-schema.sql] script
 2. Open the file in any text editor, then copy all its contents 
 3. Open XAMPP Control panel, then [Start] the MySQL service
 4. Once the service started, press the [Admin] button
 5. After you're redirected to the admin page on your browser, click [SQL] on the top of the screen
 6. Paste the sql file contents in the text box, then press [Go] on the bottom right
-7. Now the [TBA] schema should be visible on the left side.
+7. Now the [bahaynikuya_db] schema should be visible on the left side.
+
+### Populating the DATABASE
+1. PREREQUISITE: Ensure the [bahaynikuya_db] schema exists in your phpadmin databases
+2. Under the database/db-design subfolder, find the [bnk-data.sql] script
+3. Open the file in any text editor, then copy all its contents 
+4. Open XAMPP Control panel, then [Start] the MySQL service
+5. Once the service started, press the [Admin] button
+6. After you're redirected to the admin page on your browser, click [SQL] on the top of the screen
+7. Paste the sql file contents in the text box, then press [Go] on the bottom right
+8. Click on any of the tables in [bahaynikuya_db] schema to verify that the sample data was inserted.
 
 
 ### Executing program
@@ -73,4 +83,4 @@ Justin Nicolai Lee
 [@juicetice](https://github.com/juiceticedlsu)
 
 Marcus Anton Mendoza
-[@juicetice](https://github.com/juiceticedlsu)
+[@makoy1017](https://github.com/makoy1017)
