@@ -13,13 +13,23 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get all properties from database
+// Check if 'properties' table exists
+$tableExists = false;
+$checkTable = $conn->query("SHOW TABLES LIKE 'properties'");
+if ($checkTable && $checkTable->num_rows > 0) {
+    $tableExists = true;
+}
+
 $properties = [];
-$result = $conn->query("SELECT * FROM properties ORDER BY created_at DESC");
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $properties[] = $row;
+if ($tableExists) {
+    $result = $conn->query("SELECT * FROM properties ORDER BY created_at DESC");
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $properties[] = $row;
+        }
     }
+} else {
+    $properties = false; // Indicate table missing
 }
 $conn->close();
 ?>
@@ -337,10 +347,23 @@ $conn->close();
 
         <div class="properties-header">
             <h2>Featured Properties</h2>
-            <p class="properties-count"><?php echo count($properties); ?> properties available</p>
+            <p class="properties-count">
+                <?php
+                if ($properties === false) {
+                    echo "Table 'properties' does not exist";
+                } else {
+                    echo count($properties) . " properties available";
+                }
+                ?>
+            </p>
         </div>
 
-        <?php if (count($properties) > 0): ?>
+        <?php if ($properties === false): ?>
+            <div class="no-properties">
+                <h3>Error: Table 'properties' does not exist in the database.</h3>
+                <p>Please contact the administrator to set up the required database table.</p>
+            </div>
+        <?php elseif (count($properties) > 0): ?>
             <div class="properties-grid">
                 <?php foreach ($properties as $property): ?>
                     <div class="property-card">

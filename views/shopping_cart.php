@@ -346,7 +346,7 @@ $conn->close();
     <nav>
         <ul>
             <li><a href="property_listing.php">Browse Properties</a></li>
-            <li><a href="cart.php">Your Cart</a></li>
+            <li><a href="checkout.php">Checkout</a></li>
             <li><a href="#">Contact Us</a></li>
         </ul>
     </nav>
