@@ -318,8 +318,8 @@ $conn->close();
 
     <nav>
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Properties</a></li>
+            <li><a href="shopping_cart.php">Shopping Cart</a></li>
+            <li><a href="checkout.php">Checkout Page</a></li>
             <li><a href="#">About Us</a></li>
             <li><a href="#">Contact</a></li>
         </ul>
