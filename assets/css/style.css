@@ -306,7 +306,7 @@ td {
     background-color: #8da553;
 }
 
-.login_input[type="text"],
+.login_input[type="email"],
 .login_input[type="password"] {
     width: 60%;                
     padding: 12px;             
