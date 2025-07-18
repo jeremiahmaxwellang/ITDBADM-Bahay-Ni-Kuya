@@ -53,190 +53,8 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bahay Ni Kuya - Your Cart</title>
+    <link rel="stylesheet" href="../assets/css/shopping_cart.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            padding-bottom: 80px; /* Added padding for floating button */
-        }
-
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        nav {
-            background-color: #34495e;
-            padding: 10px 0;
-        }
-
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin: 0 15px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .cart-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .cart-header h2 {
-            font-size: 28px;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .cart-count {
-            color: #7f8c8d;
-            font-size: 16px;
-        }
-
-        .cart-items {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .cart-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-
-        .cart-item-image {
-            width: 150px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 20px;
-        }
-
-        .cart-item-details {
-            flex-grow: 1;
-        }
-
-        .cart-item-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-
-        .cart-item-location {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .cart-item-price {
-            color: #e74c3c;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .remove-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 20px;
-        }
-
-        .remove-btn:hover {
-            background-color: #c0392b;
-        }
-
-        .cart-summary {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            padding: 20px;
-            text-align: right;
-        }
-
-        .cart-total {
-            font-size: 20px;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        .cart-total span {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-
-        .checkout-btn {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .checkout-btn:hover {
-            background-color: #27ae60;
-        }
-
-        .empty-cart {
-            text-align: center;
-            padding: 50px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .continue-shopping {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
-        .continue-shopping:hover {
-            background-color: #2980b9;
-        }
-
         /* Floating Checkout Button - Always Visible */
         .floating-checkout {
             position: fixed;
@@ -270,84 +88,19 @@ $conn->close();
         .cart-icon {
             font-size: 20px;
         }
-
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 40px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            text-align: left;
-            padding: 0 20px;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .footer-section p, .footer-section a {
-            color: #ecf0f1;
-            margin-bottom: 10px;
-            display: block;
-            text-decoration: none;
-        }
-
-        .copyright {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #4a6278;
-        }
-
-        @media (max-width: 768px) {
-            .cart-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .cart-item-image {
-                margin-bottom: 15px;
-                width: 100%;
-                height: auto;
-                max-height: 200px;
-            }
-            
-            .remove-btn {
-                margin-left: 0;
-                margin-top: 15px;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .floating-checkout-btn {
-                padding: 12px 25px;
-                font-size: 16px;
-            }
-        }
     </style>
 </head>
 <body>
-    <header>
+    <header class="BahayniKuya-header">
         <h1>Bahay Ni Kuya</h1>
         <p>Your Property Cart</p>
     </header>
 
     <nav>
         <ul>
-            <li><a href="property_listing.php">Browse Properties</a></li>
-            <li><a href="checkout.php">Checkout</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a class="navButton" href="property_listing.php">Browse Properties</a></li>
+            <li><a class="navButton" href="checkout.php">Checkout</a></li>
+            <li><a class="navButton" href="#">Contact Us</a></li>
         </ul>
     </nav>
 
