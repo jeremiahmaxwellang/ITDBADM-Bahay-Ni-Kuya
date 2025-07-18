@@ -1,36 +1,25 @@
 <?php
-// Database connection
-$servername = "localhost";
-$username = "root"; // Change to your MySQL username
-$password = ""; // Change to your MySQL password
-$dbname = "itmosys_db";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Database configuration
+require_once('../includes/dbconfig.php');
 
 // Check if 'properties' table exists
-$tableExists = false;
-$checkTable = $conn->query("SHOW TABLES LIKE 'properties'");
-if ($checkTable && $checkTable->num_rows > 0) {
-    $tableExists = true;
-}
+// $tableExists = false;
+// $checkTable = $conn->query("SHOW TABLES LIKE 'properties'");
+// if ($checkTable && $checkTable->num_rows > 0) {
+//     $tableExists = true;
+// }
 
 $properties = [];
-if ($tableExists) {
-    $result = $conn->query("SELECT * FROM properties ORDER BY created_at DESC");
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $properties[] = $row;
-        }
-    }
-} else {
+// if ($tableExists) {
+//     $result = $conn->query("SELECT * FROM properties ORDER BY created_at DESC");
+//     if ($result && $result->num_rows > 0) {
+//         while ($row = $result->fetch_assoc()) {
+//             $properties[] = $row;
+//         }
+//     }
+// } else {
     $properties = false; // Indicate table missing
-}
+// }
 $conn->close();
 ?>
 
@@ -59,6 +48,7 @@ $conn->close();
             <li><a class="topNavBar" href="checkout.php">Checkout Page</a></li>
             <li><a class="topNavBar" href="#">About Us</a></li>
             <li><a class="topNavBar" href="#">Contact</a></li>
+            <li><a class="topNavBar" href="logout.php">Sign Out</a></li>
         </ul>
     </nav>
 

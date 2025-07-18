@@ -43,61 +43,62 @@
 
         <div class="login_formDiv">
             <?php
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                // Create database connection
-                $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
-                
-                if ($conn->connect_error) {
-                    die("<p class='error-message'>Connection failed: " . $conn->connect_error . "</p>");
-                }
 
-                // Sanitize and validate input
-                $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-                $password = $_POST['password'];
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    // Sanitize and validate input
+                    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+                    $password = $_POST['password'];
 
-                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    echo "<p class='error-message'>Invalid email format</p>";
-                } else {
-                    // Prepare SQL statement
-                    $stmt = $conn->prepare("SELECT email, first_name, last_name, password_hash, role FROM users WHERE email = ?");
-                    $stmt->bind_param("s", $email);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
+                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        echo "<p class='error-message'>Invalid email format</p>";
+                    } else {
+                        // Prepare SQL statement
+                        $stmt = $conn->prepare("SELECT email, first_name, last_name, password_hash, role FROM users WHERE email = ?");
+                        $stmt->bind_param("s", $email);
 
-                    if ($result->num_rows == 1) {
-                        $user = $result->fetch_assoc();
+                        // Execute SQL statement
+                        if($stmt->execute()){
+                            $success = "Sign-in successful!";
+                        }
+
+                        else $error = "Error: " . $stmt->error;
                         
-                        // Verify password
-                        if (password_verify($password, $user['password_hash'])) {
-                            // Set session variables
-                            $_SESSION['user_email'] = $user['email'];
-                            $_SESSION['first_name'] = $user['first_name'];
-                            $_SESSION['last_name'] = $user['last_name'];
-                            $_SESSION['user_role'] = $user['role'];
-                            $_SESSION['logged_in'] = true;
+                        $result = $stmt->get_result();
 
-                            // Redirect based on role
-                            if ($user['role'] == 'A') {
-                                header("Location: admin.php");
-                                exit();
-                            } elseif ($user['role'] == 'S') {
-                                header("Location: staff_dashboard.php");
-                                exit();
+                        if ($result->num_rows == 1) {
+                            $user = $result->fetch_assoc();
+                            
+                            // Verify password
+                            if (($password == $user['password_hash'])) {
+                                // Set session variables
+                                $_SESSION['user_email'] = $user['email'];
+                                $_SESSION['first_name'] = $user['first_name'];
+                                $_SESSION['last_name'] = $user['last_name'];
+                                $_SESSION['user_role'] = $user['role'];
+                                $_SESSION['logged_in'] = true;
+
+                                // Redirect based on role
+                                if ($user['role'] == 'A') {
+                                    header("Location: admin.php");
+                                    exit();
+                                } elseif ($user['role'] == 'S') {
+                                    header("Location: staff_dashboard.php");
+                                    exit();
+                                } else {
+                                    header("Location: property_listing.php");
+                                    exit();
+                                }
                             } else {
-                                header("Location: property_listing.php");
-                                exit();
+                                echo "<p class='error-message'>Invalid email or password</p>";
                             }
                         } else {
                             echo "<p class='error-message'>Invalid email or password</p>";
                         }
-                    } else {
-                        echo "<p class='error-message'>Invalid email or password</p>";
+                        
+                        $stmt->close();
+                        $conn->close();
                     }
-                    
-                    $stmt->close();
-                    $conn->close();
                 }
-            }
 
             // Display system messages
             if (isset($_GET['logout'])) {
