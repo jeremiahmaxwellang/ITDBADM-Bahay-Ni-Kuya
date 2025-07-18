@@ -2,11 +2,11 @@
 session_start();
 
 // Redirect if already logged in
-if (isset($_SESSION['user_id'])) {
-    if ($_SESSION['user_role'] === 'admin') {
+if (isset($_SESSION['user_email'])) {
+    if ($_SESSION['user_role'] === 'A') {
         header("Location: admin.php");
         exit();
-    } elseif ($_SESSION['user_role'] === 'staff') {
+    } elseif ($_SESSION['user_role'] === 'S') {
         header("Location: staff_dashboard.php");
         exit();
     } else {
@@ -14,8 +14,15 @@ if (isset($_SESSION['user_id'])) {
         exit();
     }
 }
+
+// Database configuration
+define('DB_SERVER', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_NAME', 'bahaynikuya_db');
 ?>
 
+<!DOCTYPE html>
 <html>
 <head>
     <title>Login Page - Bahay ni Kuya</title>
@@ -52,108 +59,78 @@ if (isset($_SESSION['user_id'])) {
         <div class="login_formDiv">
             <?php
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                // Database connection
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "bahaynikuya_db";
-
-                // Create connection
-                $conn = new mysqli($servername, $username, $password, $dbname);
-
-                // Check connection
+                // Create database connection
+                $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+                
                 if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
+                    die("<p class='error-message'>Connection failed: " . $conn->connect_error . "</p>");
                 }
 
-                // Fetching form data
-                $user_id = mysqli_real_escape_string($conn, $_POST['student_id']);
-                $pass = mysqli_real_escape_string($conn, $_POST['password']);
+                // Sanitize and validate input
+                $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+                $password = $_POST['password'];
 
-                // Check in users table first (for admin/staff)
-                $sql = "SELECT * FROM users WHERE username = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("s", $user_id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-
-                if ($result->num_rows > 0) {
-                    $user = $result->fetch_assoc();
-                    
-                    // Verify password (in a real app, use password_verify() with hashed passwords)
-                    if ($user['password'] === $pass) {
-                        $_SESSION['user_id'] = $user['username'];
-                        $_SESSION['user_role'] = $user['role'];
-                        
-                        // Redirect based on role
-                        if ($user['role'] == 'admin') {
-                            header("Location: admin.php");
-                            exit();
-                        } elseif ($user['role'] == 'staff') {
-                            header("Location: staff_dashboard.php");
-                            exit();
-                        } else {
-                            // For students, check the students table
-                            $sql = "SELECT * FROM students WHERE student_id = ?";
-                            $stmt = $conn->prepare($sql);
-                            $stmt->bind_param("s", $user_id);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            
-                            if ($result->num_rows > 0) {
-                                $_SESSION['student_id'] = $user_id;
-                                header("Location: property_listing.php");
-                                exit();
-                            } else {
-                                echo "<p class='error-message'>Invalid username or password.</p>";
-                            }
-                        }
-                    } else {
-                        echo "<p class='error-message'>Invalid username or password.</p>";
-                    }
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    echo "<p class='error-message'>Invalid email format</p>";
                 } else {
-                    // If not found in users table, check students table
-                    $sql = "SELECT * FROM students WHERE student_id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("s", $user_id);
+                    // Prepare SQL statement
+                    $stmt = $conn->prepare("SELECT email, first_name, last_name, password_hash, role FROM users WHERE email = ?");
+                    $stmt->bind_param("s", $email);
                     $stmt->execute();
                     $result = $stmt->get_result();
-                    
-                    if ($result->num_rows > 0) {
-                        $student = $result->fetch_assoc();
+
+                    if ($result->num_rows == 1) {
+                        $user = $result->fetch_assoc();
                         
-                        // Verify password (in a real app, use password_verify() with hashed passwords)
-                        if ($student['password'] === $pass) {
-                            $_SESSION['student_id'] = $student['student_id'];
-                            $_SESSION['user_role'] = 'student';
-                            header("Location: property_listing.php");
-                            exit();
+                        // Verify password
+                        if (password_verify($password, $user['password_hash'])) {
+                            // Set session variables
+                            $_SESSION['user_email'] = $user['email'];
+                            $_SESSION['first_name'] = $user['first_name'];
+                            $_SESSION['last_name'] = $user['last_name'];
+                            $_SESSION['user_role'] = $user['role'];
+                            $_SESSION['logged_in'] = true;
+
+                            // Redirect based on role
+                            if ($user['role'] == 'A') {
+                                header("Location: admin.php");
+                                exit();
+                            } elseif ($user['role'] == 'S') {
+                                header("Location: staff_dashboard.php");
+                                exit();
+                            } else {
+                                header("Location: property_listing.php");
+                                exit();
+                            }
                         } else {
-                            echo "<p class='error-message'>Invalid username or password.</p>";
+                            echo "<p class='error-message'>Invalid email or password</p>";
                         }
                     } else {
-                        echo "<p class='error-message'>Invalid username or password.</p>";
+                        echo "<p class='error-message'>Invalid email or password</p>";
                     }
+                    
+                    $stmt->close();
+                    $conn->close();
                 }
-                
-                $stmt->close();
-                $conn->close();
             }
 
-            // Display logout message if redirected from logout
-            if (isset($_GET['logout']) && $_GET['logout'] == 'true') {
+            // Display system messages
+            if (isset($_GET['logout'])) {
                 echo "<p class='success-message'>You have been successfully logged out.</p>";
             }
             
-            // Display registration success message
-            if (isset($_GET['registered']) && $_GET['registered'] == 'true') {
+            if (isset($_GET['registered'])) {
                 echo "<p class='success-message'>Registration successful! Please login.</p>";
+            }
+            
+            if (isset($_GET['error'])) {
+                echo "<p class='error-message'>" . htmlspecialchars($_GET['error']) . "</p>";
             }
             ?>
 
             <form method="post" action="" class="login_form">
-                <label for="student_id" class="login_label">User ID:</label>
-                <input type="text" id="student_id" name="student_id" class="login_input" required placeholder="Enter your User ID">
+                <label for="email" class="login_label">Email:</label>
+                <input type="email" id="email" name="email" class="login_input" required placeholder="Enter your Email">
                 
                 <label for="password" class="login_label">Password:</label>
                 <input type="password" id="password" name="password" class="login_input" required placeholder="Enter your Password">
@@ -161,6 +138,7 @@ if (isset($_SESSION['user_id'])) {
                 <button type="submit" class="login_button">Sign In</button>
                 
                 <p class="register_prompt">Don't have an account yet? <a href="register.php" class="register_link">Register</a></p>
+                <p class="register_prompt">Forgot password? <a href="forgot_password.php" class="register_link">Reset here</a></p>
             </form>
         </div>
     </div>
