@@ -63,7 +63,7 @@ Only 1 login page needed for all 3 roles
                 if ($result->num_rows > 0) {
                     // Success: Redirect to TBA
                     echo "<p>Login successful! Redirecting...</p>";
-                    header("refresh:2;url=EnrollmentMenu.php");
+                    header("refresh:2;url=main_menu.php");
                 } else {
                     // Failure: Show error message
                     echo "<p style='color:red;'>Invalid username or password.</p>";
