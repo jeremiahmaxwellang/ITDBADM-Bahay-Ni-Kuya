@@ -48,7 +48,7 @@ $conn->close();
         <h1 class="site_header">Bahay Ni Kuya</h1>
         <p>Finding your dream home with us is easier than surviving Kuya’s weekly eviction!</p>
         <a href="shopping_cart.php" class="cart-button">
-        <span>Cart</span>
+        <span>Cart 🛒</span>
         <span class="cart-count">0</span>
         </a>
     </header>
