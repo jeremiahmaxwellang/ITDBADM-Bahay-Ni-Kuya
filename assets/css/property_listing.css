@@ -98,8 +98,8 @@ nav ul li a {
     position: absolute;
     right: 20px;
     top: 20px;
-    background-color: #e74c3c;
-    color: white;
+    background-color: #d30000;
+    color: black;
     border: none;
     padding: 8px 15px;
     border-radius: 4px;
@@ -110,12 +110,12 @@ nav ul li a {
 }
 
 .cart-button:hover {
-    background-color: #c0392b;
+    background-color: #ff5e5e;
 }
 
 .cart-count {
-    background-color: white;
-    color: #e74c3c;
+    background-color: rgb(255, 255, 255);
+    color: black;
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -124,6 +124,10 @@ nav ul li a {
     align-items: center;
     font-size: 12px;
     font-weight: bold;
+}
+
+.cart-count:hover {
+    background-color: rgb(222, 130, 130);
 }
 
 .container {
