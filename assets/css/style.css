@@ -1,6 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
+:root {
+    --MainBlue: #0476D0;
+    --MainRed: #E32227;
+    --MainYellow: #FFDF00;
+    --DefaultFont: 'Lato', serif;
+    --DefaultHeaderFont: 'Bebas Neue', sans-serif;
+    --DefaultFontColor: black;
+}
+
 /* General Body Styling */
 body {
     font-family: 'Lato', serif;
@@ -334,15 +343,15 @@ td {
 }
 
 .register_prompt {
-    text-align: center;
+    text-align: center !important;
     margin-top: 15px;
     font-family: "Lato", serif; 
     font-size: 15px;
-    margin-left: 170px;
+    margin-left: 0;
 }
 
 .register_link {
-    color: CornflowerBlue;
+    color: var(--MainBlue);
     text-decoration: none;
 }
 
@@ -386,15 +395,25 @@ td {
 }
 
 .top_left_title {
-    position: absolute;
+    position: absolute;    
     top: 20px;
     left: 20px;
-    font-size: 40px;
-    font-family: 'Times New Roman', serif;
-    color: CornflowerBlue;
+    font-size: 64px;    
+    font-family: 'Bebas Neue', serif;
+    color: var(--MainBlue);
     font-weight: bold;
     display: flex;
     align-items: center;
+    /* Text outline using text-shadow */
+    text-shadow:
+        -2px -2px 0 black,
+        2px -2px 0 black,
+        -2px 2px 0 black,
+        2px 2px 0 black,
+        0 2px 0 black,
+        2px 0 0 black,
+        0 -2px 0 black,
+        -2px 0 0 black;
 }
 
 .top_left_title img {
@@ -417,6 +436,7 @@ td {
     text-align: center;
     font-size: 22px;
     margin-bottom: 10px;
+    font-family: 'Lato', serif;
 }
 
 .register_separator {
@@ -447,14 +467,19 @@ form {
 .register_label {
     font-weight: bold;
     margin-bottom: 5px;
+    font-family: 'Lato', serif;
 }
 
 .register_input {
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    border: 2px solid black;
+    border-radius: 8px;
+    background-color: #f0f8ff;
+    color: black;
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: 'Lato', serif;
 }
 
 .register_field_group {
@@ -470,7 +495,7 @@ form {
     background-color: yellow;
     color: black;
     font-size: 16px;
-    font-family: 'Times New Roman', serif;
+    font-family: 'Lato', serif;
     border: none;
     border-radius: 30px;
     cursor: pointer;
@@ -487,7 +512,7 @@ form {
 }
 
 .register_prompt a {
-    color: CornflowerBlue;
+    color: var(--MainBlue);
     text-decoration: none;
 }
 
