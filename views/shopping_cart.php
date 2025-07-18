@@ -105,10 +105,6 @@ $conn->close();
     </nav>
 
     <div class="container">
-        <div class="cart-header">
-            <h2>Your Selected Properties</h2>
-            <p class="cart-count"><?php echo count($cartItems); ?> property<?php echo count($cartItems) !== 1 ? 's' : ''; ?> in cart</p>
-        </div>
 
         <?php if (!empty($cartItems)): ?>
             <div class="cart-items">
@@ -129,6 +125,11 @@ $conn->close();
             </div>
 
             <div class="cart-summary">
+                <div class="cart-header">
+                    <h2>Your Selected Properties</h2>
+                    <p class="cart-count"><?php echo count($cartItems); ?> house<?php echo count($cartItems) !== 1 ? 's' : ''; ?> in cart</p>
+                </div>
+
                 <div class="cart-total">
                     Total: <span>₱<?php echo number_format($totalPrice, 2); ?></span>
                 </div>
@@ -136,6 +137,11 @@ $conn->close();
             </div>
         <?php else: ?>
             <div class="empty-cart">
+                <div class="cart-header">
+                    <h2>Your Selected Properties</h2>
+                    <p class="cart-count"><?php echo count($cartItems); ?> house<?php echo count($cartItems) !== 1 ? 's' : ''; ?> in cart</p>
+                </div>
+
                 <h3>Your cart is empty</h3>
                 <p>Browse our properties to find your dream home</p>
                 <a href="property_listing.php" class="continue-shopping">Continue Shopping</a>
