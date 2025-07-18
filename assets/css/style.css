@@ -1,7 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
 /* General Body Styling */
 body {
-    font-family: 'Montserrat', Times New Roman, serif;
+    font-family: 'Lato', serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
@@ -28,7 +30,7 @@ body {
 /* ITmosys Header Styling */
 .itmosys-header {
     font-size: 24px;
-    font-family: 'Montserrat';
+    font-family: 'Bebas Neue', sans-serif; /* Corrected font-family */
     color: white;
     margin: 0;
 }
@@ -263,35 +265,31 @@ td {
 
 .login_subtitle {
     margin: 0;
-    padding-bottom: 10px;
     color: #333;
-    font-family: 'Montserrat', Times New Roman, serif;
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    text-align: center;
+    width: 100%;
 }
 
 .login_separator {
     border-top: 2px solid #ccc;
-    margin-top: 40px;
     margin-bottom: 20px;
 }
 
 .login_button {
     display: block;
-    width: 200px;                     /* Shorter width */
+    width: 140px;                     /* Shorter width */
     padding: 12px;                    /* Slightly smaller padding */
     margin: 10px auto 0 auto;         /* Center horizontally */
     font-size: 16px;
-    font-family: "Times New Roman", serif;
-    border: none;
-    border-radius: 5px;
-    background-color: yellow;
+    font-family: "Lato", serif;
+    border: 2px solid #0476D0;        /* Fixed border */
+    border-radius: 50px;
+    background-color: #FFDF00;
     color: black;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border-radius: 50px;
 }
 
 
@@ -301,23 +299,26 @@ td {
 
 .login_input[type="text"],
 .login_input[type="password"] {
-    width: 60%;               /* Slightly shorter than 100% */
-    padding: 10px;
+    width: 60%;                
+    padding: 12px;             
+    border: 2px solid black; 
+    border-radius: 8px;
+    background-color: #f0f8ff;
+    color: black;               /* Text color */
+    font-size: 16px;           /* Larger font */
     margin: 5px auto 15px auto; /* Top, auto (left/right for centering), bottom */
-    border: 1px solid #ccc;
-    border-radius: 5px;
     box-sizing: border-box;
-    font-family: "Times New Roman", serif;
-    font-size: 16px;
-    display: block;           /* Needed for margin auto to work */
+    display: block;
+    font-family: 'Lato', serif;
 }
 
 .login_label {
-    font-family: 'Montserrat', Times New Roman, serif;
+    font-family: 'Lato', serif;
     margin: 3px auto 15px auto; /* Top, auto (left/right for centering), bottom */
     margin-top: 10px;
     display: block;
     font-weight: bold;
+    font-size: 24px;
 }
 
 .login_formDiv {
@@ -335,7 +336,7 @@ td {
 .register_prompt {
     text-align: center;
     margin-top: 15px;
-    font-family: "Times New Roman", serif;
+    font-family: "Lato", serif; 
     font-size: 15px;
     margin-left: 170px;
 }
@@ -350,3 +351,146 @@ td {
 }
 
 /* End of Login CSS */
+
+/* Gradient overlay for login background */
+.login-bg-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        135deg,
+        rgba(80,124,147,0.7) 0%,
+        rgba(255,223,0,0.3) 100%
+    );
+}
+
+/* Ensure login_container and other content are above the gradient */
+.login_container, .login_title, .login_subtitle {
+    position: relative;
+    z-index: 1;
+}
+
+/* Registration Page Styles */
+.register-body {
+    background-image: url('../assets/images/pbb house.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    padding: 0;
+}
+
+.top_left_title {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 40px;
+    font-family: 'Times New Roman', serif;
+    color: CornflowerBlue;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.top_left_title img {
+    height: 40px;
+    margin-right: 15px;
+}
+
+.register_container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 30px;
+    width: 550px;
+    margin: 150px auto;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.register_subtitle {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.register_separator {
+    height: 2px;
+    background-color: #ccc;
+    margin: 20px 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.register_name_row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.register_name_column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.register_label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.register_input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.register_field_group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.register_button {
+    width: 200px;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: yellow;
+    color: black;
+    font-size: 16px;
+    font-family: 'Times New Roman', serif;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register_button:hover {
+    background-color: gold;
+}
+
+.register_prompt {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.register_prompt a {
+    color: CornflowerBlue;
+    text-decoration: none;
+}
+
+.register_prompt a:hover {
+    text-decoration: underline;
+}

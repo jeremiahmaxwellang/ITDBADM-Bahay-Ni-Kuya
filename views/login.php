@@ -14,15 +14,16 @@ Only 1 login page needed for all 3 roles
 
 </head>
 <body style="background-image: url('../assets/images/pbb house.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <div class="login-bg-gradient"></div>
     
     <div style="
         position: absolute;
         top: 20px;
         left: 20px;
-        font-size: 40px;
-        font-family: 'Times New Roman', serif;
+        font-size: 64px;
+        font-family: 'Bebas Neue', serif;
         color: CornflowerBlue;
-        font-weight: bold;">
+        font-weight: regular;">
         <img src="../assets/images/pbb logo.png" alt="Logo" style="height: 40px; margin-right: 15px; margin-top: 5px">
         BAHAY NI KUYA
     </div>
@@ -83,9 +84,9 @@ Only 1 login page needed for all 3 roles
 <!-- TODO: Replace this with the necessary code -->
             <form method="post" action="" class="login_form">
                 <label for="student_id" class="login_label">User ID:</label>
-                <input type="text" id="student_id" name="student_id" class="login_input" required>
+                <input type="text" id="student_id" name="student_id" class="login_input" required placeholder="Enter your User ID">
                 <label for="password" class="login_label">Password:</label>
-                <input type="password" id="password" name="password" class="login_input" required>
+                <input type="password" id="password" name="password" class="login_input" required placeholder="Enter your Password">
                 <button type="submit" class="login_button">Sign In</button>
                 <p class="register_prompt">Don't have an account yet? <a href="register.php" class="register_link">Register</a> </p>
             </form>
