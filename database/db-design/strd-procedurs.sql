@@ -79,3 +79,34 @@ BEGIN
 END
 
 $$ DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_cancel_order(
+    IN p_order_id INT,
+    IN p_property_id INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error occurred, transaction rolled back';
+    END;
+
+    START TRANSACTION;
+
+    -- Delete order items for this order
+    DELETE FROM order_items WHERE order_id = p_order_id;
+
+    -- Delete order record
+    DELETE FROM orders WHERE order_id = p_order_id;
+
+    -- Restore property to 'For Sale' if it was 'Sold'
+    UPDATE properties 
+    SET offer_type = 'For Sale' 
+    WHERE property_id = p_property_id AND offer_type = 'Sold';
+
+    COMMIT;
+END
+
+$$ DELIMITER ;
