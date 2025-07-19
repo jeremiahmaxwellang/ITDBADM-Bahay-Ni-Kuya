@@ -31,11 +31,11 @@ VALUES
 -- INSERT PROPERTIES
 INSERT INTO properties(property_name, address, price, description, offer_type, photo)
 VALUES
-("name", "address", 3599000.00, "describe", 'For Sale', "pbb_house.jpg"),
-("name", "address", 5000000.00, "describe", 'For Sale', "pbb_house.jpg"),
-("name", "address", 4222000.00, "describe", 'For Sale', "pbb_house.jpg"),
-("name", "address", 2790000.00, "describe", 'For Sale', "pbb_house.jpg"),
-("name", "address", 10585000.00, "describe", 'For Sale', "pbb_house.jpg"),
-("name", "address", 2000000.00, "describe", 'For Sale', "pbb_house.jpg"),
-("name", "address", 1999999.99, "describe", 'Sold', "pbb_house.jpg")
+("Brent Manalo", "Bonifacio Global City, Taguig", 1500000.00, "describe", 'For Sale', "Brent_Manalo.jpg"),
+("Mika Salamanca", "Tondo, Manila", 5000000.00, "describe", 'For Sale', "Mika_Salamanca.jpg"),
+("Ralph De Leon", "Intramuro, Manila", 4222000.00, "describe", 'For Sale', "Ralph.jpg"),
+("Will Ashley", "San Nicolas, Manila", 2790000.00, "describe", 'For Sale', "pbb_house.jpg"),
+("Esnyr", "Binondo, Manila", 10585000.00, "describe", 'For Sale', "esnyr.jpg"),
+("Charlie", "Calamba, Laguna", 2000000.00, "describe", 'For Sale', "charlie.jpg"),
+("Klarisse", "Cavite", 1999999.99, "describe", 'Sold', "klarisse.jpg")
 ;
