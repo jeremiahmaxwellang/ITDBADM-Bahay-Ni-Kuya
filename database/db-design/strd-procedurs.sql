@@ -110,3 +110,28 @@ BEGIN
 END
 
 $$ DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_update_property(
+    IN p_property_id INT,
+    IN p_property_name VARCHAR(255),
+    IN p_address VARCHAR(255),
+    IN p_price DECIMAL(15,2),
+    IN p_description TEXT,
+    IN p_offer_type VARCHAR(50)
+)
+BEGIN
+    -- Update the property details except photo
+    UPDATE property
+    SET 
+        property_name = p_property_name,
+        address = p_address,
+        price = p_price,
+        description = p_description,
+        offer_type = p_offer_type
+    WHERE property_id = p_property_id;
+    
+END
+
+$$ DELIMITER ;
