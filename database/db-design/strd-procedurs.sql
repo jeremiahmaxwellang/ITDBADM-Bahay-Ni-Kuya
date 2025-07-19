@@ -48,3 +48,34 @@ END
 
 $$ DELIMITER ;
 
+DELIMITER $$
+
+CREATE PROCEDURE sp_place_order(
+    IN p_email VARCHAR(100),
+    IN p_total_amount DECIMAL(10,2),
+    IN p_currency_id INT,
+    OUT p_order_id INT  -- output parameter to get the new order ID
+)
+BEGIN
+    INSERT INTO orders(email, order_date, total_amount, currency_id)
+    VALUES (p_email, CURDATE(), p_total_amount, p_currency_id);
+
+    -- Get the last inserted order_id
+    SET p_order_id = LAST_INSERT_ID();
+END
+
+$$ DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_add_order_item(
+    IN p_order_id INT,
+    IN p_property_id INT,
+    IN p_quantity INT
+)
+BEGIN
+    INSERT INTO order_items(order_id, property_id, quantity)
+    VALUES (p_order_id, p_property_id, p_quantity);
+END
+
+$$ DELIMITER ;

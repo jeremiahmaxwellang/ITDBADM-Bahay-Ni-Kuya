@@ -49,7 +49,7 @@ ENGINE = InnoDB;
 -- Table `bahaynikuya_db`.`orders`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`orders` (
-  `order_id` INT NOT NULL,
+  `order_id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(100) NULL,
   `order_date` DATE NULL,
   `total_amount` DECIMAL(10,2) NULL,
@@ -89,7 +89,7 @@ ENGINE = InnoDB;
 -- Table `bahaynikuya_db`.`order_items`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`order_items` (
-  `order_item_id` INT NOT NULL,
+  `order_item_id` INT NOT NULL AUTO_INCREMENT,
   `order_id` INT NULL,
   `property_id` INT NULL,
   `quantity` INT NULL,
