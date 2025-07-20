@@ -8,6 +8,7 @@ USE bahaynikuya_db;
 -- INSERT USERS
 INSERT INTO users(email, first_name, last_name, password_hash, role)
 VALUES 
+-- admin user account
 ("admin@gmail.com", "Admin", "Man", "adminpassword", 'A'),
 
 ("customer@gmail.com", "Custom", "Murr", "customerpassword", 'C'),
@@ -17,6 +18,7 @@ VALUES
 ("duelas@gmail.com", "Charles", "Duelas", "duelaspassword", 'C'),
 ("lee@gmail.com", "Justin", "Lee", "leepassword", 'C'),
 
+-- staff user account
 ("staff@gmail.com", "Staff", "Guy", "staffpassword", 'S');
 
 -- INSERT CURRENCIES
