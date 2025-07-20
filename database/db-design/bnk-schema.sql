@@ -69,6 +69,10 @@ CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`orders` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- NEW is_confirmed column
+ALTER TABLE `bahaynikuya_db`.`orders` 
+ADD `is_confirmed` ENUM('Y', 'N') DEFAULT 'N';
+
 
 -- -----------------------------------------------------
 -- Table `bahaynikuya_db`.`properties`
