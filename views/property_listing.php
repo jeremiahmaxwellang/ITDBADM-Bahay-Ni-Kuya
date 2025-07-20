@@ -35,6 +35,9 @@ $conn->close();
     <div class="property-bg-gradient"></div>
     <header>
         <h1 class="site_header">Bahay Ni Kuya</h1>
+        <button class="logout-btn" onclick="window.location.href='logout.php'">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
         <p>Finding your dream home with us is easier than surviving Kuya’s weekly eviction!</p>
         <a href="shopping_cart.php" class="cart-button">
         <span>Cart 🛒</span>

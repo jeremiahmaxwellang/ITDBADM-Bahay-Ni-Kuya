@@ -25,30 +25,33 @@ if ($_SESSION['user_role'] !== 'A') {
     <style>
         /* Admin-specific styles */
         .admin-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 30px;
+            max-width: 95%; /* Changed from 1200px to percentage for better responsiveness */
+            margin: 30px auto; /* Reduced top margin */
+            padding: 20px; /* Reduced padding */
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             position: relative;
-            z-index: 2;
+            box-sizing: border-box; /* Include padding in height calculation */
         }
         
         .admin-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 30px;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--MainYellow);
+            position: relative; /* Needed for absolute positioning of children */
+            min-height: 60px; /* Ensure header has enough height */
         }
         
         .admin-title {
-            font-size: 42px;
+            font-size: 36px;
             color: var(--MainBlue);
             font-family: var(--DefaultHeaderFont);
             letter-spacing: 1px;
+            margin: 0; /* Remove default margins */
         }
         
         .logout-btn {
@@ -61,6 +64,9 @@ if ($_SESSION['user_role'] !== 'A') {
             font-family: var(--DefaultFont);
             font-weight: bold;
             transition: background-color 0.3s;
+            position: absolute; /* Changed to absolute positioning */
+            bottom: 20px; /* Position at bottom */
+            right: 20px; /* Position at right */
         }
         
         .logout-btn:hover {
@@ -97,6 +103,7 @@ if ($_SESSION['user_role'] !== 'A') {
         .tab-content {
             display: none;
             animation: fadeIn 0.5s;
+            min-height: 300px; /* Minimum height for empty tabs */
         }
         
         @keyframes fadeIn {
@@ -106,6 +113,7 @@ if ($_SESSION['user_role'] !== 'A') {
         
         .tab-content.active {
             display: block;
+            overflow:
         }
         
         table {
@@ -255,6 +263,60 @@ if ($_SESSION['user_role'] !== 'A') {
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 80%;
+    max-width: 800px;
+    position: relative;
+    animation: modalopen 0.4s;
+}
+
+@keyframes modalopen {
+    from {opacity: 0; transform: translateY(-50px)}
+    to {opacity: 1; transform: translateY(0)}
+}
+
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+/* Darken the background when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+body.modal-open .admin-container {
+    filter: brightness(0.8);
+    pointer-events: none;
+}
     </style>
 </head>
 <body>
@@ -280,13 +342,13 @@ if ($_SESSION['user_role'] !== 'A') {
         ?>
         
         <div class="admin-tabs">
-            <button class="tab-btn active" onclick="openTab('properties')">
+            <button class="tab-btn active" onclick="openTab('properties', event)">
                 <i class="fas fa-home"></i> Properties
             </button>
-            <button class="tab-btn" onclick="openTab('orders')">
+            <button class="tab-btn" onclick="openTab('orders', event)">
                 <i class="fas fa-clipboard-list"></i> Orders
             </button>
-            <button class="tab-btn" onclick="openTab('add-property')">
+            <button class="tab-btn" onclick="openTab('add-property', event)">
                 <i class="fas fa-plus-circle"></i> Add Property
             </button>
         </div>
@@ -312,7 +374,7 @@ if ($_SESSION['user_role'] !== 'A') {
                     $servername = "localhost";
                     $username = "root";
                     $password = "";
-                    $dbname = "itmosys_db";
+                    $dbname = "bahaynikuya_db";
                     
                     $conn = new mysqli($servername, $username, $password, $dbname);
                     
@@ -321,7 +383,15 @@ if ($_SESSION['user_role'] !== 'A') {
                     }
                     
                     // Fetch properties
-                    $sql = "SELECT * FROM properties";
+                    $sql = "SELECT 
+                        property_id as id, 
+                        property_name as name, 
+                        offer_type as status, 
+                        price, 
+                        photo as image,
+                        'Property' as type,  
+                        address as location
+                        FROM bahaynikuya_db.properties";
                     $result = $conn->query($sql);
                     
                     if ($result->num_rows > 0) {
@@ -379,12 +449,18 @@ if ($_SESSION['user_role'] !== 'A') {
                     }
                     
                     // Fetch orders with property and customer details
-                    $sql = "SELECT o.id, p.name as property_name, s.name as student_name, 
-                            o.order_date, o.status, o.total_amount 
-                            FROM orders o
-                            JOIN properties p ON o.property_id = p.id
-                            JOIN students s ON o.student_id = s.student_id
-                            ORDER BY o.order_date DESC";
+                    $sql = "SELECT 
+                        o.order_id as id, 
+                        p.property_name, 
+                        u.first_name, 
+                        u.last_name,
+                        o.order_date, 
+                        'Completed' as status,  // Placeholder since no status column exists
+                        o.total_amount 
+                        FROM bahaynikuya_db.orders o
+                        JOIN bahaynikuya_db.properties p ON o.property_id = p.property_id
+                        JOIN bahaynikuya_db.users u ON o.email = u.email
+                        ORDER BY o.order_date DESC";
                     $result = $conn->query($sql);
                     
                     if ($result->num_rows > 0) {
@@ -487,28 +563,67 @@ if ($_SESSION['user_role'] !== 'A') {
     </div>
     
     <script>
-        function openTab(tabName) {
-            // Hide all tab contents
-            const tabContents = document.getElementsByClassName('tab-content');
-            for (let i = 0; i < tabContents.length; i++) {
-                tabContents[i].classList.remove('active');
-            }
-            
-            // Remove active class from all tab buttons
-            const tabButtons = document.getElementsByClassName('tab-btn');
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons[i].classList.remove('active');
-            }
-            
-            // Show the selected tab content and mark button as active
-            document.getElementById(tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+        function openTab(tabName, event) {
+    // Prevent default behavior if event is provided
+    if (event) {
+        event.preventDefault();
+    }
+    
+    // Hide all tab contents
+    const tabContents = document.getElementsByClassName('tab-content');
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove('active');
+    }
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.getElementsByClassName('tab-btn');
+    for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove('active');
+    }
+    
+    // Show the selected tab content and mark button as active
+    document.getElementById(tabName).classList.add('active');
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+}
+
+// Initialize the first tab as active on page load
+document.addEventListener('DOMContentLoaded', function() {
+    openTab('properties');
+});
         
         function editProperty(id) {
-            // Redirect to edit page with property ID
-            window.location.href = 'edit_property.php?id=' + id;
-        }
+    // Show loading state
+    document.getElementById('editPropertyContent').innerHTML = '<p>Loading...</p>';
+    
+    // Add modal-open class to body
+    document.body.classList.add('modal-open');
+    
+    // Show modal
+    document.getElementById('editPropertyModal').style.display = 'block';
+    
+    // Load edit form via AJAX
+    fetch('edit_property.php?id=' + id)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('editPropertyContent').innerHTML = data;
+        })
+        .catch(error => {
+            document.getElementById('editPropertyContent').innerHTML = 
+                '<div class="alert alert-error">Error loading form: ' + error + '</div>';
+        });
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
         
         function viewOrderDetails(id) {
             // Redirect to order details page
@@ -559,5 +674,15 @@ if ($_SESSION['user_role'] !== 'A') {
             }
         }
     </script>
+    <!-- Edit Property Modal -->
+<div id="editPropertyModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('editPropertyModal')">&times;</span>
+        <h2><i class="fas fa-edit"></i> Edit Property</h2>
+        <div id="editPropertyContent">
+            <!-- Content will be loaded via AJAX -->
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -318,4 +318,23 @@ footer {
     .search-bar form {
         flex-direction: column;
     }
+    
+.logout-btn {
+            background-color: var(--MainRed);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--DefaultFont);
+            font-weight: bold;
+            transition: background-color 0.3s;
+            position: absolute; /* Changed to absolute positioning */
+            bottom: 20px; /* Position at bottom */
+            right: 20px; /* Position at right */
+        }
+        
+        .logout-btn:hover {
+            background-color: #c11a1f;
+        }
 }
