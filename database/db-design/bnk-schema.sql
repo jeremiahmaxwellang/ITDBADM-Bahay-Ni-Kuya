@@ -112,7 +112,6 @@ CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`order_items` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `bahaynikuya_db`.`transaction_log`
 -- -----------------------------------------------------
