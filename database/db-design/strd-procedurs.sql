@@ -123,7 +123,7 @@ CREATE PROCEDURE sp_update_property(
 )
 BEGIN
     -- Update the property details except photo
-    UPDATE property
+    UPDATE properties
     SET 
         property_name = p_property_name,
         address = p_address,
