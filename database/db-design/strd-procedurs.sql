@@ -21,7 +21,6 @@ BEGIN
     SELECT exchange_rate_to_usd INTO rate_target 
     FROM currencies WHERE currency_code = target_currency LIMIT 1;
 
-    -- Now, convert PHP to USD, then to target: 
     -- (base_price / rate_to_usd) * rate_target
     IF base_price IS NULL OR rate_to_usd IS NULL OR rate_target IS NULL THEN
         SET converted_price = NULL; -- error indicator
@@ -122,7 +121,7 @@ CREATE PROCEDURE sp_update_property(
     IN p_offer_type VARCHAR(50)
 )
 BEGIN
-    -- Update the property details except photo
+    -- Update the property details 
     UPDATE properties
     SET 
         property_name = p_property_name,
