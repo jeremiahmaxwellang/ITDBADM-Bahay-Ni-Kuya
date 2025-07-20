@@ -2,24 +2,36 @@
 // Database configuration
 require_once('../includes/dbconfig.php');
 
+// Get search input
+$search_location = isset($_GET['search_location']) ? trim($_GET['search_location']) : '';
+$price_filter = isset($_GET['price_filter']) ? $_GET['price_filter'] : '';
+
 // Check if 'properties' table exists
-// $tableExists = false;
-// $checkTable = $conn->query("SHOW TABLES LIKE 'properties'");
-// if ($checkTable && $checkTable->num_rows > 0) {
-//     $tableExists = true;
-// }
+$tableExists = false;
+$checkTable = $conn->query("SHOW TABLES LIKE 'properties'");
+if ($checkTable && $checkTable->num_rows > 0) {
+    $tableExists = true;
+}
 
 $properties = [];
-// if ($tableExists) {
-//     $result = $conn->query("SELECT * FROM properties ORDER BY created_at DESC");
-//     if ($result && $result->num_rows > 0) {
-//         while ($row = $result->fetch_assoc()) {
-//             $properties[] = $row;
-//         }
-//     }
-// } else {
+if ($tableExists) {
+    if ($search_location !== '') {
+        $stmt = $conn->prepare("SELECT * FROM properties WHERE address LIKE ? ORDER BY property_id DESC");
+        $like = '%' . $search_location . '%';
+        $stmt->bind_param("s", $like);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    } else {
+        $result = $conn->query("SELECT * FROM properties ORDER BY property_id DESC");
+    }
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $properties[] = $row;
+        }
+    }
+} else {
     $properties = false; // Indicate table missing
-// }
+}
 $conn->close();
 ?>
 
@@ -70,18 +82,12 @@ $conn->close();
                 </p>
             </div>
             <form action="#" method="GET">
-                <input type="text" placeholder="Search by location...">
-                <select>
+                <input type="text" name="search_location" placeholder="Search by location." value="<?php echo htmlspecialchars($search_location); ?>">
+                <select name="price_filter">
                     <option value="">Any Price</option>
-                    <option value="1">Under ₱5M</option>
-                    <option value="2">₱5M - ₱10M</option>
-                    <option value="3">Over ₱10M</option>
-                </select>
-                <select>
-                    <option value="">Any Type</option>
-                    <option value="house">House</option>
-                    <option value="condo">Condominium</option>
-                    <option value="land">Land</option>
+                    <option value="1" <?php if ($_GET['price_filter'] === '1') echo 'selected'; ?>>Under ₱5M</option>
+                    <option value="2" <?php if ($_GET['price_filter'] === '2') echo 'selected'; ?>>₱5M - ₱10M</option>
+                    <option value="3" <?php if ($_GET['price_filter'] === '3') echo 'selected'; ?>>Over ₱10M</option>
                 </select>
                 <button type="submit">Search</button>
             </form>
@@ -96,15 +102,14 @@ $conn->close();
             <div class="properties-grid">
                 <?php foreach ($properties as $property): ?>
                     <div class="property-card">
-                        <img src="<?php echo $property['image_path']; ?>" alt="<?php echo $property['title']; ?>" class="property-image">
+                        <img src="../assets/images/<?php echo htmlspecialchars($property['photo']); ?>" alt="<?php echo htmlspecialchars($property['property_name']); ?>" class="property-image">
                         <div class="property-details">
-                            <h3 class="property-title"><?php echo $property['title']; ?></h3>
-                            <p class="property-location"><?php echo $property['location']; ?></p>
+                            <h3 class="property-title"><?php echo htmlspecialchars($property['property_name']); ?></h3>
+                            <p class="property-location"><?php echo htmlspecialchars($property['address']); ?></p>
                             <p class="property-price">₱<?php echo number_format($property['price'], 2); ?></p>
                             <div class="property-features">
-                                <span>3 Bedrooms</span>
-                                <span>2 Bathrooms</span>
-                                <span>150 sqm</span>
+                                <!-- You may want to add dynamic features here if available -->
+                                <span><?php echo htmlspecialchars($property['offer_type']); ?></span>
                             </div>
                             <a href="#" class="view-details">View Details</a>
                         </div>
