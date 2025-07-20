@@ -15,15 +15,44 @@ if ($checkTable && $checkTable->num_rows > 0) {
 
 $properties = [];
 if ($tableExists) {
+    // Build dynamic SQL query with filters
+    $query = "SELECT * FROM properties WHERE 1";
+    $params = [];
+    $types = "";
+
+    // Location filter
     if ($search_location !== '') {
-        $stmt = $conn->prepare("SELECT * FROM properties WHERE address LIKE ? ORDER BY property_id DESC");
-        $like = '%' . $search_location . '%';
-        $stmt->bind_param("s", $like);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    } else {
-        $result = $conn->query("SELECT * FROM properties ORDER BY property_id DESC");
+        $query .= " AND address LIKE ?";
+        $params[] = '%' . $search_location . '%';
+        $types .= "s";
     }
+
+    // Price filter
+    if ($price_filter !== '') {
+        if ($price_filter === '1') {
+            $query .= " AND price < ?";
+            $params[] = 5000000;
+            $types .= "i";
+        } elseif ($price_filter === '2') {
+            $query .= " AND price BETWEEN ? AND ?";
+            $params[] = 5000000;
+            $params[] = 10000000;
+            $types .= "ii";
+        } elseif ($price_filter === '3') {
+            $query .= " AND price > ?";
+            $params[] = 10000000;
+            $types .= "i";
+        }
+    }
+
+    $query .= " ORDER BY property_id DESC";
+    $stmt = $conn->prepare($query);
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $properties[] = $row;
@@ -32,6 +61,7 @@ if ($tableExists) {
 } else {
     $properties = false; // Indicate table missing
 }
+
 $conn->close();
 ?>
 
