@@ -77,9 +77,6 @@ $conn->close();
     <div class="property-bg-gradient"></div>
     <header>
         <h1 class="site_header">Bahay Ni Kuya</h1>
-        <button class="logout-btn" onclick="window.location.href='logout.php'">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
         <p>Finding your dream home with us is easier than surviving Kuya’s weekly eviction!</p>
         <a href="shopping_cart.php" class="cart-button">
         <span>Cart 🛒</span>
@@ -93,7 +90,7 @@ $conn->close();
             <li><a class="topNavBar" href="checkout.php">Checkout Page</a></li>
             <li><a class="topNavBar" href="#">About Us</a></li>
             <li><a class="topNavBar" href="#">Contact</a></li>
-            <li><a class="topNavBar" href="logout.php">Sign Out</a></li>
+            <li><a class="topNavBar" onclick="window.location.href='logout.php'">Sign Out</a></li>
         </ul>
     </nav>
 
@@ -141,7 +138,7 @@ $conn->close();
                                 <!-- You may want to add dynamic features here if available -->
                                 <span><?php echo htmlspecialchars($property['offer_type']); ?></span>
                             </div>
-                            <a href="#" class="view-details">View Details</a>
+                            <a href="view_details.php?property_id=<?php echo $property['property_id']; ?>" class="view-details">View Details</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

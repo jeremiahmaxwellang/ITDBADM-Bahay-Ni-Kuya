@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+:root {
+    --MainBlue: #0476D0;
+    --MainRed: #E32227;
+    --MainYellow: #FFDF00;
+    --DefaultFont: 'Lato', serif;
+    --DefaultHeaderFont: 'Bebas Neue', sans-serif;
+    --DefaultFontColor: black;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+}
+
+body {
+    background-image: url('../images/pbb house.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #333;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Gradient overlay for property listing background */
+.property-bg-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        135deg,
+        rgba(80,124,147,0.7) 0%,
+        rgba(255,223,0,0.3) 100%
+    );
+}
+
+/* Ensure main content is above the gradient */
+body > *:not(.property-bg-gradient) {
+    position: relative;
+    z-index: 1;
+}
+
+header {
+    background-color: var(--MainRed);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+}
+
+nav {
+    background-color: var(--MainYellow);
+    padding: 10px 0;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    align-items: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Top Navigation Bar */
+.topNavBar {
+    color: var(--DefaultFontColor);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Bahay ni Kuya Header */
+.site_header {
+    font-family: var(--DefaultHeaderFont);
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+/* Cart button Styles */
+.cart-button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background-color: #d30000;
+    color: black;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-button:hover {
+    background-color: #ff5e5e;
+}
+
+.cart-count {
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.cart-count:hover {
+    background-color: rgb(222, 130, 130);
+}
+
+/* Main Content Container Style */
+.container {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.backButton {
+    background-color: var(--MainRed); 
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px; 
+    font-weight: bold; 
+    text-decoration: none;
+}
+
+.blueContainer {
+    display: flex; 
+    flex-wrap: wrap; margin-top: 20px;
+}
+
+/* Left Section Styles: Image and info */
+.leftContainer {
+    flex: 1; 
+    min-width: 300px;
+    background-color: var(--MainBlue);
+    padding: 20px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.propertyName {
+    font-family: 'Bebas Neue', serif;
+    font-size: 64px; 
+    color: white;
+    text-shadow:
+        -2px -2px 0 black,
+         2px -2px 0 black,
+        -2px  2px 0 black,
+         2px  2px 0 black;
+}
+
+.propertyAddress { 
+    font-size: 30px; 
+    font-weight: bold;
+    color: darkgray;
+}
+
+.propertyPrice {
+    font-size: 30px; 
+    color: red; 
+    font-weight: bold;
+}
+
+/* Right Section Styles: Property details */
+.rightContainer {
+    flex: 1; 
+    min-width: 300px;
+    background-color: var(--MainBlue);
+    padding: 20px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.descriptionHeader {
+    font-family: 'Bebas Neue', sans-serif; 
+    color: black; 
+    font-size: 64px;
+        text-shadow:
+        -1px -1px 0 white,
+         1px -1px 0 white,
+        -1px  1px 0 white,
+         1px  1px 0 white;
+}
+
+.descriptionBody {
+    color: white; 
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.propertyStatus {
+    color: white; 
+    font-weight: bold;
+    font-size: 32px;
+}
+
+footer {
+    background-color: var(--MainBlue);
+    color: white;
+    text-align: center;
+    padding: 30px 0;
+    margin-top: 40px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    text-align: left;
+    padding: 0 20px;
+}
+
+.footer-section h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.footer-section p, .footer-section a {
+    color: #ecf0f1;
+    margin-bottom: 10px;
+    display: block;
+    text-decoration: none;
+}
+
+.copyright {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #4a6278;
+}
+
+@media (max-width: 768px) {
+    .properties-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .properties-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-bar form {
+        flex-direction: column;
+    }
+    
+.logout-btn {
+            background-color: var(--MainRed);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--DefaultFont);
+            font-weight: bold;
+            transition: background-color 0.3s;
+            position: absolute; /* Changed to absolute positioning */
+            bottom: 20px; /* Position at bottom */
+            right: 20px; /* Position at right */
+        }
+        
+        .logout-btn:hover {
+            background-color: #c11a1f;
+        }
+}
