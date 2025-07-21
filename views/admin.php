@@ -142,29 +142,23 @@ if ($_SESSION['user_role'] !== 'A') {
                         <th>Date</th>
                         <th>Status</th>
                         <th>Total</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    // Database connection
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-                    
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
                     
                     // Fetch orders with property and customer details
                     $sql = "SELECT 
                         o.order_id as id, 
                         p.property_name, 
-                        u.first_name, 
-                        u.last_name,
+                        CONCAT(u.first_name, ' ', u.last_name) AS full_name,
                         o.order_date, 
-                        'Completed' as status,  // Placeholder since no status column exists
+                        'Completed' as status,
                         o.total_amount 
                         FROM bahaynikuya_db.orders o
-                        JOIN bahaynikuya_db.properties p ON o.property_id = p.property_id
+                        JOIN bahaynikuya_db.order_items ot ON o.order_id = ot.order_id
+                        JOIN bahaynikuya_db.properties p ON ot.property_id = p.property_id
+
                         JOIN bahaynikuya_db.users u ON o.email = u.email
                         ORDER BY o.order_date DESC";
                     $result = $conn->query($sql);
@@ -175,15 +169,10 @@ if ($_SESSION['user_role'] !== 'A') {
                             echo "<tr>
                                 <td>{$row['id']}</td>
                                 <td>{$row['property_name']}</td>
-                                <td>{$row['student_name']}</td>
+                                <td> {$row['full_name']}</td>
                                 <td>" . date('M d, Y', strtotime($row['order_date'])) . "</td>
                                 <td class='$statusClass'>{$row['status']}</td>
                                 <td>₱" . number_format($row['total_amount'], 2) . "</td>
-                                <td>
-                                    <button class='action-btn edit-btn' onclick='viewOrderDetails({$row['id']})'>
-                                        <i class='fas fa-eye'></i> View
-                                    </button>
-                                </td>
                             </tr>";
                         }
                     } else {
@@ -199,62 +188,34 @@ if ($_SESSION['user_role'] !== 'A') {
         <!-- Add Property Tab -->
         <div id="add-property" class="tab-content">
             <h2><i class="fas fa-plus-circle"></i> Add New Property</h2>
-            <form class="add-property-form" action="admin_add_property.php" method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="name">Property Name:</label>
-                    <input type="text" id="name" name="name" required>
+            <form class="add-property-form" method="POST" action="sql_add_property.php" enctype="multipart/form-data">
+                <!-- Name -->
+                <div class = "form-group">
+                    <div class="form-group">
+                        <label for="name">Property Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="form-group">
+                        <label for="price">Price (₱):</label>
+                        <input type="number" id="price" name="price" step="0.01" min="0" required>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="type">Property Type:</label>
-                    <select id="type" name="type" required>
-                        <option value="">Select Type</option>
-                        <option value="Apartment">Apartment</option>
-                        <option value="Dormitory">Dormitory</option>
-                        <option value="House">House</option>
-                        <option value="Room">Room</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="price">Price (₱):</label>
-                    <input type="number" id="price" name="price" step="0.01" min="0" required>
-                </div>
-                
+                <!-- Description -->
                 <div class="form-group">
                     <label for="description">Description:</label>
                     <textarea id="description" name="description" rows="4" required></textarea>
                 </div>
                 
+                <!-- Location -->
                 <div class="form-group">
                     <label for="location">Location:</label>
-                    <input type="text" id="location" name="location" required>
+                    <input type="text" id="address" name="address" required>
                 </div>
                 
-                <div class="form-group">
-                    <label for="bedrooms">Bedrooms:</label>
-                    <input type="number" id="bedrooms" name="bedrooms" min="0" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="bathrooms">Bathrooms:</label>
-                    <input type="number" id="bathrooms" name="bathrooms" min="0" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="size">Size (sqm):</label>
-                    <input type="number" id="size" name="size" step="0.1" min="0" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="status">Status:</label>
-                    <select id="status" name="status" required>
-                        <option value="Available">Available</option>
-                        <option value="Occupied">Occupied</option>
-                        <option value="Maintenance">Maintenance</option>
-                    </select>
-                </div>
-                
+                <!-- Location -->
                 <div class="form-group">
                     <label for="image">Property Image:</label>
                     <input type="file" id="image" name="image" accept="image/*" required onchange="previewImage(this)">

@@ -1,23 +1,9 @@
-// DELETE PROPERTIES
-function deleteProperty(id) {
-    if (confirm("Are you sure you want to delete this property?")) {
-        fetch('../assets/php/sql_delete_property.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'id=' + encodeURIComponent(id)
-        })
-        .then(response => "Property successfully deleted")
-        .then(data => {
-            alert(data); // Optional feedback
-            location.reload(); // Refresh page to reflect changes
-        })
-        .catch(error => console.error("Error:", error));
-    }
-}
+// Initialize the first tab as active on page load
+document.addEventListener('DOMContentLoaded', function() {
+    openTab('properties', {currentTarget: document.querySelector('[data-tab="properties"]')});
+});
 
-
+// Opens Different Admin Panel Tabs
 function openTab(tabName, event) {
     // Prevent default behavior if event is provided
     if (event) {
@@ -43,12 +29,27 @@ function openTab(tabName, event) {
     }
 }
 
-// Initialize the first tab as active on page load
-document.addEventListener('DOMContentLoaded', function() {
-    openTab('properties');
-});
-        
-        function editProperty(id) {
+// DELETE PROPERTIES
+function deleteProperty(id) {
+    if (confirm("Are you sure you want to delete this property?")) {
+        fetch('../assets/php/sql_delete_property.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'id=' + encodeURIComponent(id)
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data); // Optional feedback
+            location.reload(); // Refresh page to reflect changes
+        })
+        .catch(error => console.error("Error:", error));
+    }
+}
+
+// EDIT PROPERTIES        
+function editProperty(id) {
     // Show loading state
     document.getElementById('editPropertyContent').innerHTML = '<p>Loading...</p>';
     
@@ -70,6 +71,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 }
 
+// ADD PROPERTIES
+function addProperty(){
+    const form = document.querySelector('.add-property-form');
+    const formData = new FormData(form);
+
+    fetch('../../views/sql_add_property.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert(data);
+        form.reset();
+        openTab('properties'); //return to properties tab
+    })
+    .catch(error => {
+        console.error("Error: ", error);
+    })
+}
+
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
     document.body.classList.remove('modal-open');
@@ -79,13 +100,6 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
     document.body.classList.remove('modal-open');
 }
-        
-function viewOrderDetails(id) {
-    // Redirect to order details page
-    window.location.href = 'order_details.php?id=' + id;
-}
-        
-
         
 function previewImage(input) {
     const preview = document.getElementById('imagePreview');

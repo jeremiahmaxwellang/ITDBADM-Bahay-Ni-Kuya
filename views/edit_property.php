@@ -13,26 +13,35 @@ if (isset($_GET['id'])) {
     
     if ($property) {
         ?>
-        <form class="edit-property-form" action="update_property.php" method="POST" enctype="multipart/form-data">
+        <form class="edit-property-form" action="sql_update_property.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= $property['property_id'] ?>">
             
+            <!-- Name -->
             <div class="form-group">
                 <label for="name">Property Name:</label>
                 <input type="text" id="name" name="name" value="<?= htmlspecialchars($property['property_name']) ?>" required>
             </div>
-            
+
+            <!-- Price -->
             <div class="form-group">
-                <label for="type">Property Type:</label>
-                <select id="type" name="type" required>
-                    <option value="Apartment" <?= $property['type']=='Apartment'?'selected':'' ?>>Apartment</option>
-                    <option value="Dormitory" <?= $property['type']=='Dormitory'?'selected':'' ?>>Dormitory</option>
-                    <option value="House" <?= $property['type']=='House'?'selected':'' ?>>House</option>
-                    <option value="Room" <?= $property['type']=='Room'?'selected':'' ?>>Room</option>
-                </select>
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" value="<?= htmlspecialchars(number_format((float)$property['price'], 2, '.', '')) ?>" required>
+            </div>
+
+
+            <!-- Address -->
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" value="<?= htmlspecialchars($property['address']) ?>" required>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" value="<?= htmlspecialchars($property['description']) ?>" required>
             </div>
             
-            <!-- Include all other form fields similarly -->
-            
+            <!-- Photo -->
             <div class="form-group">
                 <label>Current Image:</label>
                 <img src="../uploads/<?= $property['photo'] ?>" style="max-width:200px;display:block;margin:10px 0;">

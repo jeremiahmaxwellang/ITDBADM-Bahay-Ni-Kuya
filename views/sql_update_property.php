@@ -1,20 +1,39 @@
 <?php
-// update_property.php
-    require_once('../includes/dbconfig.php');
+// Database configuration
+require_once('../includes/dbconfig.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $name = $_POST['name'];
-    // Get all other fields
+    $address = $_POST['address'];
+    $price = $_POST['price'];
+    $description = $_POST['description'];
     
     // Handle file upload if new image was provided
     if (!empty($_FILES['image']['name'])) {
-        // Your image upload logic here
+        $photo = $_FILES['image']['name'];
+        $tempPath = $_FILES['image']['name'];
+        $uploadPath = "../assets/images" . basename($photo);
+
+        if(move_uploaded_file($tempPath, $uploadPath)){
+            
+        }
+
+        else{
+            $_SESSION['admin_message'] = "Error uploading photo.";
+            $_SESSION['admin_message_type'] = "error";
+        }
     }
     
-    // Update database
-    $stmt = $conn->prepare("UPDATE properties SET property_name=?, type=?, ... WHERE property_id=?");
-    $stmt->bind_param("ss...i", $name, $type, ..., $id);
+    // Update property
+    $stmt = $conn->prepare("UPDATE properties SET 
+    property_name=?, 
+    address=?, 
+    price=?, 
+    description=?,
+    photo=?
+    WHERE property_id=?");
+    $stmt->bind_param("ssdssi", $name, $address, $price, $description, $photo, $id);
     
     if ($stmt->execute()) {
         $_SESSION['admin_message'] = "Property updated successfully";
