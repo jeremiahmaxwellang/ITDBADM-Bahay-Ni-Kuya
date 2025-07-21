@@ -77,19 +77,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
         unset($_SESSION['cart'][$removePropertyId]);
 
         // If the item has been removed from the cart, we also remove it from the order_items table
-        $stmt = $conn->prepare("DELETE FROM order_items WHERE property_id = ? AND order_id IN (SELECT order_id FROM orders WHERE email = ? AND is_confirmed = 'N')");
+        $stmt = $conn->prepare("
+            DELETE FROM order_items 
+            WHERE property_id = ? 
+            AND order_id IN (
+                SELECT o.order_id 
+                FROM orders o
+                JOIN transaction_log t ON o.order_id = t.order_id 
+                WHERE o.email = ? AND t.payment_status = 'unpaid'
+            )
+        ");
+
         $stmt->bind_param("is", $removePropertyId, $userEmail);
         $stmt->execute();
     }
 }
 
 // Populate $cartItems for display
-if (!empty($_SESSION['cart'])) {
-    $cartIds = implode(',', array_keys($_SESSION['cart']));
-    $result = $conn->query("SELECT * FROM properties WHERE property_id IN ($cartIds)");
+// Get the latest unconfirmed order of the user
+$stmt = $conn->prepare("
+    SELECT o.order_id 
+    FROM orders o
+    JOIN transaction_log t ON o.order_id = t.order_id 
+    WHERE o.email = ? AND t.payment_status = 'unpaid' 
+    ORDER BY o.order_date DESC 
+    LIMIT 1
+");
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($orderRow = $result->fetch_assoc()) {
+    $orderId = $orderRow['order_id'];
+
+    // Get order items for this order
+    $stmt = $conn->prepare("
+        SELECT oi.order_id, oi.property_id, oi.quantity, o.email, p.property_name, p.address, p.price, p.photo
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.order_id
+        JOIN properties p ON oi.property_id = p.property_id
+        WHERE oi.order_id = ? AND o.email = ?
+    ");
+    $stmt->bind_param("is", $orderId, $userEmail);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
     while ($row = $result->fetch_assoc()) {
         $cartItems[] = $row;
-        $totalPrice += $row['price'] * $_SESSION['cart'][$row['property_id']];
+        $totalPrice += $row['price'] * $row['quantity'];
     }
 }
 
