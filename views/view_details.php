@@ -21,14 +21,24 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/view_details.css">
     <title>View Property Details</title>
+    <script>
+        // JavaScript function to show a popup if the property is sold
+        function checkPropertyStatus() {
+            var status = "<?php echo $property ? $property['offer_type'] : ''; ?>";
+            if (status === 'Sold') {
+                alert("Sorry, this property has already been sold.");
+                return false; // Prevent form submission
+            }
+            return true; // Proceed with form submission
+        }
+    </script>
 </head>
 <body>
-    <!-- Background gradeint -->
+    <!-- Background gradient -->
     <div class="property-bg-gradient"></div>
 
     <!-- Header -->
@@ -36,8 +46,8 @@ $conn->close();
         <h1 class="site_header">Bahay Ni Kuya</h1>
         <p>Finding your dream home with us is easier than surviving Kuya’s weekly eviction!</p>
         <a href="shopping_cart.php" class="cart-button">
-        <span>Cart 🛒</span>
-        <span class="cart-count">0</span>
+            <span>Cart 🛒</span>
+            <span class="cart-count">0</span>
         </a>
     </header>
 
@@ -61,7 +71,7 @@ $conn->close();
             <!-- Big Blue Rectangle -->
             <div class="blueContainer">
 
-            <!-- Left section: Image and info -->
+                <!-- Left section: Image and info -->
                 <div class="leftContainer">
                     <h1 class="propertyName">
                         <?php echo htmlspecialchars($property['property_name']); ?>
@@ -85,8 +95,7 @@ $conn->close();
                         ?>
                     </p>
 
-
-                    <form method="POST" action="add_to_cart.php" style="margin-top: 20px;">
+                    <form method="POST" action="add_to_cart.php" style="margin-top: 20px;" onsubmit="return checkPropertyStatus()">
                         <input type="hidden" name="property_id" value="<?php echo $property['property_id']; ?>">
                         <button type="submit" style="background-color: red; color: white; border: none; padding: 12px 24px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer;">
                             ADD TO CART
