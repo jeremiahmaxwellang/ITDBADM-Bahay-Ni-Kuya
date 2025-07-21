@@ -30,7 +30,7 @@ if ($_SESSION['user_role'] !== 'A') {
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
    
-    <script src="../assets/js/delete_property.js"></script>
+    <script src="../assets/js/admin.js"></script>
 </head>
 <body>
     <!-- Background gradient overlay -->
@@ -268,118 +268,7 @@ if ($_SESSION['user_role'] !== 'A') {
         </div>
     </div>
     
-    <script>
-        function openTab(tabName, event) {
-    // Prevent default behavior if event is provided
-    if (event) {
-        event.preventDefault();
-    }
-    
-    // Hide all tab contents
-    const tabContents = document.getElementsByClassName('tab-content');
-    for (let i = 0; i < tabContents.length; i++) {
-        tabContents[i].classList.remove('active');
-    }
-    
-    // Remove active class from all tab buttons
-    const tabButtons = document.getElementsByClassName('tab-btn');
-    for (let i = 0; i < tabButtons.length; i++) {
-        tabButtons[i].classList.remove('active');
-    }
-    
-    // Show the selected tab content and mark button as active
-    document.getElementById(tabName).classList.add('active');
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-    }
-}
 
-// Initialize the first tab as active on page load
-document.addEventListener('DOMContentLoaded', function() {
-    openTab('properties');
-});
-        
-        function editProperty(id) {
-    // Show loading state
-    document.getElementById('editPropertyContent').innerHTML = '<p>Loading...</p>';
-    
-    // Add modal-open class to body
-    document.body.classList.add('modal-open');
-    
-    // Show modal
-    document.getElementById('editPropertyModal').style.display = 'block';
-    
-    // Load edit form via AJAX
-    fetch('edit_property.php?id=' + id)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('editPropertyContent').innerHTML = data;
-        })
-        .catch(error => {
-            document.getElementById('editPropertyContent').innerHTML = 
-                '<div class="alert alert-error">Error loading form: ' + error + '</div>';
-        });
-}
-
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-    document.body.classList.remove('modal-open');
-}
-
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-    document.body.classList.remove('modal-open');
-}
-        
-        function viewOrderDetails(id) {
-            // Redirect to order details page
-            window.location.href = 'order_details.php?id=' + id;
-        }
-        
-        function deleteProperty(id) {
-            if (confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
-                // Send AJAX request to delete property
-                fetch('delete_property.php?id=' + id, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Property deleted successfully');
-                        location.reload();
-                    } else {
-                        alert('Error deleting property: ' + (data.message || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while deleting the property');
-                });
-            }
-        }
-        
-        function previewImage(input) {
-            const preview = document.getElementById('imagePreview');
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-                
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-    </script>
     <!-- Edit Property Modal -->
 <div id="editPropertyModal" class="modal" style="display:none;">
     <div class="modal-content">
