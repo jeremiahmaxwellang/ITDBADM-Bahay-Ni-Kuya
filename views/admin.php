@@ -1,5 +1,7 @@
 <?php
-// admin.php
+// Database configuration
+require_once('../includes/dbconfig.php');
+
 session_start();
 
 // Check if user is logged in and is an admin
@@ -12,7 +14,11 @@ if ($_SESSION['user_role'] !== 'A') {
     header("Location: index.php");
     exit();
 }
+
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,302 +28,9 @@ if ($_SESSION['user_role'] !== 'A') {
     <title>Admin Dashboard - Bahay ni Kuya</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        /* Admin-specific styles */
-        .admin-container {
-            max-width: 95%; /* Changed from 1200px to percentage for better responsiveness */
-            margin: 30px auto; /* Reduced top margin */
-            padding: 20px; /* Reduced padding */
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-            box-sizing: border-box; /* Include padding in height calculation */
-        }
-        
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--MainYellow);
-            position: relative; /* Needed for absolute positioning of children */
-            min-height: 60px; /* Ensure header has enough height */
-        }
-        
-        .admin-title {
-            font-size: 36px;
-            color: var(--MainBlue);
-            font-family: var(--DefaultHeaderFont);
-            letter-spacing: 1px;
-            margin: 0; /* Remove default margins */
-        }
-        
-        .logout-btn {
-            background-color: var(--MainRed);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: var(--DefaultFont);
-            font-weight: bold;
-            transition: background-color 0.3s;
-            position: absolute; /* Changed to absolute positioning */
-            bottom: 20px; /* Position at bottom */
-            right: 20px; /* Position at right */
-        }
-        
-        .logout-btn:hover {
-            background-color: #c11a1f;
-        }
-        
-        .admin-tabs {
-            display: flex;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .tab-btn {
-            padding: 12px 25px;
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            font-family: var(--DefaultFont);
-            font-weight: bold;
-            color: #555;
-            transition: all 0.3s;
-        }
-        
-        .tab-btn.active {
-            border-bottom: 3px solid var(--MainBlue);
-            color: var(--MainBlue);
-        }
-        
-        .tab-btn:hover:not(.active) {
-            color: var(--MainRed);
-        }
-        
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-            min-height: 300px; /* Minimum height for empty tabs */
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .tab-content.active {
-            display: block;
-            overflow:
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            background-color: var(--MainBlue);
-            color: white;
-            font-weight: bold;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        
-        .action-btn {
-            padding: 8px 12px;
-            margin: 0 5px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .edit-btn {
-            background-color: var(--MainYellow);
-            color: black;
-        }
-        
-        .edit-btn:hover {
-            background-color: #e6c900;
-        }
-        
-        .delete-btn {
-            background-color: var(--MainRed);
-            color: white;
-        }
-        
-        .delete-btn:hover {
-            background-color: #c11a1f;
-        }
-        
-        .add-property-form {
-            margin-top: 30px;
-            padding: 25px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--MainBlue);
-        }
-        
-        .form-group input, 
-        .form-group textarea, 
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: var(--DefaultFont);
-        }
-        
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .submit-btn {
-            background-color: var(--MainBlue);
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        
-        .submit-btn:hover {
-            background-color: #0360a8;
-        }
-        
-        .status-available {
-            color: #27ae60;
-            font-weight: bold;
-        }
-        
-        .status-occupied {
-            color: var(--MainRed);
-            font-weight: bold;
-        }
-        
-        .status-maintenance {
-            color: #f39c12;
-            font-weight: bold;
-        }
-        
-        .property-image-preview {
-            max-width: 200px;
-            max-height: 150px;
-            display: block;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    width: 80%;
-    max-width: 800px;
-    position: relative;
-    animation: modalopen 0.4s;
-}
-
-@keyframes modalopen {
-    from {opacity: 0; transform: translateY(-50px)}
-    to {opacity: 1; transform: translateY(0)}
-}
-
-.close-btn {
-    position: absolute;
-    right: 20px;
-    top: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #aaa;
-    cursor: pointer;
-}
-
-.close-btn:hover {
-    color: #333;
-}
-
-/* Darken the background when modal is open */
-body.modal-open {
-    overflow: hidden;
-}
-
-body.modal-open .admin-container {
-    filter: brightness(0.8);
-    pointer-events: none;
-}
-    </style>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+   
+    <script src="../assets/js/delete_property.js"></script>
 </head>
 <body>
     <!-- Background gradient overlay -->
@@ -370,18 +83,6 @@ body.modal-open .admin-container {
                 </thead>
                 <tbody>
                     <?php
-                    // Database connection
-                    $servername = "localhost";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "bahaynikuya_db";
-                    
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-                    
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
-                    
                     // Fetch properties
                     $sql = "SELECT 
                         property_id as id, 
@@ -396,6 +97,7 @@ body.modal-open .admin-container {
                     
                     if ($result->num_rows > 0) {
                         while($row = $result->fetch_assoc()) {
+                            
                             $statusClass = 'status-' . strtolower($row['status']);
                             echo "<tr>
                                 <td>{$row['id']}</td>
@@ -408,9 +110,12 @@ body.modal-open .admin-container {
                                     <button class='action-btn edit-btn' onclick='editProperty({$row['id']})'>
                                         <i class='fas fa-edit'></i> Edit
                                     </button>
+
                                     <button class='action-btn delete-btn' onclick='deleteProperty({$row['id']})'>
                                         <i class='fas fa-trash'></i> Delete
                                     </button>
+
+                                    
                                 </td>
                             </tr>";
                         }
@@ -418,10 +123,11 @@ body.modal-open .admin-container {
                         echo "<tr><td colspan='7'>No properties found</td></tr>";
                     }
                     
-                    $conn->close();
+
                     ?>
                 </tbody>
             </table>
+
         </div>
         
         <!-- Orders Tab -->
@@ -493,7 +199,7 @@ body.modal-open .admin-container {
         <!-- Add Property Tab -->
         <div id="add-property" class="tab-content">
             <h2><i class="fas fa-plus-circle"></i> Add New Property</h2>
-            <form class="add-property-form" action="add_property.php" method="POST" enctype="multipart/form-data">
+            <form class="add-property-form" action="admin_add_property.php" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="name">Property Name:</label>
                     <input type="text" id="name" name="name" required>

@@ -1,422 +1,297 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-.admin_title {
-    position: absolute;
-    top: 10px;
-    font-size: 36px;
-    font-family: fantasy;
-    color: #b39f92;
-    margin-top: 150px;
-    z-index: 1;
-}
 
-/* Sidebar specific styles for admin */
-.sidebar.admin-sidebar {
-    background-color: #b39f92; 
-}
-
-.sidebar.admin-sidebar .sidebar-btn {
-    color: white;
-}
-
-.sidebar.admin-sidebar .sidebar-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #f4f4f4;
-}
-
-/* Logout Button Styling */
-.sidebar.admin-sidebar .logout-btn {
-    background-color: #a34849; 
-    color: white;
-}
-
-.sidebar.admin-sidebar .logout-btn:hover {
-    background-color: #703232;
-}
-
-/* Top Bar for Admin Page */
-.top-panel.admin-top-panel {
-    background-color: #a79488; 
-    color: white;
-    padding: 20px 0;
-    text-align: center; 
-    font-family: 'Montserrat', sans-serif;
-}
-
-/* Logout Button Styling */
-.AdminLogout-btn {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 150px;
-    font-size: 16px;
-    background-color: #a34849;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-/* Logout Button Hover Effect */
-.AdminLogout-btn:hover {
-    background-color: #703232;
-}
-
-/* Button Styling for Admin */
-.main-button.admin-button {
-    font-size: 16px;
-    background-color: #a79488; 
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-align: center;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    width: 100%;
-    font-family: "Times New Roman", serif;
-}
-
-.main-button.admin-button:hover {
-    background-color: #7b6659; 
-}
-
-/* Admin Menu Button Styling */
-.admenu-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px; 
-    margin: 0 auto;
-    width: 100%;
-}
-
-/* Container Styling for Buttons */
-.admin_menu_container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 20px;
-    background-color: white;
+/* Admin-specific styles */
+.admin-container {
+    max-width: 95%; /* Changed from 1200px to percentage for better responsiveness */
+    margin: 30px auto; /* Reduced top margin */
+    padding: 20px; /* Reduced padding */
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-    max-width: 700px;
-    text-align: center;
-}
-
-/* File Input Container Styling */
-.file-input-container {
-    display: flex;
-    flex-direction: row; 
-    align-items: center; 
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px; 
-    width: 100%; 
-    text-align: center; 
-}
-
-.file-input-container label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    color: #333;
-}
-
-.file-input-container input[type="file"] {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    color: #333;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.file-input-container button {
-    flex: 0;
-}
-
-/* Container Styling */
-.AdminContainer {
-    background-color: white;
-    width: 1500px;
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-    margin: 300px auto 20px auto;
-    margin-left: 70px;
-    text-align: left;
-}
-
-/* Center both the form and the table */
-.offerings-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 90%;
-    margin: 0 auto;
-}
-
-.form-container,
-.table-container {
-    width: 80%; 
-    margin-bottom: 20px;
-}
-
-.form-container form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.form-container h4 {
-    grid-column: span 2;
-    text-align: center;
-}
-
-.table-container table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-
-/* Success and Error Messages */
-.success-message {
-    color: #3b7849;
-    font-weight: bold;
-    font-family: 'Montserrat', sans-serif;
-    margin-bottom: 10px;
-}
-
-.error-message {
-    color: #a34849;
-    font-weight: bold;
-    font-family: 'Montserrat', sans-serif;
-    margin-bottom: 10px;
-}
-
-/* General Table Styling */
-.table-container {
-    background-color: #f5f5f5; 
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 100% ;
-    margin: 20px auto;
-    text-align: center;
-    overflow-y: auto; 
-    max-height: 400px; 
-}
-
-/* Table Styling */
-table {
-    border-collapse: collapse;
-    width: 100%;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-collapse: collapse;
-}
-
-table th {
-    background-color: #a79488; 
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 12px 15px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-table td {
-    padding: 12px 15px;
-    text-align: center;
-    border: 1px solid #ddd;
-    color: #5b4941; 
-    word-wrap: break-word;
-}
-
-.table-container th:last-child,
-.table-container td:last-child {
-    width: 250px;
-    text-align: center;
-    overflow: hidden; 
-}
-
-.table-container td:last-child form {
-    display: flex;
-    justify-content: center;
-    gap: 10px; 
-}
-
-table tr:nth-child(even) {
-    background-color: #f5f2f0; 
-}
-
-table tr:nth-child(odd) {
-    background-color: #ffffff; 
-}
-
-/* Cell Styling */
-table td {
-    color: #5b4941; 
-    padding: 12px 15px;
-    text-align: center;
-    border: 1px solid #ddd;
-    word-wrap: break-word;
-}
-
-/* Adjust Container for Tables */
-.table-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 10px 0;
-}
-
-/* File Input Container */
-.file-input-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-/* Start of Login CSS */
-.login_container { 
-    position: relative; 
-    text-align: left; 
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-    width: 350px;
-    height: fit-content;
-    margin-top: 40px;
-    flex-direction: column;
-}
-
-.login_body {
-    background-image: url('for loop justinn.png');
-    font-family: 'Montserrat', Times New Roman, serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     position: relative;
+    box-sizing: border-box; /* Include padding in height calculation */
 }
 
-.login_title {
-    position: absolute;
-    top: 10px;
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--MainYellow);
+    position: relative; /* Needed for absolute positioning of children */
+    min-height: 60px; /* Ensure header has enough height */
+}
+
+.admin-title {
     font-size: 36px;
-    font-family: 'Montserrat';
-    color: #5b8ba4;
-    margin-top: 150px;
-    z-index: 1;
+    color: var(--MainBlue);
+    font-family: var(--DefaultHeaderFont);
+    letter-spacing: 1px;
+    margin: 0; /* Remove default margins */
 }
 
-.login_subtitle {
-    margin: 0;
-    padding-bottom: 10px;
-    color: #333;
-    font-family: 'Montserrat', Times New Roman, serif;
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 24px;
+.logout-btn {
+    background-color: var(--MainRed);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--DefaultFont);
+    font-weight: bold;
+    transition: background-color 0.3s;
+    position: absolute; /* Changed to absolute positioning */
+    bottom: 20px; /* Position at bottom */
+    right: 20px; /* Position at right */
 }
 
-.login_separator {
-    border-top: 2px solid #ccc;
-    margin-top: 40px;
+.logout-btn:hover {
+    background-color: #c11a1f;
+}
+
+.admin-tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tab-btn {
+    padding: 12px 25px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-family: var(--DefaultFont);
+    font-weight: bold;
+    color: #555;
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    border-bottom: 3px solid var(--MainBlue);
+    color: var(--MainBlue);
+}
+
+.tab-btn:hover:not(.active) {
+    color: var(--MainRed);
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s;
+    min-height: 300px; /* Minimum height for empty tabs */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.tab-content.active {
+    display: block;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: var(--MainBlue);
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.action-btn {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.edit-btn {
+    background-color: var(--MainYellow);
+    color: black;
+}
+
+.edit-btn:hover {
+    background-color: #e6c900;
+}
+
+.delete-btn {
+    background-color: var(--MainRed);
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c11a1f;
+}
+
+.add-property-form {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
     margin-bottom: 20px;
 }
 
-.AdminLogin_button {
+.form-group label {
     display: block;
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    margin-top: 5px;
-    font-size: 16px;
-    font-family: "Times New Roman", serif;
-    border: none;
-    border-radius: 5px;
-    background-color: #a79488;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--MainBlue);
 }
 
-.AdminLogin_button:hover {
-    background-color:#7b6659;
-}
-
-.login_input[type="text"],
-.login_input[type="password"] {
+.form-group input, 
+.form-group textarea, 
+.form-group select {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-family: "Times New Roman", serif;
-    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: var(--DefaultFont);
 }
 
-.login_label {
-    font-family: 'Montserrat', Times New Roman, serif;
-    margin-top: 10px;
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.submit-btn {
+    background-color: var(--MainBlue);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #0360a8;
+}
+
+.status-available {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.status-occupied {
+    color: var(--MainRed);
+    font-weight: bold;
+}
+
+.status-maintenance {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.property-image-preview {
+    max-width: 200px;
+    max-height: 150px;
     display: block;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-.login_formDiv {
-    margin-top: 20px;
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-weight: bold;
 }
 
-.login_form {
-    display: flex;  
-    flex-direction: column; 
-    align-items: flex-start; 
-    gap: 0px; 
-    width: 100%; 
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
-/* End of Login CSS */
 
-/* Checkbox container for prerequisites */
-.checkbox-container {
-    display: flex;
-    flex-wrap: wrap; 
-    gap: 10px; 
-    max-width: 100%; 
-    max-height: 200px; 
-    overflow-y: auto; 
-    background-color: #f9f9f9;
-    padding: 15px; 
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
     border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 80%;
+    max-width: 800px;
+    position: relative;
+    animation: modalopen 0.4s;
 }
 
-.checkbox-item {
-    
-    align-items: center; 
-    gap: 5px; 
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
+@keyframes modalopen {
+    from {opacity: 0; transform: translateY(-50px)}
+    to {opacity: 1; transform: translateY(0)}
+}
+
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+/* Darken the background when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+body.modal-open .admin-container {
+    filter: brightness(0.8);
+    pointer-events: none;
 }
