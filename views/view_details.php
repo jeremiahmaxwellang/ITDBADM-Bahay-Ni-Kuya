@@ -2,6 +2,9 @@
 // Database configuration
 require_once('../includes/dbconfig.php');
 
+ // Start the session to store the cart data
+session_start();
+
 // Get the property ID
 $property_id = isset($_GET['property_id']) ? intval($_GET['property_id']) : 0;
 $property = null;
@@ -95,7 +98,8 @@ $conn->close();
                         ?>
                     </p>
 
-                    <form method="POST" action="add_to_cart.php" style="margin-top: 20px;" onsubmit="return checkPropertyStatus()">
+                    <!-- Add to Cart Form -->
+                    <form method="POST" action="shopping_cart.php" style="margin-top: 20px;" onsubmit="return checkPropertyStatus()">
                         <input type="hidden" name="property_id" value="<?php echo $property['property_id']; ?>">
                         <button type="submit" style="background-color: red; color: white; border: none; padding: 12px 24px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer;">
                             ADD TO CART
@@ -132,7 +136,7 @@ $conn->close();
         </div>
         
         <div class="copyright">
-            <p>&copy; 2023 Prime Properties. All rights reserved.</p>
+            <p>&copy; 2023 Very Good Properties. All rights are not reserved.</p>
         </div>
     </footer>
 </body>

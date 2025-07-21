@@ -2,46 +2,102 @@
 session_start();
 
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "itmosys_db";
+require_once('../includes/dbconfig.php');
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Handle item removal
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
-    $propertyId = (int)$_POST['remove_item'];
-    if (isset($_SESSION['cart'][$propertyId])) {
-        unset($_SESSION['cart'][$propertyId]);
-    }
-}
-
-// Initialize cart if it doesn't exist
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
-}
-
-// Get cart items details from database
+// Initialize $cartItems and $totalPrice
 $cartItems = [];
 $totalPrice = 0;
 
-if (!empty($_SESSION['cart'])) {
-    $cartIds = implode(',', array_keys($_SESSION['cart']));
-    $result = $conn->query("SELECT * FROM properties WHERE id IN ($cartIds)");
-    
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $cartItems[] = $row;
-            $totalPrice += $row['price'];
+// Check if user is logged in
+if (!isset($_SESSION['user_email'])) {
+    // If the user is not logged in, redirect to the login page
+    header("Location: login.php");
+    exit();
+}
+
+// Get the logged-in user's email from the session
+$userEmail = $_SESSION['user_email'];  // Make sure you are storing the user's email in the session
+
+// Function to handle adding items to the cart
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['property_id'])) {
+    $propertyId = (int)$_POST['property_id'];
+
+    // Check if the property ID is valid
+    if ($propertyId > 0) {
+        // Initialize cart if it doesn't exist
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+
+        // Add property to the cart
+        if (!isset($_SESSION['cart'][$propertyId])) {
+            $_SESSION['cart'][$propertyId] = 1;  // Assuming the user is adding one item at a time
+        } else {
+            $_SESSION['cart'][$propertyId] += 1;  // Increment the quantity if the item is already in the cart
+        }
+
+        // Create a new order in the database if it's the first item being added to the cart
+        if (count($_SESSION['cart']) == 1) {
+            $currencyId = 1;  // Set the currency ID (replace with appropriate logic)
+            $totalAmount = 0;
+
+            // Calculate the total amount for the cart
+            foreach ($_SESSION['cart'] as $id => $quantity) {
+                $stmt = $conn->prepare("SELECT price FROM properties WHERE property_id = ?");
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if ($row = $result->fetch_assoc()) {
+                    $totalAmount += $row['price'] * $quantity;
+                }
+            }
+
+            // Insert a new order into the orders table
+            $stmt = $conn->prepare("INSERT INTO orders (email, order_date, total_amount, currency_id) VALUES (?, CURDATE(), ?, ?)");
+            $stmt->bind_param("sdi", $userEmail, $totalAmount, $currencyId);
+            $stmt->execute();
+            $orderId = $stmt->insert_id;  // Get the last inserted order ID
+
+            // Add each item in the cart to the order_items table
+            foreach ($_SESSION['cart'] as $id => $quantity) {
+                $stmt = $conn->prepare("INSERT INTO order_items (order_id, property_id, quantity) VALUES (?, ?, ?)");
+                $stmt->bind_param("iii", $orderId, $id, $quantity);
+                $stmt->execute();
+            }
         }
     }
+}
+
+// Handle removing an item from the cart
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
+    $removePropertyId = (int)$_POST['remove_item'];
+
+    // Remove the item from the session cart
+    if (isset($_SESSION['cart'][$removePropertyId])) {
+        unset($_SESSION['cart'][$removePropertyId]);
+
+        // If the item has been removed from the cart, we also remove it from the order_items table
+        $stmt = $conn->prepare("DELETE FROM order_items WHERE property_id = ? AND order_id IN (SELECT order_id FROM orders WHERE email = ? AND is_confirmed = 'N')");
+        $stmt->bind_param("is", $removePropertyId, $userEmail);
+        $stmt->execute();
+    }
+}
+
+// Populate $cartItems for display
+if (!empty($_SESSION['cart'])) {
+    $cartIds = implode(',', array_keys($_SESSION['cart']));
+    $result = $conn->query("SELECT * FROM properties WHERE property_id IN ($cartIds)");
+    while ($row = $result->fetch_assoc()) {
+        $cartItems[] = $row;
+        $totalPrice += $row['price'] * $_SESSION['cart'][$row['property_id']];
+    }
+}
+
+// Redirect to the property details page
+if (isset($_GET['property_id'])) {
+    $property_id = $_GET['property_id'];
+    header("Location: ../view_details.php?property_id=$property_id");
+    exit();
 }
 
 $conn->close();
@@ -110,14 +166,14 @@ $conn->close();
             <div class="cart-items">
                 <?php foreach ($cartItems as $item): ?>
                     <div class="cart-item">
-                        <img src="<?php echo $item['image_path']; ?>" alt="<?php echo $item['title']; ?>" class="cart-item-image">
+                        <img src="../assets/images/<?php echo $item['photo']; ?>" alt="<?php echo $item['property_name']; ?>" class="cart-item-image">
                         <div class="cart-item-details">
-                            <h3 class="cart-item-title"><?php echo $item['title']; ?></h3>
-                            <p class="cart-item-location"><?php echo $item['location']; ?></p>
+                            <h3 class="cart-item-title"><?php echo $item['property_name']; ?></h3>
+                            <p class="cart-item-location"><?php echo $item['address']; ?></p>
                             <p class="cart-item-price">₱<?php echo number_format($item['price'], 2); ?></p>
                         </div>
-                        <form action="cart.php" method="post">
-                            <input type="hidden" name="remove_item" value="<?php echo $item['id']; ?>">
+                        <form action="shopping_cart.php" method="post">
+                            <input type="hidden" name="remove_item" value="<?php echo $item['property_id']; ?>">
                             <button type="submit" class="remove-btn">Remove</button>
                         </form>
                     </div>
