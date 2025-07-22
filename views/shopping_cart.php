@@ -156,19 +156,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
 $stmt = $conn->prepare("
     SELECT o.order_id 
     FROM orders o
-    WHERE o.email = ? 
-    ORDER BY o.order_date DESC 
-    LIMIT 1
+    LEFT JOIN transaction_log t ON o.order_id = t.order_id
+    WHERE o.email = ? AND o.is_confirmed = 'N'
+    ORDER BY o.order_date DESC
 ");
-
-// $stmt = $conn->prepare("
-//     SELECT o.order_id 
-//     FROM orders o
-//     JOIN transaction_log t ON o.order_id = t.order_id 
-//     WHERE o.email = ? AND t.payment_status = 'unpaid' 
-//     ORDER BY o.order_date DESC 
-//     LIMIT 1
-// ");
 
 if (!$stmt) {
     die("Prepare failed: " . $conn->error);
