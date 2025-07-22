@@ -87,11 +87,11 @@ if ($orderRow = $result->fetch_assoc()) {
 }
 
 // Redirect to the property details page
-if (isset($_GET['property_id'])) {
-    $property_id = $_GET['property_id'];
-    header("Location: ../view_details.php?property_id=$property_id");
-    exit();
-}
+// if (isset($_GET['property_id'])) {
+//     $property_id = $_GET['property_id'];
+//     header("Location: ../view_details.php?property_id=$property_id");
+//     exit();
+// }
 
 $conn->close();
 ?>

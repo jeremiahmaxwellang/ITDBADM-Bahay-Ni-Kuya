@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['property_id'])) {
 
             if ($rowCheck = $resCheck->fetch_assoc()) {
                 // Update quantity on existing item
-                $newQty = $rowCheck['quantity'] + $quantity;
+                $newQty = $_SESSION['cart'][$id]; // This is the total quantity for this item in the session cart
                 $stmtUpdate = $conn->prepare("UPDATE order_items SET quantity = ? WHERE order_id = ? AND property_id = ?");
                 $stmtUpdate->bind_param("iii", $newQty, $orderId, $id);
                 $stmtUpdate->execute();
@@ -208,7 +208,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['property_id'])) {
                     </p>
 
                     <!-- Add to Cart Form -->
-                    <form method="POST" action="shopping_cart.php" style="margin-top: 20px;" onsubmit="return checkPropertyStatus()">
+                    <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'] . (isset($_GET['property_id']) ? '?property_id=' . $_GET['property_id'] : '')); ?>" 
+                    style="margin-top: 20px;" onsubmit="return checkPropertyStatus()">
                         <input type="hidden" name="property_id" value="<?php echo $property['property_id']; ?>">
                         <button type="submit" style="background-color: red; color: white; border: none; padding: 12px 24px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer;">
                             ADD TO CART
