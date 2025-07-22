@@ -88,8 +88,6 @@ $conn->close();
         <ul>
             <li><a class="topNavBar" href="shopping_cart.php">Shopping Cart</a></li>
             <li><a class="topNavBar" href="checkout.php">Checkout Page</a></li>
-            <li><a class="topNavBar" href="#">About Us</a></li>
-            <li><a class="topNavBar" href="#">Contact</a></li>
             <li><a class="topNavBar" onclick="window.location.href='logout.php'">Sign Out</a></li>
         </ul>
     </nav>

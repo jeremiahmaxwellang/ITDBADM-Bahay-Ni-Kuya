@@ -138,7 +138,6 @@ $conn->close();
         <ul>
             <li><a class="navButton" href="property_listing.php">Browse Properties</a></li>
             <li><a class="navButton" href="shopping_cart.php">Your Cart</a></li>
-            <li><a class="navButton" href="#">Contact Us</a></li>
             <li><a class="navButton" onclick="window.location.href='logout.php'">Sign Out</a></li>
         </ul>
     </nav>
