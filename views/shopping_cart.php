@@ -149,7 +149,6 @@ $conn->close();
         <ul>
             <li><a class="navButton" href="property_listing.php">Browse Properties</a></li>
             <li><a class="navButton" href="checkout.php">Checkout</a></li>
-            <li><a class="navButton" href="#">Contact Us</a></li>
             <li><a class="navButton" onclick="window.location.href='logout.php'">Sign Out</a></li>
         </ul>
     </nav>
@@ -199,13 +198,15 @@ $conn->close();
         <?php endif; ?>
     </div>
 
+    <?php /*
     <div class="floating-checkout">
-    <button class="floating-checkout-btn" 
-            onclick="<?php echo !empty($cartItems) ? 'window.location.href=\'checkout.php\'' : 'alert(\'Your cart is empty. Please add properties before checkout.\')'; ?>">
-        <span class="cart-icon">🛒</span>
-        <?php echo !empty($cartItems) ? 'Checkout (₱' . number_format($totalPrice, 2) . ')' : 'Cart Empty'; ?>
-    </button>
+        <button class="floating-checkout-btn" 
+                onclick="<?php echo !empty($cartItems) ? 'window.location.href=\'checkout.php\'' : 'alert(\'Your cart is empty. Please add properties before checkout.\')'; ?>">
+            <span class="cart-icon">🛒</span>
+            <?php echo !empty($cartItems) ? 'Checkout (₱' . number_format($totalPrice, 2) . ')' : 'Cart Empty'; ?>
+        </button>
     </div>
+*/ ?>
 
     <footer>
         <div class="footer-content">
