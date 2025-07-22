@@ -19,6 +19,7 @@
     align-items: flex-start;
     margin-bottom: 30px;
     padding-bottom: 15px;
+    padding-top: 100px;
     border-bottom: 2px solid var(--MainYellow);
     position: relative; /* Needed for absolute positioning of children */
     min-height: 60px; /* Ensure header has enough height */
@@ -26,6 +27,7 @@
 
 .admin-title {
     font-size: 36px;
+    padding-top: 10px;
     color: var(--MainBlue);
     font-family: var(--DefaultHeaderFont);
     letter-spacing: 1px;
