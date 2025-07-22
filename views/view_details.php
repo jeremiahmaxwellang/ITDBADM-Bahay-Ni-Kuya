@@ -2,8 +2,17 @@
 // Database configuration
 require_once('../includes/dbconfig.php');
 
- // Start the session to store the cart data
+// Start the session to store the cart data
 session_start();
+
+// Ensure user is logged in
+if (!isset($_SESSION['user_email'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Get the user's email from the session
+$userEmail = $_SESSION['user_email'];
 
 // Get the property ID
 $property_id = isset($_GET['property_id']) ? intval($_GET['property_id']) : 0;
@@ -17,8 +26,108 @@ if ($property_id > 0) {
     if ($result && $result->num_rows > 0) {
         $property = $result->fetch_assoc();
     }
+    $stmt->close();
 }
-$conn->close();
+
+// Handle adding items to the cart
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['property_id'])) {
+    $propertyId = (int)$_POST['property_id'];
+
+    // Check if the property ID is valid
+    if ($propertyId > 0) {
+        // Initialize cart if it doesn't exist
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+
+        // Add property to the cart
+        if (!isset($_SESSION['cart'][$propertyId])) {
+            $_SESSION['cart'][$propertyId] = 1;  // Assuming the user is adding one item at a time
+        } else {
+            $_SESSION['cart'][$propertyId] += 1;  // Increment the quantity if the item is already in the cart
+        }
+
+        // Check if an unpaid order exists for this user
+        $stmt = $conn->prepare("
+            SELECT o.order_id 
+            FROM orders o
+            JOIN transaction_log t ON o.order_id = t.order_id 
+            WHERE o.email = ? AND t.payment_status = 'unpaid' 
+            ORDER BY o.order_date DESC 
+            LIMIT 1
+        ");
+        $stmt->bind_param("s", $userEmail);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orderId = null;
+
+        if ($orderRow = $result->fetch_assoc()) {
+            $orderId = $orderRow['order_id'];
+        } else {
+            // Create a new order if no unpaid order exists
+            if (count($_SESSION['cart']) == 1) {
+                $currencyId = 1;  // Set the currency ID (replace with appropriate logic)
+                $totalAmount = 0;
+
+                // Calculate the total amount for the cart
+                foreach ($_SESSION['cart'] as $id => $quantity) {
+                    $stmt2 = $conn->prepare("SELECT price FROM properties WHERE property_id = ?");
+                    $stmt2->bind_param("i", $id);
+                    $stmt2->execute();
+                    $res = $stmt2->get_result();
+                    if ($row2 = $res->fetch_assoc()) {
+                        $totalAmount += $row2['price'] * $quantity;
+                    }
+                    $stmt2->close();
+                }
+
+                // Insert a new order into the orders table
+                $stmtInsert = $conn->prepare("INSERT INTO orders (email, order_date, total_amount, currency_id) VALUES (?, CURDATE(), ?, ?)");
+                $stmtInsert->bind_param("sdi", $userEmail, $totalAmount, $currencyId);
+                $stmtInsert->execute();
+                $orderId = $stmtInsert->insert_id;
+
+                // Insert unpaid entry in transaction_log
+                $stmtTrans = $conn->prepare("INSERT INTO transaction_log (order_id, payment_status) VALUES (?, 'unpaid')");
+                $stmtTrans->bind_param("i", $orderId);
+                $stmtTrans->execute();
+
+                $stmtInsert->close();
+                $stmtTrans->close();
+            }
+        }
+        $stmt->close();
+
+        // Sync session cart with order_items table
+        foreach ($_SESSION['cart'] as $id => $quantity) {
+            // Check if order_item exists
+            $stmtCheck = $conn->prepare("SELECT quantity FROM order_items WHERE order_id = ? AND property_id = ?");
+            $stmtCheck->bind_param("ii", $orderId, $id);
+            $stmtCheck->execute();
+            $resCheck = $stmtCheck->get_result();
+
+            if ($rowCheck = $resCheck->fetch_assoc()) {
+                // Update quantity on existing item
+                $newQty = $rowCheck['quantity'] + $quantity;
+                $stmtUpdate = $conn->prepare("UPDATE order_items SET quantity = ? WHERE order_id = ? AND property_id = ?");
+                $stmtUpdate->bind_param("iii", $newQty, $orderId, $id);
+                $stmtUpdate->execute();
+                $stmtUpdate->close();
+            } else {
+                // Insert new item
+                $stmtInsertItem = $conn->prepare("INSERT INTO order_items (order_id, property_id, quantity) VALUES (?, ?, ?)");
+                $stmtInsertItem->bind_param("iii", $orderId, $id, $quantity);
+                $stmtInsertItem->execute();
+                $stmtInsertItem->close();
+            }
+            $stmtCheck->close();
+        }
+
+        // Redirect after POST
+        header("Location: shopping_cart.php");
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
