@@ -34,3 +34,23 @@ SHOW GRANTS FOR 'staff'@'%';
 -- 1. Repair Aria Tables
 REPAIR TABLE mysql.host USE_FRM;
 REPAIR TABLE mysql.user USE_FRM;
+
+
+-- 2. Test Staff permissions
+
+-- -- Expected result: FAIL
+-- -- INSERT command denied to user 'staff'@'localhost' for table `bahaynikuya_db`.`properties`
+-- INSERT INTO bahaynikuya_db.properties(property_id, property_name, address, price, description, offer_type, photo)
+-- VALUES
+
+-- (7, "Klarisse", "Cavite", 1999999.99, "Affordable property for sale in Cavite, perfect for families or investors looking for a growing community with easy access to Metro Manila and nearby commercial hubs.", 'Sold', "../assets/images/klarisse.jpg")
+-- ;
+
+-- -- Expected result: SUCCESS
+-- SELECT * FROM bahaynikuya_db.properties;
+
+-- -- Expected result: FAIL
+-- -- INSERT command denied to user 'staff'@'localhost' for table `bahaynikuya_db`.`currencies`
+-- INSERT INTO bahaynikuya_db.currencies(currency_id, currency_code, symbol, exchange_rate_to_usd)
+-- VALUES
+-- (10, "TRY", "₱", 57.18);
