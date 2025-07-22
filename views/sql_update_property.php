@@ -26,14 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Update property
-    $stmt = $conn->prepare("UPDATE properties SET 
-    property_name=?, 
-    address=?, 
-    price=?, 
-    description=?,
-    photo=?
-    WHERE property_id=?");
-    $stmt->bind_param("ssdssi", $name, $address, $price, $description, $photo, $id);
+    // $stmt = $conn->prepare("UPDATE properties SET 
+    // property_name=?, 
+    // address=?, 
+    // price=?, 
+    // description=?,
+    // photo=?
+    // WHERE property_id=?");
+    // $stmt->bind_param("ssdssi", $name, $address, $price, $description, $photo, $id);
+
+    // STORED PROCEDURE: sp_update_property
+    $stmt = $conn->prepare("CALL sp_update_property(?, ?, ?, ?, ?, 'For Sale')");
+    $stmt->bind_param("issds", $id, $name, $address, $price, $description);
+
     
     if ($stmt->execute()) {
         $_SESSION['admin_message'] = "Property updated successfully";
