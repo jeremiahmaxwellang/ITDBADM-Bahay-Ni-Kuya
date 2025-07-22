@@ -36,6 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['property_id'])) {
             $_SESSION['cart'][$propertyId] += 1;  // Increment the quantity if the item is already in the cart
         }
 
+        // Check if an unpaid order exists for this user
+        $stmt = $conn->prepare("
+            SELECT o.order_id 
+            FROM orders o
+            JOIN transaction_log t ON o.order_id = t.order_id 
+            WHERE o.email = ? AND t.payment_status = 'unpaid' 
+            ORDER BY o.order_date DESC 
+            LIMIT 1
+        ");
+        if (!$stmt) { die("Prepare failed: " . $conn->error); }
+        $stmt->bind_param("s", $userEmail);
+        if (!$stmt->execute()) { die("Execute failed: " . $stmt->error); }
+        $result = $stmt->get_result();
+
+        if ($orderRow = $result->fetch_assoc()) {
+            $orderId = $orderRow['order_id'];
+        } else {
         // Create a new order in the database if it's the first item being added to the cart
         if (count($_SESSION['cart']) == 1) {
             $currencyId = 1;  // Set the currency ID (replace with appropriate logic)
@@ -43,27 +60,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['property_id'])) {
 
             // Calculate the total amount for the cart
             foreach ($_SESSION['cart'] as $id => $quantity) {
-                $stmt = $conn->prepare("SELECT price FROM properties WHERE property_id = ?");
-                $stmt->bind_param("i", $id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                if ($row = $result->fetch_assoc()) {
-                    $totalAmount += $row['price'] * $quantity;
+                $stmt2 = $conn->prepare("SELECT price FROM properties WHERE property_id = ?");
+                if (!$stmt2) { die("Prepare failed: " . $conn->error); }
+                $stmt2->bind_param("i", $id);
+                $stmt2->execute();
+                $res = $stmt2->get_result();
+                if ($row2 = $res->fetch_assoc()) {
+                    $totalAmount += $row2['price'] * $quantity;
                 }
+                $stmt2->close();
             }
 
             // Insert a new order into the orders table
-            $stmt = $conn->prepare("INSERT INTO orders (email, order_date, total_amount, currency_id) VALUES (?, CURDATE(), ?, ?)");
-            $stmt->bind_param("sdi", $userEmail, $totalAmount, $currencyId);
-            $stmt->execute();
-            $orderId = $stmt->insert_id;  // Get the last inserted order ID
+            $stmtInsert = $conn->prepare("INSERT INTO orders (email, order_date, total_amount, currency_id) VALUES (?, CURDATE(), ?, ?)");
+            if (!$stmtInsert) { die("Prepare failed: " . $conn->error); }
+            $stmtInsert->bind_param("sdi", $userEmail, $totalAmount, $currencyId);
+            if (!$stmtInsert->execute()) { die("Execute failed: " . $stmtInsert->error); }
+            // $stmt->execute();
+            $orderId = $stmtInsert->insert_id;  // Get the last inserted order ID
 
-            // Add each item in the cart to the order_items table
-            foreach ($_SESSION['cart'] as $id => $quantity) {
-                $stmt = $conn->prepare("INSERT INTO order_items (order_id, property_id, quantity) VALUES (?, ?, ?)");
-                $stmt->bind_param("iii", $orderId, $id, $quantity);
-                $stmt->execute();
+            // Insert unpaid entry in transaction_log
+            $stmtTrans = $conn->prepare("INSERT INTO transaction_log (order_id, payment_status) VALUES (?, 'unpaid')");
+            if (!$stmtTrans) { die("Prepare failed: " . $conn->error); }
+            $stmtTrans->bind_param("i", $orderId);
+            if (!$stmtTrans->execute()) { die("Execute failed: " . $stmtTrans->error); }
+            
+            $stmtInsert->close();
+            $stmtTrans->close();
+        }
+        $stmt->close();
+
+
+            // Sync session cart with order_items table
+        foreach ($_SESSION['cart'] as $id => $quantity) {
+            // Check if order_item exists
+            $stmtCheck = $conn->prepare("SELECT quantity FROM order_items WHERE order_id = ? AND property_id = ?");
+            if (!$stmtCheck) { die("Prepare failed: " . $conn->error); }
+            $stmtCheck->bind_param("ii", $orderId, $id);
+            $stmtCheck->execute();
+            $resCheck = $stmtCheck->get_result();
+
+            if ($rowCheck = $resCheck->fetch_assoc()) {
+                // Update quantity on existing item
+                $newQty = $quantity; // Or add to existing quantity: $rowCheck['quantity'] + $quantity;
+                $stmtUpdate = $conn->prepare("UPDATE order_items SET quantity = ? WHERE order_id = ? AND property_id = ?");
+                if (!$stmtUpdate) { die("Prepare failed: " . $conn->error); }
+                $stmtUpdate->bind_param("iii", $newQty, $orderId, $id);
+                if (!$stmtUpdate->execute()) { die("Execute failed: " . $stmtUpdate->error); }
+                $stmtUpdate->close();
+            } else {
+                // Insert new item
+                $stmtInsertItem = $conn->prepare("INSERT INTO order_items (order_id, property_id, quantity) VALUES (?, ?, ?)");
+                if (!$stmtInsertItem) { die("Prepare failed: " . $conn->error); }
+                $stmtInsertItem->bind_param("iii", $orderId, $id, $quantity);
+                if (!$stmtInsertItem->execute()) { die("Execute failed: " . $stmtInsertItem->error); }
+                $stmtInsertItem->close();
             }
+            $stmtCheck->close();
+        }
+
+        // Redirect after POST
+        header("Location: shopping_cart.php");
+        exit();
         }
     }
 }
@@ -98,13 +156,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
 $stmt = $conn->prepare("
     SELECT o.order_id 
     FROM orders o
-    JOIN transaction_log t ON o.order_id = t.order_id 
-    WHERE o.email = ? AND t.payment_status = 'unpaid' 
+    WHERE o.email = ? 
     ORDER BY o.order_date DESC 
     LIMIT 1
 ");
 
-$stmt->execute();
+// $stmt = $conn->prepare("
+//     SELECT o.order_id 
+//     FROM orders o
+//     JOIN transaction_log t ON o.order_id = t.order_id 
+//     WHERE o.email = ? AND t.payment_status = 'unpaid' 
+//     ORDER BY o.order_date DESC 
+//     LIMIT 1
+// ");
+
+if (!$stmt) {
+    die("Prepare failed: " . $conn->error);
+}
+
+$stmt->bind_param("s", $userEmail);  // Bind the email parameter, string type
+
+if (!$stmt->execute()) {
+    die("Execute failed: " . $stmt->error);
+}
+
 $result = $stmt->get_result();
 
 if ($orderRow = $result->fetch_assoc()) {
