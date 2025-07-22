@@ -95,30 +95,32 @@ $conn->close();
     </nav>
 
     <div class="container">
-        <div class="search-bar">
-            <div class="properties-header">
-                <h2>Featured Properties</h2>
-                <p class="properties-count">
-                    <?php
-                    if ($properties === false) {
-                        echo "Table 'properties' does not exist";
-                    } else {
-                        echo count($properties) . " properties available";
-                    }
-                    ?>
-                </p>
+            <div class="search-bar">
+                <div class="properties-header">
+                    <h2>Featured Properties</h2>
+                    <p class="properties-count">
+                        <?php
+                        if ($properties === false) {
+                            echo "Table 'properties' does not exist";
+                        } else {
+                            echo count($properties) . " properties available";
+                        }
+                        ?>
+                    </p>
+                </div>
+                <div class="searchbar-section">
+                        <form action="#" method="GET">
+                    <input type="text" name="search_location" placeholder="Search by location." value="<?php echo htmlspecialchars($search_location); ?>">
+                    <select name="price_filter">
+                        <option value="">Any Price</option>
+                        <option value="1" <?php if ($_GET['price_filter'] === '1') echo 'selected'; ?>>Under ₱5M</option>
+                        <option value="2" <?php if ($_GET['price_filter'] === '2') echo 'selected'; ?>>₱5M - ₱10M</option>
+                        <option value="3" <?php if ($_GET['price_filter'] === '3') echo 'selected'; ?>>Over ₱10M</option>
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
+                </div>
             </div>
-            <form action="#" method="GET">
-                <input type="text" name="search_location" placeholder="Search by location." value="<?php echo htmlspecialchars($search_location); ?>">
-                <select name="price_filter">
-                    <option value="">Any Price</option>
-                    <option value="1" <?php if ($_GET['price_filter'] === '1') echo 'selected'; ?>>Under ₱5M</option>
-                    <option value="2" <?php if ($_GET['price_filter'] === '2') echo 'selected'; ?>>₱5M - ₱10M</option>
-                    <option value="3" <?php if ($_GET['price_filter'] === '3') echo 'selected'; ?>>Over ₱10M</option>
-                </select>
-                <button type="submit">Search</button>
-            </form>
-        </div>
 
         <?php if ($properties === false): ?>
             <div class="no-properties">
@@ -129,7 +131,7 @@ $conn->close();
             <div class="properties-grid">
                 <?php foreach ($properties as $property): ?>
                     <div class="property-card">
-                        <img src="../assets/images/<?php echo htmlspecialchars($property['photo']); ?>" alt="<?php echo htmlspecialchars($property['property_name']); ?>" class="property-image">
+                        <img src="<?php echo htmlspecialchars($property['photo']); ?>" alt="<?php echo htmlspecialchars($property['property_name']); ?>" class="property-image">
                         <div class="property-details">
                             <h3 class="property-title"><?php echo htmlspecialchars($property['property_name']); ?></h3>
                             <p class="property-location"><?php echo htmlspecialchars($property['address']); ?></p>

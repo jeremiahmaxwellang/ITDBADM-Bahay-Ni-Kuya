@@ -136,6 +136,14 @@ nav ul li a {
     padding: 0 20px;
 }
 
+.searchbar-section {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap; /* Ensures elements stay in a single line */
+    justify-content: center;
+    width: 100%;
+}
+
 .search-bar {
     background-color: white;
     padding: 20px;
@@ -144,18 +152,12 @@ nav ul li a {
     margin-bottom: 30px;
 }
 
-.search-bar form {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
 .search-bar input, .search-bar select {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     flex-grow: 1;
-    min-width: 200px;
+    width: 200px;
 }
 
 .search-bar button {
