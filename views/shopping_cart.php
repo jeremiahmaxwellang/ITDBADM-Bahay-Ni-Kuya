@@ -198,13 +198,15 @@ $conn->close();
         <?php endif; ?>
     </div>
 
+    <?php /*
     <div class="floating-checkout">
-    <button class="floating-checkout-btn" 
-            onclick="<?php echo !empty($cartItems) ? 'window.location.href=\'checkout.php\'' : 'alert(\'Your cart is empty. Please add properties before checkout.\')'; ?>">
-        <span class="cart-icon">🛒</span>
-        <?php echo !empty($cartItems) ? 'Checkout (₱' . number_format($totalPrice, 2) . ')' : 'Cart Empty'; ?>
-    </button>
+        <button class="floating-checkout-btn" 
+                onclick="<?php echo !empty($cartItems) ? 'window.location.href=\'checkout.php\'' : 'alert(\'Your cart is empty. Please add properties before checkout.\')'; ?>">
+            <span class="cart-icon">🛒</span>
+            <?php echo !empty($cartItems) ? 'Checkout (₱' . number_format($totalPrice, 2) . ')' : 'Cart Empty'; ?>
+        </button>
     </div>
+*/ ?>
 
     <footer>
         <div class="footer-content">
