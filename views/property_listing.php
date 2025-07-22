@@ -1,10 +1,14 @@
 <?php
+session_start();
 // Database configuration
 require_once('../includes/dbconfig.php');
 
 // Get search input
 $search_location = isset($_GET['search_location']) ? trim($_GET['search_location']) : '';
 $price_filter = isset($_GET['price_filter']) ? $_GET['price_filter'] : '';
+
+// Count items in cart
+$cartCount = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
 
 // Check if 'properties' table exists
 $tableExists = false;
@@ -80,7 +84,7 @@ $conn->close();
         <p>Finding your dream home with us is easier than surviving Kuya’s weekly eviction!</p>
         <a href="shopping_cart.php" class="cart-button">
         <span>Cart 🛒</span>
-        <span class="cart-count">0</span>
+        <span class="cart-count"><?php echo $cartCount; ?></span>
         </a>
     </header>
 
@@ -137,7 +141,6 @@ $conn->close();
                             <p class="property-location"><?php echo htmlspecialchars($property['address']); ?></p>
                             <p class="property-price">₱<?php echo number_format($property['price'], 2); ?></p>
                             <div class="property-features">
-                                <!-- You may want to add dynamic features here if available -->
                                 <span><?php echo htmlspecialchars($property['offer_type']); ?></span>
                             </div>
                             <a href="view_details.php?property_id=<?php echo $property['property_id']; ?>" class="view-details">View Details</a>
