@@ -1,3 +1,10 @@
+-- Bahay Ni Kuya STORED PROCEDURES SCRIPT
+
+-- ITDBADM S13 Group 7 Project
+-- Jeremiah Ang, Charles Duelas, Justin Lee, Marcus Mendoza
+
+USE bahaynikuya_db;
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_convert_currency (
@@ -31,6 +38,8 @@ END
 
 $$ DELIMITER ;
 
+USE bahaynikuya_db;
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_search_properties(
@@ -46,6 +55,8 @@ BEGIN
 END
 
 $$ DELIMITER ;
+
+USE bahaynikuya_db;
 
 DELIMITER $$
 
@@ -65,6 +76,9 @@ END
 
 $$ DELIMITER ;
 
+
+USE bahaynikuya_db;
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_add_order_item(
@@ -78,6 +92,9 @@ BEGIN
 END
 
 $$ DELIMITER ;
+
+
+USE bahaynikuya_db;
 
 DELIMITER $$
 
@@ -109,6 +126,9 @@ BEGIN
 END
 
 $$ DELIMITER ;
+
+
+USE bahaynikuya_db;
 
 DELIMITER $$
 

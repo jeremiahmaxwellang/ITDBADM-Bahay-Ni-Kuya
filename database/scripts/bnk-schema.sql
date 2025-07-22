@@ -131,6 +131,8 @@ CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`transaction_log` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+ALTER TABLE `bahaynikuya_db`.`transaction_log` 
+MODIFY transaction_id INT AUTO_INCREMENT NOT NULL;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

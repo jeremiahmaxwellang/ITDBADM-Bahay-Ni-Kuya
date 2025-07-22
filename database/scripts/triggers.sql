@@ -1,4 +1,7 @@
-USE bahaynikuya_db;
+-- Bahay Ni Kuya TRIGGERS SCRIPT
+
+-- ITDBADM S13 Group 7 Project
+-- Jeremiah Ang, Charles Duelas, Justin Lee, Marcus Mendoza
 
 
 -- -----------------------------------------------------

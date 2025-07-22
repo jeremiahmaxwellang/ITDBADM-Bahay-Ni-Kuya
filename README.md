@@ -13,6 +13,10 @@ Bahay Ni Kuya is a website where users can purchase houses and view pertinent de
 
 ### Installation
 
+* Quick tutorial on installing XAMPP on Windows 10/11:
+[https://www.youtube.com/watch?v=VCHXCusltqI](https://www.youtube.com/watch?v=VCHXCusltqI)
+
+
 * Download ZIP of main branch on GitHub
 * Extract the project folder to your ```xampp/htdocs``` folder
 * To find the htdocs folder, open your XAMPP Control Panel and press [Explorer] to open
@@ -56,6 +60,7 @@ localhost/ITDBADM-Bahay-Ni-Kuya/views/login.php
 
 ## Help
 
+### Issue: Cannot Start MySQL on XAMPP
 * If XAMPP cannot start the MySQL service, try:
 - Opening Task Manager
 ```
@@ -70,6 +75,26 @@ then wait for the terminal to display the following:
 2:22:04 PM  [mysql] 	Attempting to start MySQL app...
 2:22:04 PM  [mysql] 	Status change detected: running
 ```
+
+### Issue: Cannot Switch Users (Admin/Staff) on myphpadmin
+* Download latest version of myphpadmin
+[https://www.phpmyadmin.net/files/5.2.2/](https://www.phpmyadmin.net/files/5.2.2/)
+
+* Delete the old ```xampp/phpMyAdmin``` folder
+
+* Unzip the newly downloaded ```phpMyAdmin-5.2.2-all-languages``` folder 
+
+* Rename the folder into ```phpMyAdmin```
+
+* Move the folder into the ```xamp`` folder
+
+* On your browser, enter the following URL:
+```
+http://localhost/phpmyadmin/index.php?route=/
+```
+
+* Username: root
+* Password: (leave it blank)
 
 
 ## Authors
