@@ -5,7 +5,7 @@ session_start();
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "itmosys_db";
+$dbname = "bahaynikuya_db";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -29,7 +29,7 @@ $serviceFee = 0;
 
 if (!empty($_SESSION['cart'])) {
     $cartIds = implode(',', array_keys($_SESSION['cart']));
-    $result = $conn->query("SELECT * FROM properties WHERE id IN ($cartIds)");
+    $result = $conn->query("SELECT * FROM properties WHERE property_id IN ($cartIds)");
     
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -162,10 +162,12 @@ $conn->close();
                     <div class="cart-items">
                         <?php foreach ($cartItems as $item): ?>
                             <div class="cart-item">
-                                <img src="<?php echo $item['image_path']; ?>" alt="<?php echo $item['title']; ?>" class="cart-item-image">
+                                <img src="../assets/images/<?php echo htmlspecialchars($item['photo']); ?>"
+                                alt="<?php echo htmlspecialchars($item['property_name']); ?>"
+                                class="cart-item-image">
                                 <div class="cart-item-details">
-                                    <h3 class="cart-item-title"><?php echo $item['title']; ?></h3>
-                                    <p class="cart-item-location"><?php echo $item['location']; ?></p>
+                                    <h3 class="cart-item-title"><?php echo $item['property_name']; ?></h3>
+                                    <p class="cart-item-location"><?php echo $item['address']; ?></p>
                                     <p class="cart-item-price">
                                         <span class="currency-symbol">
                                             <?php 
