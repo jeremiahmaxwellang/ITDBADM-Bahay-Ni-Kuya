@@ -8,7 +8,7 @@
 -- Creating an ADMIN user and granting FULL ACCESS to the db
 CREATE USER 'admin'@'%' IDENTIFIED BY 'adminpassword';
 GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
+-- FLUSH PRIVILEGES; -- not working on myphpadmin
 
 -- Create STAFF user
 CREATE USER 'staff'@'%' IDENTIFIED BY 'staffpassword';
@@ -17,15 +17,8 @@ GRANT SELECT ON bahaynikuya_db.properties TO 'staff'@'%';
 GRANT SELECT ON bahaynikuya_db.orders TO 'staff'@'%';
 GRANT SELECT ON bahaynikuya_db.order_items TO 'staff'@'%';
 
--- Create STAFF user
-CREATE USER 'staff2'@'%' IDENTIFIED BY 'staffpassword';
--- Grant partial access to STAFF (read-only access to properties, orders, and order_items)
-GRANT SELECT ON bahaynikuya_db.properties TO 'staff2'@'%';
-GRANT SELECT ON bahaynikuya_db.orders TO 'staff2'@'%';
-GRANT SELECT ON bahaynikuya_db.order_items TO 'staff2'@'%';
 
-
-FLUSH PRIVILEGES; -- Changes take effect.
+-- FLUSH PRIVILEGES; -- not working on myphpadmin
 
 -- See list of users created in MYSQL
 SELECT user, host FROM mysql.user;

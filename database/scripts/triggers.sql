@@ -4,16 +4,12 @@
 -- Jeremiah Ang, Charles Duelas, Justin Lee, Marcus Mendoza
 
 
--- -----------------------------------------------------
--- Added July 20, 2025
--- -----------------------------------------------------
-
 -- 1. trg_after_order: Logs order completion in transaction_logs table
 USE bahaynikuya_db;
 
 -- NEW is_confirmed column
-ALTER TABLE `bahaynikuya_db`.`orders` 
-ADD `is_confirmed` ENUM('Y', 'N') DEFAULT 'N';
+-- ALTER TABLE `bahaynikuya_db`.`orders` 
+-- ADD `is_confirmed` ENUM('Y', 'N') DEFAULT 'N';
 
 DELIMITER $$
 CREATE TRIGGER trg_after_order
@@ -64,9 +60,7 @@ $$ DELIMITER ;
 -- SET description = 'Testing the new trigger'
 -- WHERE property_id = 1;
 
--- -----------------------------------------------------
--- Added July 21, 2025
--- -----------------------------------------------------
+
 
 -- 3. [ADMIN PANEL] tg_archive_properties: Audits deleted property in a new property_archive table
 USE bahaynikuya_db;
