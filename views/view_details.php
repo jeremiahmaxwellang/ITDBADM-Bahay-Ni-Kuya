@@ -79,7 +79,7 @@ $conn->close();
                     <h1 class="propertyName">
                         <?php echo htmlspecialchars($property['property_name']); ?>
                     </h1>
-                    <img src="../assets/images/<?php echo htmlspecialchars($property['photo']); ?>" alt="Property Image" style="width: 100%; border-radius: 0 0 10px 10px;">
+                    <img src="<?php echo htmlspecialchars($property['photo']); ?>" alt="Property Image" style="width: 100%; border-radius: 20px;">
                     <p class="propertyAddress"><?php echo htmlspecialchars($property['address']); ?></p>
                     <p class="propertyPrice">
                         ₱<?php echo number_format($property['price'], 0); ?>

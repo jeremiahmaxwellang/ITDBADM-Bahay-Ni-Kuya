@@ -276,7 +276,7 @@ $conn->close();
             <div class="cart-items">
                 <?php foreach ($cartItems as $item): ?>
                     <div class="cart-item">
-                        <img src="../assets/images/<?php echo $item['photo']; ?>" alt="<?php echo $item['property_name']; ?>" class="cart-item-image">
+                        <img src="<?php echo $item['photo']; ?>" alt="<?php echo $item['property_name']; ?>" class="cart-item-image">
                         <div class="cart-item-details">
                             <h3 class="cart-item-title"><?php echo $item['property_name']; ?></h3>
                             <p class="cart-item-location"><?php echo $item['address']; ?></p>
