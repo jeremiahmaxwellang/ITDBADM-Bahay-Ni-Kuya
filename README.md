@@ -23,7 +23,7 @@ Bahay Ni Kuya is a website where users can purchase houses and view pertinent de
 the file location of the xampp folder.
 
 ### Running the CREATE SCHEMA SQL script
-1. Under the database/db-design subfolder, find the [bnk-schema.sql] script
+1. Under the ```database/scripts``` subfolder, find the [bnk-schema.sql] script
 2. Open the file in any text editor, then copy all its contents 
 3. Open XAMPP Control panel, then [Start] the MySQL and Apache service
 4. Once the service started, press the [Admin] button beside MySQL
@@ -33,7 +33,7 @@ the file location of the xampp folder.
 
 ### Populating the DATABASE
 1. PREREQUISITE: Ensure the [bahaynikuya_db] schema exists in your phpadmin databases
-2. Under the database/db-design subfolder, find the [bnk-data.sql] script
+2. Under the ```database/scripts``` subfolder, find the [bnk-data.sql] script
 3. Open the file in any text editor, then copy all its contents 
 4. Open XAMPP Control panel, then [Start] the MySQL and Apache service
 5. Once the service started, press the [Admin] button beside MySQL
@@ -77,6 +77,15 @@ then wait for the terminal to display the following:
 ```
 
 ### Issue: Cannot Switch Users (Admin/Staff) on myphpadmin
+
+YouTube Video Tutorial:
+[https://youtu.be/lNcdsK-RUyw](https://youtu.be/lNcdsK-RUyw)
+
+#### Step 1: Create Admin and Staff Accounts
+* Run the ```database/scripts/privileges.sql``` script to create the Admin and Staff accounts
+* Note: the Admin account created will have full privileges to all databases.
+
+#### Step 2: Download myphpadmin 5.2.2
 * Download latest version of myphpadmin
 [https://www.phpmyadmin.net/files/5.2.2/](https://www.phpmyadmin.net/files/5.2.2/)
 
@@ -93,8 +102,15 @@ then wait for the terminal to display the following:
 http://localhost/phpmyadmin/index.php?route=/
 ```
 
-* Username: root
-* Password: (leave it blank)
+* Login using the Admin user you created in Step 1:
+```Username: admin```
+```Password: adminpassword```
+
+* To logout of Admin, press the Logout button on the top left corner below the "myphpadmin" logo
+(The button to the right of the small house icon)
+
+```Username: staff```
+```Password: staffpassword```
 
 
 ## Authors
