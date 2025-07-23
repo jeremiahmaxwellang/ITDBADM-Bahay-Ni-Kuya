@@ -22,14 +22,20 @@ Bahay Ni Kuya is a website where users can purchase houses and view pertinent de
 * To find the htdocs folder, open your XAMPP Control Panel and press [Explorer] to open
 the file location of the xampp folder.
 
-### Running the CREATE SCHEMA SQL script
-1. Under the ```database/scripts``` subfolder, find the [bnk-schema.sql] script
-2. Open the file in any text editor, then copy all its contents 
-3. Open XAMPP Control panel, then [Start] the MySQL and Apache service
-4. Once the service started, press the [Admin] button beside MySQL
+### Creating the DATABASE, PROCEDURES, and TRIGGERS
+#### Step 1: Find the sql scripts in database/scripts
+* Under the ```database/scripts``` subfolder, find the [bnk-schema.sql] script
+
+#### Step 2: Copy paste the script into myphpadmin
+1. Open the file in any text editor, then copy all its contents 
+2. Open XAMPP Control panel, then [Start] the MySQL and Apache service
+3. Once the service started, press the [Admin] button beside MySQL
 5. After you're redirected to the admin page on your browser, click [SQL] on the top of the screen
 6. Paste the sql file contents in the text box, then press [Go] on the bottom right
 7. Refresh the page and the [bahaynikuya_db] schema should be visible on the left side.
+
+#### Step 3: Repeat the steps for stored procedures & triggers
+* Repeat the Steps above for the ```strd-procedurs.sql``` and ```triggers.sql``` script to complete the DB.
 
 ### Populating the DATABASE
 1. PREREQUISITE: Ensure the [bahaynikuya_db] schema exists in your phpadmin databases
@@ -95,7 +101,7 @@ YouTube Video Tutorial:
 
 * Rename the folder into ```phpMyAdmin```
 
-* Move the folder into the ```xamp`` folder
+* Move the folder into the ```xamp``` folder
 
 * On your browser, enter the following URL:
 ```
