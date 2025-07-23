@@ -1,9 +1,9 @@
 <?php
-// Database configuration
-require_once('../includes/dbconfig.php');
-
 // Start the session to store the cart data
 session_start();
+
+// Database configuration
+require_once('../includes/dbconfig.php');
 
 // Ensure user is logged in
 if (!isset($_SESSION['user_email'])) {
@@ -47,56 +47,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['property_id'])) {
             $_SESSION['cart'][$propertyId] += 1;  // Increment the quantity if the item is already in the cart
         }
 
-        // Check if an unpaid order exists for this user
-        $stmt = $conn->prepare("
-            SELECT o.order_id 
-            FROM orders o
-            JOIN transaction_log t ON o.order_id = t.order_id 
-            WHERE o.email = ? AND t.payment_status = 'unpaid' 
-            ORDER BY o.order_date DESC 
-            LIMIT 1
-        ");
+        // Check if unpaid order exists for user
+        $stmt = $conn->prepare("SELECT o.order_id FROM orders o JOIN transaction_log t ON o.order_id=t.order_id WHERE o.email=? AND t.payment_status='unpaid' ORDER BY o.order_date DESC LIMIT 1");
         $stmt->bind_param("s", $userEmail);
         $stmt->execute();
         $result = $stmt->get_result();
-        $orderId = null;
 
-        if ($orderRow = $result->fetch_assoc()) {
-            $orderId = $orderRow['order_id'];
+        if ($result && $row = $result->fetch_assoc()) {
+            $orderId = $row['order_id'];
         } else {
-            // Create a new order if no unpaid order exists
-            if (count($_SESSION['cart']) == 1) {
-                $currencyId = 1;  // Set the currency ID (replace with appropriate logic)
-                $totalAmount = 0;
-
-                // Calculate the total amount for the cart
-                foreach ($_SESSION['cart'] as $id => $quantity) {
-                    $stmt2 = $conn->prepare("SELECT price FROM properties WHERE property_id = ?");
-                    $stmt2->bind_param("i", $id);
-                    $stmt2->execute();
-                    $res = $stmt2->get_result();
-                    if ($row2 = $res->fetch_assoc()) {
-                        $totalAmount += $row2['price'] * $quantity;
-                    }
-                    $stmt2->close();
+            // No unpaid order - create a new one
+            // Calculate total amount from session cart
+            $totalAmount = 0;
+            foreach ($_SESSION['cart'] as $id => $qty) {
+                $stmt2 = $conn->prepare("SELECT price FROM properties WHERE property_id=?");
+                $stmt2->bind_param("i", $id);
+                $stmt2->execute();
+                $res = $stmt2->get_result();
+                if ($r2 = $res->fetch_assoc()) {
+                    $totalAmount += $r2['price'] * $qty;
                 }
-
-                // Insert a new order into the orders table
-                $stmtInsert = $conn->prepare("INSERT INTO orders (email, order_date, total_amount, currency_id) VALUES (?, CURDATE(), ?, ?)");
-                $stmtInsert->bind_param("sdi", $userEmail, $totalAmount, $currencyId);
-                $stmtInsert->execute();
-                $orderId = $stmtInsert->insert_id;
-
-                // Insert unpaid entry in transaction_log
-                $stmtTrans = $conn->prepare("INSERT INTO transaction_log (order_id, payment_status) VALUES (?, 'unpaid')");
-                $stmtTrans->bind_param("i", $orderId);
-                $stmtTrans->execute();
-
-                $stmtInsert->close();
-                $stmtTrans->close();
+                $stmt2->close();
             }
+
+            $currencyId = 1; // Whatever your default is
+            $stmtInsert = $conn->prepare("INSERT INTO orders (email, order_date, total_amount, currency_id) VALUES (?, CURDATE(), ?, ?)");
+            $stmtInsert->bind_param("sdi", $userEmail, $totalAmount, $currencyId);
+            $stmtInsert->execute();
+            $orderId = $stmtInsert->insert_id;
+            $stmtInsert->close();
+
+            $stmtTrans = $conn->prepare("INSERT INTO transaction_log (order_id, payment_status) VALUES (?, 'unpaid')");
+            $stmtTrans->bind_param("i", $orderId);
+            $stmtTrans->execute();
+            $stmtTrans->close();
         }
-        $stmt->close();
+
+        // Now update or insert order_items with the current session cart quantities
+        foreach ($_SESSION['cart'] as $id => $qty) {
+            $stmtCheck = $conn->prepare("SELECT quantity FROM order_items WHERE order_id=? AND property_id=?");
+            $stmtCheck->bind_param("ii", $orderId, $id);
+            $stmtCheck->execute();
+            $resCheck = $stmtCheck->get_result();
+
+            if ($resCheck->fetch_assoc()) {
+                $stmtUpdate = $conn->prepare("UPDATE order_items SET quantity=? WHERE order_id=? AND property_id=?");
+                $stmtUpdate->bind_param("iii", $qty, $orderId, $id);
+                $stmtUpdate->execute();
+                $stmtUpdate->close();
+            } else {
+                $stmtInsertItem = $conn->prepare("INSERT INTO order_items (order_id, property_id, quantity) VALUES (?, ?, ?)");
+                $stmtInsertItem->bind_param("iii", $orderId, $id, $qty);
+                $stmtInsertItem->execute();
+                $stmtInsertItem->close();
+            }
+            $stmtCheck->close();
+        }
+
 
         // Sync session cart with order_items table
         foreach ($_SESSION['cart'] as $id => $quantity) {
@@ -122,6 +129,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['property_id'])) {
             }
             $stmtCheck->close();
         }
+
+        // For debugging
+        error_log('Cart Contents: ' . print_r($_SESSION['cart'], true));
 
         // Redirect after POST
         header("Location: shopping_cart.php");
