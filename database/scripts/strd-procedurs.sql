@@ -48,7 +48,7 @@ CREATE PROCEDURE sp_search_properties(
 BEGIN
     SELECT * FROM properties
     WHERE (address LIKE CONCAT('%', loc, '%') OR loc = '')
-      AND price BETWEEN min_price AND max_price;
+      AND price BETWEEN min_price AND max_price
       -- Removed: AND offer_type = 'For Sale'
 END $$ 
 
