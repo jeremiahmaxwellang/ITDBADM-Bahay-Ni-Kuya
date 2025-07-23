@@ -202,3 +202,20 @@ BEGIN
 END
 
 $$ DELIMITER ;
+
+-- 8. sp_latest_order: Get the latest unconfirmed order of the user
+USE bahaynikuya_db;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_latest_order(
+    IN o_email VARCHAR(100)
+)
+BEGIN
+    SELECT o.order_id 
+    FROM orders o
+    LEFT JOIN transaction_log t ON o.order_id = t.order_id
+    WHERE o.email = o_email AND o.is_confirmed = 'N'
+    ORDER BY o.order_date DESC;
+END
+$$ DELIMITER ;

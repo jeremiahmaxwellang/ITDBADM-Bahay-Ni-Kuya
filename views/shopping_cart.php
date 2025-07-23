@@ -44,14 +44,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
 }
 
 // Populate $cartItems for display
-// Get the latest unconfirmed order of the user
-$stmt = $conn->prepare("
-    SELECT o.order_id 
-    FROM orders o
-    LEFT JOIN transaction_log t ON o.order_id = t.order_id
-    WHERE o.email = ? AND o.is_confirmed = 'N'
-    ORDER BY o.order_date DESC
-");
+// CALL PROCEDURE: sp_latest_order to get the latest unconfirmed order of the user
+$stmt = $conn->prepare("CALL sp_latest_order(?)");
+
+// $stmt = $conn->prepare("
+//     SELECT o.order_id 
+//     FROM orders o
+//     LEFT JOIN transaction_log t ON o.order_id = t.order_id
+//     WHERE o.email = ? AND o.is_confirmed = 'N'
+//     ORDER BY o.order_date DESC
+// ");
 
 if (!$stmt) {
     die("Prepare failed: " . $conn->error);
