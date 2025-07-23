@@ -162,7 +162,7 @@ $conn->close();
                     <div class="cart-items">
                         <?php foreach ($cartItems as $item): ?>
                             <div class="cart-item">
-                                <img src="../assets/images/<?php echo htmlspecialchars($item['photo']); ?>"
+                                <img src="<?php echo htmlspecialchars($item['photo']); ?>"
                                 alt="<?php echo htmlspecialchars($item['property_name']); ?>"
                                 class="cart-item-image">
                                 <div class="cart-item-details">
