@@ -8,37 +8,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $_POST['address'];
     $price = $_POST['price'];
     $description = $_POST['description'];
+    $photo = null;
     
-    // Handle file upload if new image was provided
+
+    // Photo upload
+    // Code referenced: https://www.youtube.com/watch?v=6iERr1ADFz8
     if (!empty($_FILES['image']['name'])) {
-        $photo = $_FILES['image']['name'];
-        $tempPath = $_FILES['image']['name'];
-        $uploadPath = "../assets/images" . basename($photo);
+        $file_name = $_FILES['image']['name'];
+        $tempname = $_FILES['image']['tmp_name'];
+        $folder = '../assets/images/'.$file_name;
 
-        if(move_uploaded_file($tempPath, $uploadPath)){
-            
-        }
+        // Set photo column
+        $photo = $folder;
 
-        else{
-            $_SESSION['admin_message'] = "Error uploading photo.";
-            $_SESSION['admin_message_type'] = "error";
+        if(move_uploaded_file($tempname, $folder)){
+            echo "<h2>File uploaded successfully</h2>";
         }
+        else echo "<h2>File upload failed.</h2>";
+
     }
-    
-    // Update property
-    // $stmt = $conn->prepare("UPDATE properties SET 
-    // property_name=?, 
-    // address=?, 
-    // price=?, 
-    // description=?,
-    // photo=?
-    // WHERE property_id=?");
-    // $stmt->bind_param("ssdssi", $name, $address, $price, $description, $photo, $id);
 
     // STORED PROCEDURE: sp_update_property
-    // TODO: Fix the stored procedure CALL (revised on jul 23)
-    $stmt = $conn->prepare("CALL sp_update_property(?, ?, ?, ?, ?, 'For Sale')");
-    $stmt->bind_param("issds", $id, $name, $address, $price, $description);
+    $stmt = $conn->prepare("CALL sp_update_property(?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("issdss", $id, $name, $address, $price, $description, $photo);
 
     
     if ($stmt->execute()) {

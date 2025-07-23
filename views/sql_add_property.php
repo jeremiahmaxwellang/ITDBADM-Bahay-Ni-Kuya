@@ -7,61 +7,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $_POST['address'];
     $price = $_POST['price'];
     $description = $_POST['description'];
+        $photo = null;
     
-    // Upload photo
-    // Code referenced: https://www.youtube.com/watch?v=JaRq73y5MJk
-    if(isset($_POST['submit'])){
-        $file = $_FILES['photo'];
 
-        $fileName = $_FILES['file']['name'];
-        $fileTmpName = $_FILES['file']['tmp_name'];
+    // Photo upload
+    // Code referenced: https://www.youtube.com/watch?v=6iERr1ADFz8
+    if (!empty($_FILES['image']['name'])) {
+        $file_name = $_FILES['image']['name'];
+        $tempname = $_FILES['image']['tmp_name'];
+        $folder = '../assets/images/'.$file_name;
 
-        $fileError = $_FILES['file']['error'];
-        $fileType = $_FILES['file']['type'];
+        // Set photo column
+        $photo = $folder;
 
-        // File Extension
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
-
-        // Allowed file extensions
-        $allowed = array('jpg', 'jpeg', 'png');
-
-        if(in_array($fileActualExt, $allowed)){
-
-            if($fileError == 0){ // if no errors
-                $fileNameNew = uniqid('', true).".".$fileActualExt;
-
-                // Set photo column
-                $photo = 'uploads/'.$fileNameNew;
-                move_uploaded_file($fileTmpName, $photo);
-            }
-
-            else{
-                echo "Error uploading file.";
-            }
+        if(move_uploaded_file($tempname, $folder)){
+            echo "<h2>File uploaded successfully</h2>";
         }
-        else{
-            echo "You can only upload files of type: jpg, jpeg, or png";
-        }
-    
+        else echo "<h2>File upload failed.</h2>";
+
     }
-
-    // Handle file upload if new image was uploaded
-    // if (!empty($_FILES['image']['name'])) {
-    //     $photo = $_FILES['image']['name'];
-
-    //     $tempPath = $_FILES['image']['name'];
-    //     $uploadPath = "../assets/images" . basename($photo);
-
-    //     if(move_uploaded_file($tempPath, $uploadPath)){
-            
-    //     }
-
-    //     else{
-    //         $_SESSION['admin_message'] = "Error uploading photo.";
-    //         $_SESSION['admin_message_type'] = "error";
-    //     }
-    // }
     
     // Insert new property
     //TODO: CALL sp_add_property stored procedure
