@@ -162,7 +162,7 @@ $conn->close();
                     <div class="cart-items">
                         <?php foreach ($cartItems as $item): ?>
                             <div class="cart-item">
-                                <img src="../assets/images/<?php echo htmlspecialchars($item['photo']); ?>"
+                                <img src="<?php echo htmlspecialchars($item['photo']); ?>"
                                 alt="<?php echo htmlspecialchars($item['property_name']); ?>"
                                 class="cart-item-image">
                                 <div class="cart-item-details">
@@ -285,10 +285,6 @@ $conn->close();
                             <label for="phone">Phone Number</label>
                             <input type="tel" id="phone" required>
                         </div>
-                        <div class="form-group">
-                            <label for="address">Shipping Address</label>
-                            <textarea id="address" rows="3" required></textarea>
-                        </div>
                     </form>
                 </div>
                 <?php endif; ?>
@@ -354,16 +350,15 @@ $conn->close();
             const fullname = document.getElementById('fullname').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
-            const address = document.getElementById('address').value;
             
-            if (!fullname || !email || !phone || !address) {
+            if (!fullname || !email || !phone) {
                 alert('Please fill in all required customer information.');
                 return;
             }
             
             // In a real application, you would submit the form to the server here
             alert('Order placed successfully! Thank you for your purchase.');
-            window.location.href = 'order_confirmation.php'; // Redirect to confirmation page
+            window.location.href = 'property_listing.php'; // Redirect to confirmation page
         }
     </script>
 </body>
