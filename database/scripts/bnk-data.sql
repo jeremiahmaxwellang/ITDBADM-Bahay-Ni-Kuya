@@ -40,16 +40,3 @@ VALUES
 (5, "Charlie", "Calamba, Laguna", 2000000.00, "Spacious property for sale in Calamba, Laguna, ideal for residential or vacation use and located in a peaceful community near hot springs, resorts, and key city amenities.", 'For Sale', "../assets/images/charlie.jpg"),
 (6, "Klarisse", "Cavite", 1999999.99, "Affordable property for sale in Cavite, perfect for families or investors looking for a growing community with easy access to Metro Manila and nearby commercial hubs.", 'Sold', "../assets/images/klarisse.jpg")
 ;
-
--- INSERT ORDERS
-INSERT INTO bahaynikuya_db.orders(order_id, email, order_date, total_amount, currency_id)
-VALUES(10, 'customer@gmail.com', CURDATE(), 4222000.00, 1)
-;
-
-INSERT INTO bahaynikuya_db.order_items(order_id, property_id, quantity)
-VALUES(10, 1, 1);
-;
-
-INSERT INTO bahaynikuya_db.order_items(order_id, property_id, quantity)
-VALUES(10, 2, 1);
-;
