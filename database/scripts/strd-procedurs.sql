@@ -3,6 +3,9 @@
 -- ITDBADM S13 Group 7 Project
 -- Jeremiah Ang, Charles Duelas, Justin Lee, Marcus Mendoza
 
+-- List of all procedures
+SHOW PROCEDURE STATUS WHERE Db = 'bahaynikuya_db';
+
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -35,11 +38,13 @@ BEGIN
         SET converted_price = (base_price / rate_to_usd) * rate_target;
     END IF;
 END
+$$ DELIMITER ;
+
 
 -- 2. sp_search_properties: filter by price range
 USE bahaynikuya_db;
 
-$$ DELIMITER ;
+DELIMITER $$
 
 CREATE PROCEDURE sp_search_properties(
     IN loc VARCHAR(255),
@@ -51,9 +56,9 @@ BEGIN
     WHERE (address LIKE CONCAT('%', loc, '%') OR loc = '')
       AND price BETWEEN min_price AND max_price
       -- Removed: AND offer_type = 'For Sale'
-END $$ 
+END
 
-DELIMITER ;
+$$ DELIMITER ;
 
 
 -- 3. sp_place_order: Creates an order
