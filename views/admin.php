@@ -31,6 +31,26 @@ if ($_SESSION['user_role'] == 'C') {
     <link rel="stylesheet" href="../assets/css/admin.css">
    
     <script src="../assets/js/admin.js"></script>
+    <script>
+        const userRole = '<?php echo $_SESSION['user_role']; ?>';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide Action Column for Staff
+            if(userRole == 'S'){
+                document.querySelectorAll('th.action-buttons').forEach(th => {
+                    th.style.display = 'none';
+                });
+
+                document.querySelectorAll('td.action-buttons').forEach(td => {
+                    td.style.display = 'none';
+                });
+
+                document.querySelector('#add-property-btn').style.display = 'none';
+         
+            }
+
+        });
+    </script>
 </head>
 <body>
     <!-- Background gradient overlay -->
@@ -61,7 +81,7 @@ if ($_SESSION['user_role'] == 'C') {
             <button class="tab-btn" onclick="openTab('orders', event)">
                 <i class="fas fa-clipboard-list"></i> Orders
             </button>
-            <button class="tab-btn" onclick="openTab('add-property', event)">
+            <button id="add-property-btn" class="tab-btn" onclick="openTab('add-property', event)">
                 <i class="fas fa-plus-circle"></i> Add Property
             </button>
         </div>
@@ -78,7 +98,7 @@ if ($_SESSION['user_role'] == 'C') {
                         <th>Type</th>
                         <th>Price</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th class="action-buttons">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,7 +126,7 @@ if ($_SESSION['user_role'] == 'C') {
                                 <td>{$row['type']}</td>
                                 <td>₱" . number_format($row['price'], 2) . "</td>
                                 <td class='$statusClass'>{$row['status']}</td>
-                                <td>
+                                <td class='action-buttons'>
                                     <button class='action-btn edit-btn' onclick='editProperty({$row['id']})'>
                                         <i class='fas fa-edit'></i> Edit
                                     </button>
