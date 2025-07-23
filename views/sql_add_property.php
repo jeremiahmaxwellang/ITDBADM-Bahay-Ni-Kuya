@@ -28,17 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Insert new property
-    //TODO: CALL sp_add_property stored procedure
+    // CALL PROCEDURE: sp_add_property
     $stmt = $conn->prepare("CALL sp_add_property(?, ?, ?, ?, ?)");
     
-    // Did not include photo due to SQL error
-    // $stmt = $conn->prepare("INSERT INTO properties(property_name, address, price, description, offer_type, photo) VALUES (?, ?, ?, ?, 'For Sale', ?)");
     $stmt->bind_param("ssdss", $name, $address, $price, $description, $photo);
-
-
-    // Without photo
-    // $stmt = $conn->prepare("INSERT INTO properties(property_name, address, price, description, offer_type) VALUES (?, ?, ?, ?, 'For Sale')");
-    // $stmt->bind_param("ssds", $name, $address, $price, $description);
 
     if ($stmt->execute()) {
         $_SESSION['admin_message'] = "Property added successfully";
