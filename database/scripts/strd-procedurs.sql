@@ -36,9 +36,10 @@ BEGIN
     END IF;
 END
 
-$$ DELIMITER ;
-
+-- 2. sp_search_properties: filter by price range
 USE bahaynikuya_db;
+
+$$ DELIMITER ;
 
 CREATE PROCEDURE sp_search_properties(
     IN loc VARCHAR(255),
@@ -54,6 +55,8 @@ END $$
 
 DELIMITER ;
 
+
+-- 3. sp_place_order: Creates an order
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -75,6 +78,7 @@ END
 $$ DELIMITER ;
 
 
+-- 4. sp_add_order_item
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -92,6 +96,7 @@ END
 $$ DELIMITER ;
 
 
+-- 5. sp_cancel_order: Cancels order and restores property status
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -130,7 +135,7 @@ $$ DELIMITER ;
 -- DATE ADDED: July 23, WEDNESDAY
 -- -----------------------------------------------------
 
--- 5. sp_update_property: Admin edits property details 
+-- 6. sp_update_property: Admin edits property details 
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -159,7 +164,7 @@ END
 $$ DELIMITER ;
 
 
--- 6. sp_add_property: Admin adds new property
+-- 7. sp_add_property: Admin adds new property
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -181,7 +186,7 @@ END
 $$ DELIMITER ;
 
 
--- 7. sp_add_user: Insert new user
+-- 8. sp_add_user: Insert new user
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -201,7 +206,7 @@ END
 
 $$ DELIMITER ;
 
--- 8. sp_latest_order: Get the latest unconfirmed order of the user
+-- 9. sp_latest_order: Get the latest unconfirmed order of the user
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -217,4 +222,5 @@ BEGIN
     WHERE o.email = o_email AND o.is_confirmed = 'N'
     ORDER BY o.order_date DESC
     LIMIT 1;
-END $$ DELIMITER ;
+END 
+$$ DELIMITER ;
