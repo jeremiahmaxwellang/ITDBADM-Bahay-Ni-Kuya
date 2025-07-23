@@ -20,6 +20,43 @@ if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
+// Handle order placement
+$orderSuccess = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
+    if (!empty($_SESSION['cart'])) {
+        // Get customer information from form
+        $fullname = $_POST['fullname'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        
+        // Start transaction
+        $conn->begin_transaction();
+        
+        try {
+            // Update each property in the cart to "Sold"
+            foreach (array_keys($_SESSION['cart']) as $propertyId) {
+                $stmt = $conn->prepare("UPDATE properties SET offer_type = 'Sold' WHERE property_id = ?");
+                $stmt->bind_param("i", $propertyId);
+                $stmt->execute();
+                $stmt->close();
+            }
+            
+            // Commit transaction
+            $conn->commit();
+            
+            // Clear the cart
+            $_SESSION['cart'] = [];
+            
+            // Set success flag
+            $orderSuccess = true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $conn->rollback();
+            $error = "Error processing your order. Please try again.";
+        }
+    }
+}
+
 // Get cart items details from database
 $cartItems = [];
 $totalPrice = 0;
@@ -126,6 +163,36 @@ $conn->close();
             border-radius: 8px;
             margin-bottom: 20px;
         }
+        
+        .confirmation-message {
+            text-align: center;
+            padding: 40px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .confirmation-message h2 {
+            color: #2ecc71;
+            margin-bottom: 15px;
+        }
+        
+        .confirmation-message .continue-shopping {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin: 15px 0;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -138,183 +205,188 @@ $conn->close();
         <ul>
             <li><a class="navButton" href="property_listing.php">Browse Properties</a></li>
             <li><a class="navButton" href="shopping_cart.php">Your Cart</a></li>
-            <li><a class="topNavBar" href='logout.php'">Sign Out</a></li>
+            <li><a class="navButton" onclick="window.location.href='logout.php'">Sign Out</a></li>
         </ul>
     </nav>
 
     <div class="container">
-        <div class="checkout-grid">
-            <div class="checkout-items">
-                <h2>Your Order Summary</h2>
-                
-                <div class="currency-selector">
-                    <form method="post">
-                        <label for="currency">Select Currency: </label>
-                        <select name="currency" id="currency" onchange="this.form.submit()">
-                            <option value="PHP" <?php echo $selectedCurrency === 'PHP' ? 'selected' : ''; ?>>Philippine Peso (₱)</option>
-                            <option value="USD" <?php echo $selectedCurrency === 'USD' ? 'selected' : ''; ?>>US Dollar ($)</option>
-                            <option value="EUR" <?php echo $selectedCurrency === 'EUR' ? 'selected' : ''; ?>>Euro (€)</option>
-                        </select>
-                    </form>
-                </div>
-                
-                <?php if (!empty($cartItems)): ?>
-                    <div class="cart-items">
-                        <?php foreach ($cartItems as $item): ?>
-                            <div class="cart-item">
-                                <img src="<?php echo htmlspecialchars($item['photo']); ?>"
-                                alt="<?php echo htmlspecialchars($item['property_name']); ?>"
-                                class="cart-item-image">
-                                <div class="cart-item-details">
-                                    <h3 class="cart-item-title"><?php echo $item['property_name']; ?></h3>
-                                    <p class="cart-item-location"><?php echo $item['address']; ?></p>
-                                    <p class="cart-item-price">
-                                        <span class="currency-symbol">
-                                            <?php 
-                                                echo $selectedCurrency === 'PHP' ? '₱' : 
-                                                     ($selectedCurrency === 'USD' ? '$' : '€');
-                                            ?>
-                                        </span>
-                                        <?php echo number_format(convertCurrency($item['price'], 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
-                                    </p>
+        <?php if ($orderSuccess): ?>
+            <div class="confirmation-message">
+                <h2>Thank You for Your Order!</h2>
+                <p>Your purchase has been confirmed and the properties have been marked as sold.</p>
+                <p>We'll contact you shortly with more details about your purchase.</p>
+                <a href="property_listing.php" class="continue-shopping">Browse More Properties</a>
+            </div>
+        <?php else: ?>
+            <?php if (isset($error)): ?>
+                <div class="error-message"><?php echo $error; ?></div>
+            <?php endif; ?>
+            
+            <div class="checkout-grid">
+                <div class="checkout-items">
+                    <h2>Your Order Summary</h2>
+                    
+                    <div class="currency-selector">
+                        <form method="post">
+                            <label for="currency">Select Currency: </label>
+                            <select name="currency" id="currency" onchange="this.form.submit()">
+                                <option value="PHP" <?php echo $selectedCurrency === 'PHP' ? 'selected' : ''; ?>>Philippine Peso (₱)</option>
+                                <option value="USD" <?php echo $selectedCurrency === 'USD' ? 'selected' : ''; ?>>US Dollar ($)</option>
+                                <option value="EUR" <?php echo $selectedCurrency === 'EUR' ? 'selected' : ''; ?>>Euro (€)</option>
+                            </select>
+                        </form>
+                    </div>
+                    
+                    <?php if (!empty($cartItems)): ?>
+                        <div class="cart-items">
+                            <?php foreach ($cartItems as $item): ?>
+                                <div class="cart-item">
+                                    <img src="<?php echo htmlspecialchars($item['photo']); ?>"
+                                    alt="<?php echo htmlspecialchars($item['property_name']); ?>"
+                                    class="cart-item-image">
+                                    <div class="cart-item-details">
+                                        <h3 class="cart-item-title"><?php echo $item['property_name']; ?></h3>
+                                        <p class="cart-item-location"><?php echo $item['address']; ?></p>
+                                        <p class="cart-item-price">
+                                            <span class="currency-symbol">
+                                                <?php 
+                                                    echo $selectedCurrency === 'PHP' ? '₱' : 
+                                                         ($selectedCurrency === 'USD' ? '$' : '€');
+                                                ?>
+                                            </span>
+                                            <?php echo number_format(convertCurrency($item['price'], 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="empty-cart-message">
-                        <h3>Your cart is empty</h3>
-                        <p>There are no items in your cart to checkout.</p>
-                        <a href="property_listing.php" class="continue-shopping">Browse Properties</a>
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <div class="checkout-summary">
-                <h2>Order Details</h2>
-                
-                <div class="summary-section">
-                    <div class="summary-row">
-                        <span>Subtotal:</span>
-                        <span>
-                            <span class="currency-symbol">
-                                <?php 
-                                    echo $selectedCurrency === 'PHP' ? '₱' : 
-                                         ($selectedCurrency === 'USD' ? '$' : '€');
-                                ?>
-                            </span>
-                            <?php echo number_format(convertCurrency($subtotal, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
-                        </span>
-                    </div>
-                    
-                    <div class="summary-row">
-                        <span>Tax (<?php echo isset($taxRate) ? ($taxRate * 100) : 0; ?>%):</span>
-                        <span>
-                            <span class="currency-symbol">
-                                <?php 
-                                    echo $selectedCurrency === 'PHP' ? '₱' : 
-                                         ($selectedCurrency === 'USD' ? '$' : '€');
-                                ?>
-                            </span>
-                            <?php echo number_format(convertCurrency($taxAmount, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
-                        </span>
-                    </div>
-                    
-                    <div class="summary-row">
-                        <span>Service Fee:</span>
-                        <span>
-                            <span class="currency-symbol">
-                                <?php 
-                                    echo $selectedCurrency === 'PHP' ? '₱' : 
-                                         ($selectedCurrency === 'USD' ? '$' : '€');
-                                ?>
-                            </span>
-                            <?php echo number_format(convertCurrency($serviceFee, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
-                        </span>
-                    </div>
-                    
-                    <div class="summary-row total">
-                        <span>Total:</span>
-                        <span>
-                            <span class="currency-symbol">
-                                <?php 
-                                    echo $selectedCurrency === 'PHP' ? '₱' : 
-                                         ($selectedCurrency === 'USD' ? '$' : '€');
-                                ?>
-                            </span>
-                            <?php echo number_format(convertCurrency($totalPrice, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
-                        </span>
-                    </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="empty-cart-message">
+                            <h3>Your cart is empty</h3>
+                            <p>There are no items in your cart to checkout.</p>
+                            <a href="property_listing.php" class="continue-shopping">Browse Properties</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <?php if (!empty($cartItems)): ?>
-                <div class="payment-section">
-                    <h3>Payment Method</h3>
-                    <div class="payment-options">
-                        <div class="payment-option">
-                            <input type="radio" id="credit-card" name="payment" checked>
-                            <label for="credit-card">Credit/Debit Card</label>
+                <div class="checkout-summary">
+                    <h2>Order Details</h2>
+                    
+                    <div class="summary-section">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span>
+                                <span class="currency-symbol">
+                                    <?php 
+                                        echo $selectedCurrency === 'PHP' ? '₱' : 
+                                             ($selectedCurrency === 'USD' ? '$' : '€');
+                                    ?>
+                                </span>
+                                <?php echo number_format(convertCurrency($subtotal, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
+                            </span>
                         </div>
-                        <div class="payment-option">
-                            <input type="radio" id="gcash" name="payment">
-                            <label for="gcash">GCash</label>
+                        
+                        <div class="summary-row">
+                            <span>Tax (<?php echo isset($taxRate) ? ($taxRate * 100) : 0; ?>%):</span>
+                            <span>
+                                <span class="currency-symbol">
+                                    <?php 
+                                        echo $selectedCurrency === 'PHP' ? '₱' : 
+                                             ($selectedCurrency === 'USD' ? '$' : '€');
+                                    ?>
+                                </span>
+                                <?php echo number_format(convertCurrency($taxAmount, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
+                            </span>
                         </div>
-                        <div class="payment-option">
-                            <input type="radio" id="paypal" name="payment">
-                            <label for="paypal">PayPal</label>
+                        
+                        <div class="summary-row">
+                            <span>Service Fee:</span>
+                            <span>
+                                <span class="currency-symbol">
+                                    <?php 
+                                        echo $selectedCurrency === 'PHP' ? '₱' : 
+                                             ($selectedCurrency === 'USD' ? '$' : '€');
+                                    ?>
+                                </span>
+                                <?php echo number_format(convertCurrency($serviceFee, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
+                            </span>
                         </div>
-                        <div class="payment-option">
-                            <input type="radio" id="bank-transfer" name="payment">
-                            <label for="bank-transfer">Bank Transfer</label>
+                        
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span>
+                                <span class="currency-symbol">
+                                    <?php 
+                                        echo $selectedCurrency === 'PHP' ? '₱' : 
+                                             ($selectedCurrency === 'USD' ? '$' : '€');
+                                    ?>
+                                </span>
+                                <?php echo number_format(convertCurrency($totalPrice, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
+                            </span>
                         </div>
                     </div>
-                </div>
 
-                <div class="customer-info">
-                    <h3>Customer Information</h3>
-                    <form class="customer-form">
-                        <div class="form-group">
-                            <label for="fullname">Full Name</label>
-                            <input type="text" id="fullname" required>
+                    <div class="payment-section">
+                        <h3>Payment Method</h3>
+                        <div class="payment-options">
+                            <div class="payment-option">
+                                <input type="radio" id="credit-card" name="payment" value="credit-card" checked>
+                                <label for="credit-card">Credit/Debit Card</label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="gcash" name="payment" value="gcash">
+                                <label for="gcash">GCash</label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="paypal" name="payment" value="paypal">
+                                <label for="paypal">PayPal</label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="bank-transfer" name="payment" value="bank-transfer">
+                                <label for="bank-transfer">Bank Transfer</label>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" required>
-                        </div>
-                    </form>
+                    </div>
+
+                    <div class="customer-info">
+                        <h3>Customer Information</h3>
+                        <form class="customer-form" method="post">
+                            <div class="form-group">
+                                <label for="fullname">Full Name</label>
+                                <input type="text" id="fullname" name="fullname" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                            <input type="hidden" name="place_order" value="1">
+                        </form>
+                    </div>
                 </div>
                 <?php endif; ?>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
 
+    <?php if (!empty($cartItems) && !$orderSuccess): ?>
     <div class="floating-place-order">
-        <button class="floating-place-order-btn" <?php echo empty($cartItems) ? 'disabled' : ''; ?> onclick="<?php echo !empty($cartItems) ? 'placeOrder()' : ''; ?>">
-            <?php if (!empty($cartItems)): ?>
-                Place Order - 
-                <span class="currency-symbol">
-                    <?php 
-                        echo $selectedCurrency === 'PHP' ? '₱' : 
-                             ($selectedCurrency === 'USD' ? '$' : '€');
-                    ?>
-                </span>
-                <?php echo number_format(convertCurrency($totalPrice, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
-            <?php else: ?>
-                Cart Empty - 
-                <span class="currency-symbol">
-                    <?php 
-                        echo $selectedCurrency === 'PHP' ? '₱' : 
-                             ($selectedCurrency === 'USD' ? '$' : '€');
-                    ?>
-                </span>
-                0.00
-            <?php endif; ?>
+        <button class="floating-place-order-btn" onclick="placeOrder()">
+            Place Order - 
+            <span class="currency-symbol">
+                <?php 
+                    echo $selectedCurrency === 'PHP' ? '₱' : 
+                         ($selectedCurrency === 'USD' ? '$' : '€');
+                ?>
+            </span>
+            <?php echo number_format(convertCurrency($totalPrice, 'PHP', $selectedCurrency, $exchangeRates), 2); ?>
         </button>
     </div>
+    <?php endif; ?>
 
     <footer>
         <div class="footer-content">
@@ -356,9 +428,8 @@ $conn->close();
                 return;
             }
             
-            // In a real application, you would submit the form to the server here
-            alert('Order placed successfully! Thank you for your purchase.');
-            window.location.href = 'property_listing.php'; // Redirect to confirmation page
+            // Submit the form
+            document.querySelector('.customer-form').submit();
         }
     </script>
 </body>
