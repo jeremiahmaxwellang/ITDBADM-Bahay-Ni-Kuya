@@ -209,13 +209,14 @@ USE bahaynikuya_db;
 DELIMITER $$
 
 CREATE PROCEDURE sp_latest_order(
-    IN o_email VARCHAR(100)
+    IN o_email VARCHAR(100),
+    OUT o_order_id INT
 )
 BEGIN
-    SELECT o.order_id 
+    SELECT o.order_id INTO o_order_id
     FROM orders o
     LEFT JOIN transaction_log t ON o.order_id = t.order_id
     WHERE o.email = o_email AND o.is_confirmed = 'N'
-    ORDER BY o.order_date DESC;
-END
-$$ DELIMITER ;
+    ORDER BY o.order_date DESC
+    LIMIT 1;
+END $$ DELIMITER ;
