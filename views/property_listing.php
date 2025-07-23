@@ -19,49 +19,34 @@ if ($checkTable && $checkTable->num_rows > 0) {
 
 $properties = [];
 if ($tableExists) {
-    // Build dynamic SQL query with filters
-    $query = "SELECT * FROM properties WHERE 1";
-    $params = [];
-    $types = "";
+    // Determine min and max price based on filter
+    $min_price = 0;
+    $max_price = 999999999; // effectively no upper limit
 
-    // Location filter
-    if ($search_location !== '') {
-        $query .= " AND address LIKE ?";
-        $params[] = '%' . $search_location . '%';
-        $types .= "s";
+    if ($price_filter === '1') {
+        $max_price = 5000000;
+    } elseif ($price_filter === '2') {
+        $min_price = 5000000;
+        $max_price = 10000000;
+    } elseif ($price_filter === '3') {
+        $min_price = 10000000;
     }
 
-    // Price filter
-    if ($price_filter !== '') {
-        if ($price_filter === '1') {
-            $query .= " AND price < ?";
-            $params[] = 5000000;
-            $types .= "i";
-        } elseif ($price_filter === '2') {
-            $query .= " AND price BETWEEN ? AND ?";
-            $params[] = 5000000;
-            $params[] = 10000000;
-            $types .= "ii";
-        } elseif ($price_filter === '3') {
-            $query .= " AND price > ?";
-            $params[] = 10000000;
-            $types .= "i";
-        }
-    }
-
-    $query .= " ORDER BY property_id DESC";
-    $stmt = $conn->prepare($query);
-    if (!empty($params)) {
-        $stmt->bind_param($types, ...$params);
-    }
+    // Use stored procedure to search
+    $stmt = $conn->prepare("CALL sp_search_properties(?, ?, ?)");
+    $stmt->bind_param("sdd", $search_location, $min_price, $max_price);
     $stmt->execute();
-    $result = $stmt->get_result();
 
+    $result = $stmt->get_result();
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $properties[] = $row;
         }
+        $result->close();
     }
+
+    $stmt->close();
+    $conn->next_result(); // Required to flush results after calling stored procedure
 } else {
     $properties = false; // Indicate table missing
 }
