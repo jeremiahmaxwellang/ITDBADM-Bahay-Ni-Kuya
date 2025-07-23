@@ -40,8 +40,6 @@ $$ DELIMITER ;
 
 USE bahaynikuya_db;
 
-DELIMITER $$
-
 CREATE PROCEDURE sp_search_properties(
     IN loc VARCHAR(255),
     IN min_price DECIMAL(12,2),
@@ -50,11 +48,11 @@ CREATE PROCEDURE sp_search_properties(
 BEGIN
     SELECT * FROM properties
     WHERE (address LIKE CONCAT('%', loc, '%') OR loc = '')
-      AND price BETWEEN min_price AND max_price
-      AND offer_type = 'For Sale';  -- Only list available properties
-END
+      AND price BETWEEN min_price AND max_price;
+      -- Removed: AND offer_type = 'For Sale'
+END $$ 
 
-$$ DELIMITER ;
+DELIMITER ;
 
 USE bahaynikuya_db;
 
