@@ -53,15 +53,6 @@ $stmt = $conn->prepare("CALL sp_latest_order(?, @order_id)");
 
 $stmt->bind_param("s", $userEmail);  // Bind the email parameter, string type
 
-// To delete:
-// $stmt = $conn->prepare("
-//     SELECT o.order_id 
-//     FROM orders o
-//     LEFT JOIN transaction_log t ON o.order_id = t.order_id
-//     WHERE o.email = ? AND o.is_confirmed = 'N'
-//     ORDER BY o.order_date DESC
-// ");
-
 if (!$stmt) {
     die("Prepare failed: " . $conn->error);
 }
