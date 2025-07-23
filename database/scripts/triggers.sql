@@ -7,10 +7,6 @@
 -- 1. trg_after_order: Logs order completion in transaction_logs table
 USE bahaynikuya_db;
 
--- NEW is_confirmed column
--- ALTER TABLE `bahaynikuya_db`.`orders` 
--- ADD `is_confirmed` ENUM('Y', 'N') DEFAULT 'N';
-
 DELIMITER $$
 CREATE TRIGGER trg_after_order
 AFTER UPDATE ON orders
