@@ -128,17 +128,22 @@ END
 $$ DELIMITER ;
 
 
+-- -----------------------------------------------------
+-- DATE ADDED: July 23, WEDNESDAY
+-- -----------------------------------------------------
+
+-- 5. sp_update_property: Admin edits property details 
 USE bahaynikuya_db;
 
 DELIMITER $$
 
 CREATE PROCEDURE sp_update_property(
     IN p_property_id INT,
-    IN p_property_name VARCHAR(255),
-    IN p_address VARCHAR(255),
-    IN p_price DECIMAL(15,2),
+    IN p_property_name VARCHAR(100),
+    IN p_address VARCHAR(300),
+    IN p_price DECIMAL(10,2),
     IN p_description TEXT,
-    IN p_offer_type VARCHAR(50)
+    IN p_photo VARCHAR(260)
 )
 BEGIN
     -- Update the property details 
@@ -148,8 +153,51 @@ BEGIN
         address = p_address,
         price = p_price,
         description = p_description,
-        offer_type = p_offer_type
+        photo = p_photo
     WHERE property_id = p_property_id;
+    
+END
+
+$$ DELIMITER ;
+
+
+-- 6. sp_add_property: Admin adds new property
+USE bahaynikuya_db;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_add_property(
+    IN p_property_name VARCHAR(100),
+    IN p_address VARCHAR(300),
+    IN p_price DECIMAL(10,2),
+    IN p_description TEXT,
+    IN p_photo VARCHAR(260)
+)
+BEGIN
+    -- Insert new property
+    INSERT INTO properties(property_name, address, price, description, offer_type, photo) 
+    VALUES (p_property_name, p_address, p_price, p_description, 'For Sale', p_photo);
+    
+END
+
+$$ DELIMITER ;
+
+
+-- 7. sp_add_user: Insert new user
+USE bahaynikuya_db;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_add_user(
+    IN u_email VARCHAR(100),
+    IN u_first_name VARCHAR(100),
+    IN u_last_name VARCHAR(100),
+    IN u_password_hash VARCHAR(200)
+)
+BEGIN
+    -- Insert new Customer user
+    INSERT INTO users(email, first_name, last_name, password_hash, role) 
+    VALUES (u_email, u_first_name, u_last_name, u_password_hash, 'C');
     
 END
 

@@ -10,8 +10,8 @@ if (!isset($_SESSION['user_email'])) {
     exit();
 }
 
-if ($_SESSION['user_role'] !== 'A') {
-    header("Location: index.php");
+if ($_SESSION['user_role'] == 'C') {
+    header("Location: property_listing.php");
     exit();
 }
 

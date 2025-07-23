@@ -8,31 +8,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $description = $_POST['description'];
     
-    // Handle file upload if new image was provided
-    if (!empty($_FILES['image']['name'])) {
-        $photo = $_FILES['image']['name'];
-        $tempPath = $_FILES['image']['name'];
-        $uploadPath = "../assets/images" . basename($photo);
+    // Upload photo
+    // Code referenced: https://www.youtube.com/watch?v=JaRq73y5MJk
+    if(isset($_POST['submit'])){
+        $file = $_FILES['photo'];
 
-        if(move_uploaded_file($tempPath, $uploadPath)){
-            
+        $fileName = $_FILES['file']['name'];
+        $fileTmpName = $_FILES['file']['tmp_name'];
+
+        $fileError = $_FILES['file']['error'];
+        $fileType = $_FILES['file']['type'];
+
+        // File Extension
+        $fileExt = explode('.', $fileName);
+        $fileActualExt = strtolower(end($fileExt));
+
+        // Allowed file extensions
+        $allowed = array('jpg', 'jpeg', 'png');
+
+        if(in_array($fileActualExt, $allowed)){
+
+            if($fileError == 0){ // if no errors
+                $fileNameNew = uniqid('', true).".".$fileActualExt;
+
+                // Set photo column
+                $photo = 'uploads/'.$fileNameNew;
+                move_uploaded_file($fileTmpName, $photo);
+            }
+
+            else{
+                echo "Error uploading file.";
+            }
         }
-
         else{
-            $_SESSION['admin_message'] = "Error uploading photo.";
-            $_SESSION['admin_message_type'] = "error";
+            echo "You can only upload files of type: jpg, jpeg, or png";
         }
+    
     }
+
+    // Handle file upload if new image was uploaded
+    // if (!empty($_FILES['image']['name'])) {
+    //     $photo = $_FILES['image']['name'];
+
+    //     $tempPath = $_FILES['image']['name'];
+    //     $uploadPath = "../assets/images" . basename($photo);
+
+    //     if(move_uploaded_file($tempPath, $uploadPath)){
+            
+    //     }
+
+    //     else{
+    //         $_SESSION['admin_message'] = "Error uploading photo.";
+    //         $_SESSION['admin_message_type'] = "error";
+    //     }
+    // }
     
     // Insert new property
-    $stmt = $conn->prepare("INSERT INTO properties(property_name, address, price, description, offer_type) VALUES (?, ?, ?, ?, 'For Sale')");
-
-    $stmt->bind_param("ssds", $name, $address, $price, $description);
+    //TODO: CALL sp_add_property stored procedure
+    $stmt = $conn->prepare("CALL sp_add_property(?, ?, ?, ?, ?)");
     
-    // Did not include photo due to SQL error    
+    // Did not include photo due to SQL error
     // $stmt = $conn->prepare("INSERT INTO properties(property_name, address, price, description, offer_type, photo) VALUES (?, ?, ?, ?, 'For Sale', ?)");
+    $stmt->bind_param("ssdss", $name, $address, $price, $description, $photo);
 
-    // $stmt->bind_param("ssdss", $name, $address, $price, $description, $imagePath);
+
+    // Without photo
+    // $stmt = $conn->prepare("INSERT INTO properties(property_name, address, price, description, offer_type) VALUES (?, ?, ?, ?, 'For Sale')");
+    // $stmt->bind_param("ssds", $name, $address, $price, $description);
 
     if ($stmt->execute()) {
         $_SESSION['admin_message'] = "Property added successfully";

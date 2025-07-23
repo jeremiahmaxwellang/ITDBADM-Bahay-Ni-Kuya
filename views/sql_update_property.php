@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // $stmt->bind_param("ssdssi", $name, $address, $price, $description, $photo, $id);
 
     // STORED PROCEDURE: sp_update_property
+    // TODO: Fix the stored procedure CALL (revised on jul 23)
     $stmt = $conn->prepare("CALL sp_update_property(?, ?, ?, ?, ?, 'For Sale')");
     $stmt->bind_param("issds", $id, $name, $address, $price, $description);
 

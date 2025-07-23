@@ -10,7 +10,7 @@
             header("Location: admin.php");
             exit();
         } elseif ($_SESSION['user_role'] === 'S') {
-            header("Location: staff_dashboard.php");
+            header("Location: admin.php");
             exit();
         } else {
             header("Location: property_listing.php");
@@ -82,7 +82,7 @@
                                     header("Location: admin.php");
                                     exit();
                                 } elseif ($user['role'] == 'S') {
-                                    header("Location: staff_dashboard.php");
+                                    header("Location: admin.php");
                                     exit();
                                 } else {
                                     header("Location: property_listing.php");

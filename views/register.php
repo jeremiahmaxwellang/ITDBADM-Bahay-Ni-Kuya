@@ -47,7 +47,10 @@
 
             else{
                 // Prepare SQL statement to insert new Customer (C)
-                $stmt = $conn->prepare("INSERT INTO users(email, first_name, last_name, password_hash, role) VALUES (?, ?, ?, ?, 'C')");
+                // STORED PROCEDURE: CALL sp_add_user
+                $stmt = $conn->prepare("CALL sp_add_user(?, ?, ?, ?)");
+                // $stmt = $conn->prepare("INSERT INTO users(email, first_name, last_name, password_hash, role) VALUES (?, ?, ?, ?, 'C')");
+
                 // Bind four strings to the ?, ?, ?, ?
                 $stmt->bind_param("ssss", $email, $first_name, $last_name, $password);
 
