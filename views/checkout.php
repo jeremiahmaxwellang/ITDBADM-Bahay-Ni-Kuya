@@ -2,6 +2,10 @@
 session_start();
 
 // Database connection
+// TODO: Replace redundant db connection code with function call
+// Database configuration
+// require_once('../includes/dbconfig.php');
+
 $servername = "localhost";
 $username = "root";
 $password = "";
