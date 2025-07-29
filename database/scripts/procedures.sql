@@ -66,7 +66,7 @@ USE bahaynikuya_db;
 DELIMITER $$
 
 CREATE PROCEDURE sp_place_order(
-    IN p_email VARCHAR(100),
+    IN p_email TEXT,
     IN p_total_amount DECIMAL(10,2),
     IN p_currency_id INT,
     OUT p_order_id INT  -- output parameter to get the new order ID
@@ -135,10 +135,6 @@ END
 $$ DELIMITER ;
 
 
--- -----------------------------------------------------
--- DATE ADDED: July 23, WEDNESDAY
--- -----------------------------------------------------
-
 -- 6. sp_update_property: Admin edits property details 
 USE bahaynikuya_db;
 
@@ -146,8 +142,8 @@ DELIMITER $$
 
 CREATE PROCEDURE sp_update_property(
     IN p_property_id INT,
-    IN p_property_name VARCHAR(100),
-    IN p_address VARCHAR(300),
+    IN p_property_name TEXT,
+    IN p_address TEXT,
     IN p_price DECIMAL(10,2),
     IN p_description TEXT,
     IN p_photo VARCHAR(260)
@@ -174,8 +170,8 @@ USE bahaynikuya_db;
 DELIMITER $$
 
 CREATE PROCEDURE sp_add_property(
-    IN p_property_name VARCHAR(100),
-    IN p_address VARCHAR(300),
+    IN p_property_name TEXT,
+    IN p_address TEXT,
     IN p_price DECIMAL(10,2),
     IN p_description TEXT,
     IN p_photo VARCHAR(260)
@@ -196,13 +192,13 @@ USE bahaynikuya_db;
 DELIMITER $$
 
 CREATE PROCEDURE sp_add_user(
-    IN u_email VARCHAR(100),
-    IN u_first_name VARCHAR(100),
-    IN u_last_name VARCHAR(100),
-    IN u_password_hash VARCHAR(200)
+    IN u_email TEXT,
+    IN u_first_name TEXT,
+    IN u_last_name TEXT,
+    IN u_password_hash TEXT,
 )
 BEGIN
-    -- Insert new Customer user
+    -- TODO: Add question ID and answer
     INSERT INTO users(email, first_name, last_name, password_hash, role) 
     VALUES (u_email, u_first_name, u_last_name, u_password_hash, 'C');
     
@@ -210,13 +206,15 @@ END
 
 $$ DELIMITER ;
 
+
+
 -- 9. sp_latest_order: Get the latest unconfirmed order of the user
 USE bahaynikuya_db;
 
 DELIMITER $$
 
 CREATE PROCEDURE sp_latest_order(
-    IN o_email VARCHAR(100),
+    IN o_email TEXT,
     OUT o_order_id INT
 )
 BEGIN
