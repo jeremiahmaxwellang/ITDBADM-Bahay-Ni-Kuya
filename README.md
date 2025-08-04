@@ -28,8 +28,10 @@ the file location of the xampp folder.
 3. Open XAMPP Control panel, then [Start] the MySQL and Apache service
 4. Once the service started, press the [Admin] button beside MySQL
 5. After you're redirected to the admin page on your browser, click [SQL] on the top of the screen
+
 6. Paste the sql file contents in the text box, then press [Go] on the bottom right
-7. Refresh the page and the [bahaynikuya_db] schema should be visible on the left side.
+7. If the script refuses to run, UNCHECK the [Enable Foreign Key Checks] checkbox.
+8. Refresh the page and the [bahaynikuya_db] schema should be visible on the left side.
 
 ### Populating the DATABASE
 1. PREREQUISITE: Ensure the [bahaynikuya_db] schema exists in your phpadmin databases
@@ -54,7 +56,6 @@ the file location of the xampp folder.
 
 * On your browser, enter the following URL to access the Bahay Ni Kuya login page
 ```
-localhost/ITDBADM-Bahay-Ni-Kuya-main/views/login.php
 localhost/ITDBADM-Bahay-Ni-Kuya/views/login.php
 ```
 

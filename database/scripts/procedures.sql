@@ -3,6 +3,9 @@
 -- ITDBADM S13 Group 7 Project
 -- Jeremiah Ang, Charles Duelas, Justin Lee, Marcus Mendoza
 
+-- List of all procedures
+SHOW PROCEDURE STATUS WHERE Db = 'bahaynikuya_db';
+
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -35,9 +38,10 @@ BEGIN
         SET converted_price = (base_price / rate_to_usd) * rate_target;
     END IF;
 END
-
 $$ DELIMITER ;
 
+
+-- 2. sp_search_properties: filter by price range
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -50,18 +54,19 @@ CREATE PROCEDURE sp_search_properties(
 BEGIN
     SELECT * FROM properties
     WHERE (address LIKE CONCAT('%', loc, '%') OR loc = '')
-      AND price BETWEEN min_price AND max_price
-      AND offer_type = 'For Sale';  -- Only list available properties
+      AND price BETWEEN min_price AND max_price;
 END
 
 $$ DELIMITER ;
 
+
+-- 3. sp_place_order: Creates an order
 USE bahaynikuya_db;
 
 DELIMITER $$
 
 CREATE PROCEDURE sp_place_order(
-    IN p_email VARCHAR(100),
+    IN p_email TEXT,
     IN p_total_amount DECIMAL(10,2),
     IN p_currency_id INT,
     OUT p_order_id INT  -- output parameter to get the new order ID
@@ -77,6 +82,7 @@ END
 $$ DELIMITER ;
 
 
+-- 4. sp_add_order_item
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -94,6 +100,7 @@ END
 $$ DELIMITER ;
 
 
+-- 5. sp_cancel_order: Cancels order and restores property status
 USE bahaynikuya_db;
 
 DELIMITER $$
@@ -128,19 +135,15 @@ END
 $$ DELIMITER ;
 
 
--- -----------------------------------------------------
--- DATE ADDED: July 23, WEDNESDAY
--- -----------------------------------------------------
-
--- 5. sp_update_property: Admin edits property details 
+-- 6. sp_update_property: Admin edits property details 
 USE bahaynikuya_db;
 
 DELIMITER $$
 
 CREATE PROCEDURE sp_update_property(
     IN p_property_id INT,
-    IN p_property_name VARCHAR(100),
-    IN p_address VARCHAR(300),
+    IN p_property_name TEXT,
+    IN p_address TEXT,
     IN p_price DECIMAL(10,2),
     IN p_description TEXT,
     IN p_photo VARCHAR(260)
@@ -161,14 +164,14 @@ END
 $$ DELIMITER ;
 
 
--- 6. sp_add_property: Admin adds new property
+-- 7. sp_add_property: Admin adds new property
 USE bahaynikuya_db;
 
 DELIMITER $$
 
 CREATE PROCEDURE sp_add_property(
-    IN p_property_name VARCHAR(100),
-    IN p_address VARCHAR(300),
+    IN p_property_name TEXT,
+    IN p_address TEXT,
     IN p_price DECIMAL(10,2),
     IN p_description TEXT,
     IN p_photo VARCHAR(260)
@@ -183,19 +186,19 @@ END
 $$ DELIMITER ;
 
 
--- 7. sp_add_user: Insert new user
+-- 8. sp_add_user: Insert new user
 USE bahaynikuya_db;
 
 DELIMITER $$
 
 CREATE PROCEDURE sp_add_user(
-    IN u_email VARCHAR(100),
-    IN u_first_name VARCHAR(100),
-    IN u_last_name VARCHAR(100),
-    IN u_password_hash VARCHAR(200)
+    IN u_email TEXT,
+    IN u_first_name TEXT,
+    IN u_last_name TEXT,
+    IN u_password_hash TEXT,
 )
 BEGIN
-    -- Insert new Customer user
+    -- TODO: Add question ID and answer
     INSERT INTO users(email, first_name, last_name, password_hash, role) 
     VALUES (u_email, u_first_name, u_last_name, u_password_hash, 'C');
     
@@ -203,13 +206,15 @@ END
 
 $$ DELIMITER ;
 
--- 8. sp_latest_order: Get the latest unconfirmed order of the user
+
+
+-- 9. sp_latest_order: Get the latest unconfirmed order of the user
 USE bahaynikuya_db;
 
 DELIMITER $$
 
 CREATE PROCEDURE sp_latest_order(
-    IN o_email VARCHAR(100),
+    IN o_email TEXT,
     OUT o_order_id INT
 )
 BEGIN
@@ -219,4 +224,5 @@ BEGIN
     WHERE o.email = o_email AND o.is_confirmed = 'N'
     ORDER BY o.order_date DESC
     LIMIT 1;
-END $$ DELIMITER ;
+END 
+$$ DELIMITER ;

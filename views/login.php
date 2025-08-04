@@ -69,7 +69,7 @@
                             $user = $result->fetch_assoc();
                             
                             // Verify password
-                            if (($password == $user['password_hash'])) {
+                            if( password_verify($POST['password'], $user['password_hash']) ){
                                 // Set session variables
                                 $_SESSION['user_email'] = $user['email'];
                                 $_SESSION['first_name'] = $user['first_name'];

@@ -73,8 +73,6 @@ CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`property_archive` (
   `description` TEXT NULL
 );
 
-ALTER TABLE bahaynikuya_db.property_archive ADD `deleted_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
-
 USE bahaynikuya_db;
 DELIMITER $$
 CREATE TRIGGER tg_archive_properties
