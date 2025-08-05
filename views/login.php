@@ -67,9 +67,10 @@
 
                         if ($result->num_rows == 1) {
                             $user = $result->fetch_assoc();
+                            $stored_hash = $user['password_hash'];
                             
-                            // Verify password
-                            if (($password == $user['password_hash'])) {
+                            // Verify password by comparing the hash of the input vs the actual password hash
+                            if( password_verify($password, $user['password_hash']) ){
                                 // Set session variables
                                 $_SESSION['user_email'] = $user['email'];
                                 $_SESSION['first_name'] = $user['first_name'];

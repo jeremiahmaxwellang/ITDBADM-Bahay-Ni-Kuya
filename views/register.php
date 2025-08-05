@@ -34,7 +34,11 @@
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $first_name = trim($_POST['first_name']);
             $last_name = trim($_POST['last_name']);
+
+            // Hash Passwords
             $password = $_POST['password'];
+            $hash = password_hash($password, PASSWORD_DEFAULT); 
+
             $confirm_password = $_POST['confirm_password'];
 
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
@@ -46,13 +50,12 @@
             }
 
             else{
-                // Prepare SQL statement to insert new Customer (C)
                 // STORED PROCEDURE: CALL sp_add_user
+                // TODO: Users must pick a security question and answer
                 $stmt = $conn->prepare("CALL sp_add_user(?, ?, ?, ?)");
-                // $stmt = $conn->prepare("INSERT INTO users(email, first_name, last_name, password_hash, role) VALUES (?, ?, ?, ?, 'C')");
 
                 // Bind four strings to the ?, ?, ?, ?
-                $stmt->bind_param("ssss", $email, $first_name, $last_name, $password);
+                $stmt->bind_param("ssss", $email, $first_name, $last_name, $hash);
 
                 if($stmt->execute()){
                     $success = "Account created successfully!";
