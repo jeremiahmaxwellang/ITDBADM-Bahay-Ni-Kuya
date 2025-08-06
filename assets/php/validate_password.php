@@ -21,57 +21,37 @@
             return false;
         }
 
-        // If password is shorter than 8 characters
-        if (strlen(($password)) < $minLength) {
-            $error = "Password must be at least $minLength characters long";
-            return false;
-        }
-
         // =========== PASSWORD COMPLEXITY =============
 
-        $error = "Password must contain at least one ";
         $invalid = 0;
+
+        // If password is shorter than 8 characters
+        if (strlen(($password)) < $minLength) {
+            $invalid++;
+        }
 
         // If password lacks uppercase letters
         if (!preg_match($uppercase_regex, $password)) {
-            $error = $error . "uppercase letter";
             $invalid++;
         }
 
         // If password lacks lowercase letters
         if (!preg_match($lowercase_regex, $password)) {
-            // $error = "Password must contain at least one lowercase letter.";
-            if($invalid > 0){
-                $error = $error . ", ";
-            }
-            $error = $error . "lowercase letter";
             $invalid++;
         }
 
         // If password lacks digits from 0-9
         if (!preg_match($digit_regex, $password)) {
-
-            if($invalid > 0){
-                $error = $error . ", ";
-            }
-
-            $error = $error . "digit from 0 to 9";
             $invalid++;
         }
         
         // If password lacks special characters
         if (!preg_match($specialchar_regex, $password)) {
-
-            if($invalid > 0){
-                $error = $error . ", ";
-            }
-
-            $error = $error . "special character.";
-
             $invalid++;
         }
 
         if($invalid > 0) {
+            $error = "Password must be at least $minLength characters long and contain:\n- at least one letter\n- at least one digit\n- at least one uppercase letter\n- and at least one symbol.";
             return false;
         }
 
