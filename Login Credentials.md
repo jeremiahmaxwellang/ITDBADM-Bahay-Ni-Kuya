@@ -5,26 +5,6 @@ Haardcoded Login Credentials for Regular User:
     password: Custom3r!
     hash: $2y$10$03DepZqvrCMJk.Pa9.VNb.Td3JmqVexn8ZDHiykxJe2.Q9tEfXoES
 
---- User 2:
-    email: kent@gmail.com
-    password: superman
-
---- User 3:
-    email: lane@gmail.com
-    password: lanepassword
-
---- User 4:
-    email: mendoza@gmail.com
-    password: mendozapassword
-
---- User 5:
-    email: duelas@gmail.com
-    password: duelaspassword
-
---- User 6:
-    email: lee@gmail.com
-    password: leepassword
-
 
 Admin & Staff:
 --- Admin:

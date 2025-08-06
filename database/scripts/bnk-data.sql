@@ -9,17 +9,12 @@ USE bahaynikuya_db;
 INSERT INTO users(email, first_name, last_name, password_hash, role)
 VALUES 
 -- admin user account
-("admin@gmail.com", "Admin", "Man", "adminpassword", 'A'),
+("admin@gmail.com", "Admin", "Man", "$2y$10$Dp/xoXZfHyllSajLIWoMGOSwIEJGFsn3/O09v5CmOSKXotHQm6GYK", 'A'),
 
-("customer@gmail.com", "Custom", "Murr", "customerpassword", 'C'),
-("kent@gmail.com", "Clark", "Kent", "superman", 'C'),
-("lane@gmail.com", "Lois", "Lane", "lanepassword", 'C'),
-("mendoza@gmail.com", "Marcus", "Mendoza", "mendozapassword", 'C'),
-("duelas@gmail.com", "Charles", "Duelas", "duelaspassword", 'C'),
-("lee@gmail.com", "Justin", "Lee", "leepassword", 'C'),
+("customer@gmail.com", "Custom", "Murr", "$2y$10$03DepZqvrCMJk.Pa9.VNb.Td3JmqVexn8ZDHiykxJe2.Q9tEfXoES", 'C'),
 
 -- staff user account
-("staff@gmail.com", "Staff", "Guy", "staffpassword", 'S');
+("staff@gmail.com", "Staff", "Guy", "$2y$10$vxyMJWxx2qR16gcyuKZZze9U3IWXv9cPgsdermeXbVnB7Md2IbJFe", 'S');
 
 -- INSERT CURRENCIES
 INSERT INTO currencies(currency_id, currency_code, symbol, exchange_rate_to_usd)

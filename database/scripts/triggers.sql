@@ -59,17 +59,6 @@ $$ DELIMITER ;
 
 
 -- 3. [ADMIN PANEL] tg_archive_properties: Audits deleted property in a new property_archive table
-USE bahaynikuya_db;
-
-CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`property_archive` (
-  `property_id` INT NOT NULL PRIMARY KEY,
-  `property_name` VARCHAR(100) NULL,
-  `address` VARCHAR(300) NULL,
-  `price` DECIMAL(10,2) NULL,
-  `description` TEXT NULL
-);
-
-ALTER TABLE bahaynikuya_db.property_archive ADD `deleted_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 
 USE bahaynikuya_db;
 DELIMITER $$
@@ -99,15 +88,6 @@ $$ DELIMITER ;
 
 -- 4. trg_property_price_audit: Tracks all price changes of the properties
 USE bahaynikuya_db;
-
-CREATE TABLE property_price_audit (
-    audit_id INT AUTO_INCREMENT PRIMARY KEY,
-    property_id INT NOT NULL,
-    old_price DECIMAL(10,2),
-    new_price DECIMAL(10,2),
-    change_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 
 DELIMITER $$
 CREATE TRIGGER trg_property_price_audit

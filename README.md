@@ -35,7 +35,7 @@ the file location of the xampp folder.
 7. Refresh the page and the [bahaynikuya_db] schema should be visible on the left side.
 
 #### Step 3: Repeat the steps for stored procedures & triggers
-* Repeat the Steps above for the ```strd-procedurs.sql``` and ```triggers.sql``` script to complete the DB.
+* Repeat the Steps above for the ```procedures.sql``` and ```triggers.sql``` script to complete the DB.
 
 ### Populating the DATABASE
 1. PREREQUISITE: Ensure the [bahaynikuya_db] schema exists in your phpadmin databases
@@ -116,6 +116,92 @@ http://localhost/phpmyadmin/index.php?route=/
 
 ```Username: staff```
 ```Password: staffpassword```
+
+### 🛠️ Issue: Cannot Delete Database in phpMyAdmin (XAMPP) — "Directory Not Empty"
+
+If you're using XAMPP and encounter the error **"Cannot delete database, directory not empty"** in phpMyAdmin, this guide will help you resolve it safely.
+
+---
+
+## ⚠️ Problem
+
+When attempting to delete a database via phpMyAdmin, you may see:
+```Cannot delete database: Directory not empty```
+
+
+This typically occurs when MySQL cannot remove the database folder from the file system due to leftover files or locked resources.
+
+---
+
+## ✅ Solution Steps
+
+### 1. Stop MySQL Service
+
+Before making any changes:
+
+- Open **XAMPP Control Panel**
+- Click **Stop** next to **MySQL**
+
+This ensures no files are in use or locked.
+
+---
+
+### 2. Locate the MySQL Data Directory
+
+Navigate to the MySQL data folder:
+
+```C:\xampp\mysql\data\```
+
+
+Find the folder named after your database (e.g., `bahaynikuya_db`).
+
+---
+
+### 3. Delete the Database Folder Manually
+
+- Right-click the folder (e.g., `bahaynikuya_db`)
+- Select **Delete**
+- If Windows prevents deletion, restart your computer or confirm MySQL is fully stopped
+
+---
+
+### 4. Restart MySQL
+
+- Return to **XAMPP Control Panel**
+- Click **Start** next to **MySQL**
+
+Your database should now be removed from phpMyAdmin.
+
+---
+
+## 🧹 Optional Cleanup
+
+If the folder contains leftover files like:
+
+- `table_name.frm`
+- `table_name.ibd`
+- `db.opt`
+
+### 5. Run the DB Scripts
+
+- In the myphpadmin SQL menu, copy paste and run the following scripts:
+- bnk-schema.sql
+- procedures.sql
+- triggers.sql
+
+Your database should now be removed from phpMyAdmin.
+
+---
+
+You can safely delete them **only if you're sure** the data is no longer needed.
+
+---
+
+## 🧪 Need to Recreate the Database?
+
+If you'd like to reinitialize the database and restore your schema, consider creating a fresh SQL script to define tables and relationships.
+
+---
 
 
 ## Authors

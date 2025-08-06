@@ -4,7 +4,7 @@
 -- Jeremiah Ang, Charles Duelas, Justin Lee, Marcus Mendoza
 
 -- List of all procedures
-SHOW PROCEDURE STATUS WHERE Db = 'bahaynikuya_db';
+-- SHOW PROCEDURE STATUS WHERE Db = 'bahaynikuya_db';
 
 USE bahaynikuya_db;
 
@@ -66,7 +66,7 @@ USE bahaynikuya_db;
 DELIMITER $$
 
 CREATE PROCEDURE sp_place_order(
-    IN p_email TEXT,
+    IN p_email VARCHAR(254),
     IN p_total_amount DECIMAL(10,2),
     IN p_currency_id INT,
     OUT p_order_id INT  -- output parameter to get the new order ID
@@ -187,18 +187,18 @@ $$ DELIMITER ;
 
 
 -- 8. sp_add_user: Insert new user
+-- TODO: Add question ID and answer
 USE bahaynikuya_db;
 
 DELIMITER $$
 
 CREATE PROCEDURE sp_add_user(
-    IN u_email TEXT,
+    IN u_email VARCHAR(254),
     IN u_first_name TEXT,
     IN u_last_name TEXT,
-    IN u_password_hash TEXT,
+    IN u_password_hash TEXT
 )
 BEGIN
-    -- TODO: Add question ID and answer
     INSERT INTO users(email, first_name, last_name, password_hash, role) 
     VALUES (u_email, u_first_name, u_last_name, u_password_hash, 'C');
     
@@ -214,7 +214,7 @@ USE bahaynikuya_db;
 DELIMITER $$
 
 CREATE PROCEDURE sp_latest_order(
-    IN o_email TEXT,
+    IN o_email VARCHAR(254),
     OUT o_order_id INT
 )
 BEGIN
