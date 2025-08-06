@@ -1,6 +1,8 @@
 <?php
     // Database configuration
     require_once('../includes/dbconfig.php');
+    include('../assets/php/validate_password.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -11,9 +13,6 @@
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body class="register-body">
-    <div class="login-bg-gradient"></div>
-
-<body style="background-image: url('../assets/images/pbb house.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="login-bg-gradient"></div>
 
 <body style="background-image: url('../assets/images/pbb house.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
@@ -29,11 +28,12 @@
 
         <?php
 
-            if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
             // Collect and sanitize user input
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $first_name = trim($_POST['first_name']);
             $last_name = trim($_POST['last_name']);
+            $error = "";
 
             // Hash Passwords
             $password = $_POST['password'];
@@ -41,15 +41,14 @@
 
             $confirm_password = $_POST['confirm_password'];
 
+        
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
                 $error = "Invalid email format";
             }
 
-            elseif($password !== $confirm_password){
-                $error = "Passwords do not match";
-            }
+            // Validate Password
+            elseif( passwordIsValid($password, $confirm_password, $error) ){
 
-            else{
                 // STORED PROCEDURE: CALL sp_add_user
                 // TODO: Users must pick a security question and answer
                 $stmt = $conn->prepare("CALL sp_add_user(?, ?, ?, ?)");

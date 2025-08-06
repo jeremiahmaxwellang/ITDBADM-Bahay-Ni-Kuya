@@ -136,3 +136,27 @@ $$ DELIMITER ;
 -- "Prime real estate in midtown Tri-State area.", 
 -- 'For Sale', 
 -- "../assets/images/Brent_Manalo.jpg");
+
+-- 6. [ REGISTER ] tg_record_password_oninsert: Save previous passwords to prevent password reuse
+USE bahaynikuya_db;
+DELIMITER $$
+CREATE TRIGGER tg_record_password_oninsert
+AFTER INSERT ON users
+FOR EACH ROW
+	BEGIN
+		INSERT INTO old_passwords(email, password_hash)  
+        VALUES(NEW.email, NEW.password_hash);
+    END
+$$ DELIMITER ;
+
+-- 7. [ PROFILE ] tg_record_password_onupdate: Save previous passwords to prevent password reuse
+USE bahaynikuya_db;
+DELIMITER $$
+CREATE TRIGGER tg_record_password_onupdate
+AFTER UPDATE ON users
+FOR EACH ROW
+	BEGIN
+		INSERT INTO old_passwords(email, password_hash)  
+        VALUES(OLD.email, NEW.password_hash);
+    END
+$$ DELIMITER ;
