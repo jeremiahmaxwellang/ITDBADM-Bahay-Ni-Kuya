@@ -2,7 +2,6 @@
     // Database configuration
     require_once('../includes/dbconfig.php');
     include('../assets/php/register_controller.php');
-
 ?>
 
 <!DOCTYPE html>

@@ -50,7 +50,7 @@
 
         } 
 
-        // Redirect to Login page if successful
+        // If Successful, user proceeds to login
         if(isset($success)){
             header("Location: login.php");
             exit();
