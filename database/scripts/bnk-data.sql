@@ -35,3 +35,15 @@ VALUES
 (5, "Charlie", "Calamba, Laguna", 2000000.00, "Spacious property for sale in Calamba, Laguna, ideal for residential or vacation use and located in a peaceful community near hot springs, resorts, and key city amenities.", 'For Sale', "../assets/images/charlie.jpg"),
 (6, "Klarisse", "Cavite", 1999999.99, "Affordable property for sale in Cavite, perfect for families or investors looking for a growing community with easy access to Metro Manila and nearby commercial hubs.", 'Sold', "../assets/images/klarisse.jpg")
 ;
+
+-- INSERT SECURITY QUESTIONS
+USE bahaynikuya_db;
+INSERT INTO security_questions(question_id, question)
+VALUES
+(1, "What is your favorite sibling's nickname?"),
+(2, "What was the first concert you attended?"),
+(3, "What was the make and model of your first car?"),
+(4, "In what city or town did your parents meet?"),
+(5, "What was the name of your first manager at your first job?")
+(6, "Who is your crush?")
+;
