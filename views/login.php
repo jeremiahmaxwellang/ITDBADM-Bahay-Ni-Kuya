@@ -1,6 +1,7 @@
 <?php
     // Database configuration
     require_once('../includes/dbconfig.php');
+    include('../assets/php/login_controller.php');
 
     session_start();
 
@@ -43,76 +44,7 @@
 
         <div class="login_formDiv">
             <?php
-
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    // Sanitize and validate input
-                    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-                    $password = $_POST['password'];
-
-                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                        echo "<p class='error-message'>Invalid email format</p>";
-                    } else {
-                        // Prepare SQL statement
-                        $stmt = $conn->prepare("SELECT email, first_name, last_name, password_hash, role FROM users WHERE email = ?");
-                        $stmt->bind_param("s", $email);
-
-                        // Execute SQL statement
-                        if($stmt->execute()){
-                            $success = "Sign-in successful!";
-                        }
-
-                        else $error = "Error: " . $stmt->error;
-                        
-                        $result = $stmt->get_result();
-
-                        if ($result->num_rows == 1) {
-                            $user = $result->fetch_assoc();
-                            $stored_hash = $user['password_hash'];
-                            
-                            // Verify password by comparing the hash of the input vs the actual password hash
-                            if( password_verify($password, $user['password_hash']) ){
-                                // Set session variables
-                                $_SESSION['user_email'] = $user['email'];
-                                $_SESSION['first_name'] = $user['first_name'];
-                                $_SESSION['last_name'] = $user['last_name'];
-                                $_SESSION['user_role'] = $user['role'];
-                                $_SESSION['logged_in'] = true;
-
-                                // Redirect based on role
-                                if ($user['role'] == 'A') {
-                                    header("Location: admin.php");
-                                    exit();
-                                } elseif ($user['role'] == 'S') {
-                                    header("Location: admin.php");
-                                    exit();
-                                } else {
-                                    header("Location: property_listing.php");
-                                    exit();
-                                }
-                            } else {
-                                echo "<p class='error-message'>Invalid email or password</p>";
-                            }
-                        } else {
-                            echo "<p class='error-message'>Invalid email or password</p>";
-                        }
-                        
-                        $stmt->close();
-                        $conn->close();
-                    }
-                }
-
-            // Display system messages
-            if (isset($_GET['logout'])) {
-                echo "<p class='success-message'>You have been successfully logged out.</p>";
-            }
-            
-            if (isset($_GET['registered'])) {
-                echo "<p class='success-message'>Registration successful! Please login.</p>";
-            }
-            
-            if (isset($_GET['error'])) {
-                echo "<p class='error-message'>" . htmlspecialchars($_GET['error']) . "</p>";
-            }
+                login($conn);
             ?>
 
             <form method="post" action="" class="login_form">

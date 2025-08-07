@@ -187,7 +187,6 @@ $$ DELIMITER ;
 
 
 -- 8. sp_add_user: Insert new user
--- TODO: Add question ID and answer
 USE bahaynikuya_db;
 
 DELIMITER $$
