@@ -1,12 +1,6 @@
 <?php
     session_start();
 
-    echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
-
-    $email = $_SESSION['user_email'];
-
     // Database configuration
     require_once('../includes/dbconfig.php');
     include('../assets/php/security_question_controller.php');
@@ -30,7 +24,7 @@ echo "</pre>";
     </div>
 
     <div class="register_container">
-        <h2 class="register_subtitle"><?php echo htmlspecialchars($email); ?> ACCOUNT RECOVERY: SELECT YOUR <span style="color: CornflowerBlue;">SECURITY QUESTION</span> </h2>
+        <h2 class="register_subtitle">ACCOUNT RECOVERY: SELECT YOUR <span style="color: CornflowerBlue;">SECURITY QUESTION</span> </h2>
         <div class="register_separator"></div>
 
          <!-- ../assets/php/security_question_controller.php -->
