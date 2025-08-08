@@ -1,23 +1,8 @@
 <?php
     // Database configuration
     require_once('../includes/dbconfig.php');
-    include('../assets/php/login_controller.php');
 
     session_start();
-
-    // Redirect if already logged in
-    if (isset($_SESSION['user_email'])) {
-        if ($_SESSION['user_role'] === 'A') {
-            header("Location: admin.php");
-            exit();
-        } elseif ($_SESSION['user_role'] === 'S') {
-            header("Location: admin.php");
-            exit();
-        } else {
-            header("Location: property_listing.php");
-            exit();
-        }
-    }
 
 ?>
 

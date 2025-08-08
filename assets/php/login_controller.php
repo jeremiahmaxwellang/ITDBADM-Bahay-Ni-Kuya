@@ -4,7 +4,7 @@
         - backend for views/login.php
     */
 
-    include('user_redirect.php');
+    include('authentication.php');
 
     function login(&$conn) {
      if ($_SERVER['REQUEST_METHOD'] == 'POST') {

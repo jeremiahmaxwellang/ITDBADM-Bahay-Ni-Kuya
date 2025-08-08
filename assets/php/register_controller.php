@@ -31,7 +31,6 @@
             elseif( passwordIsValid($password, $confirm_password, $error) ){
 
                 // STORED PROCEDURE: CALL sp_add_user
-                // TODO: Users must pick a security question and answer
                 $stmt = $conn->prepare("CALL sp_add_user(?, ?, ?, ?)");
 
                 // Bind four strings to the ?, ?, ?, ?
@@ -39,6 +38,12 @@
 
                 if($stmt->execute()){
                     $success = "Account created successfully!";
+
+                    // Store password in OLD_PASSWORDS TABLE to prevent future reuse
+                    $pass_stmt = $conn->prepare("CALL sp_record_password(?, ?)");
+                    $pass_stmt->bind_param("ss", $email, $hash);
+                    $pass_stmt->execute();
+
                 }
 
                 else $error = "Error: " . $stmt->error;

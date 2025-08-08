@@ -7,6 +7,10 @@
 
     // Database configuration
     require_once('../includes/dbconfig.php');
+    include('../assets/php/login_success_controller.php');
+
+    // Log successful authentication to EVENT_LOGS table
+    logAuthentication($conn);
 ?>
 
 <!DOCTYPE html>
