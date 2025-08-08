@@ -16,6 +16,11 @@
     function passwordIsValid(&$conn, $email, $password, $confirm_password, &$error) { // reference &$error to change the msg
         global $uppercase_regex, $lowercase_regex, $digit_regex, $specialchar_regex, $minLength;
 
+        // If password is NOT older than 1 day
+        if(!isOld($conn, $email, $error)) {
+            return false;
+        }
+
         // If either [Password] or [Confirm Password] is empty
         if (empty($password) || empty($confirm_password)) {
             $error = "Password fields cannot be empty.";
@@ -96,5 +101,38 @@
         }
         
         return false; // query failed
+    }
+
+    // Check if password is at least 1 day old
+    function isOld(&$conn, $email, &$error) {
+        $stmt = $conn->prepare("SELECT password_created
+        FROM old_passwords
+        WHERE email=?
+        ORDER BY password_created DESC
+        LIMIT 1");
+
+        if($stmt) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->bind_result($password_created);
+
+            if($stmt->fetch()){
+                $stmt->close();
+
+                $changed_time = strtotime($password_created);
+                $now = time();
+                $difference = $now - $changed_time;
+
+                if($difference < 86400) { // 86400 seconds = 1 day
+                    $error = "You must wait at least one (1) day before changing password.<br>Last changed: $password_created<br>";
+                    return false; // password is not old enough
+                }
+            }
+            else {
+                $stmt->close();
+            }
+            
+            return true; // Password is old enough
+        }
     }
 ?>
