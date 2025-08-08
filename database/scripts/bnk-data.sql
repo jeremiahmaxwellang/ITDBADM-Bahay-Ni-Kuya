@@ -44,6 +44,6 @@ VALUES
 (2, "What was the first concert you attended?"),
 (3, "What was the make and model of your first car?"),
 (4, "In what city or town did your parents meet?"),
-(5, "What was the name of your first manager at your first job?")
+(5, "What was the name of your first manager at your first job?"),
 (6, "Who is your crush?")
 ;
