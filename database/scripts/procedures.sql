@@ -225,3 +225,34 @@ BEGIN
     LIMIT 1;
 END 
 $$ DELIMITER ;
+
+-- 10. sp_record_password: Save previous passwords to prevent password reuse
+--     CALL this whenever password is changed
+DELIMITER $$
+
+CREATE PROCEDURE sp_record_password(
+    IN my_email VARCHAR(254),
+    IN my_password_hash TEXT
+)
+BEGIN
+    INSERT INTO old_passwords(email, password_hash)  
+    VALUES(my_email, my_password_hash);
+END 
+$$ DELIMITER ;
+
+
+-- 11. [LOGS] sp_log_event: Log to event_logs table: all successful and failed user logins, input validation failures, access control failure
+-- this_type:   ENUM('I', 'A', 'C')
+-- this_result: ENUM('Success', 'Fail')
+
+DELIMITER $$
+CREATE PROCEDURE sp_log_event(
+    IN this_type VARCHAR(1),
+    IN this_user_email VARCHAR(254),
+    IN this_result VARCHAR(10) 
+)
+BEGIN
+    INSERT INTO event_logs(type, user_email, result)  
+    VALUES(this_type, this_user_email, this_result);
+END
+$$ DELIMITER ;
