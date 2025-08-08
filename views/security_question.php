@@ -13,6 +13,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
+
 <body class="register-body">
     <div class="login-bg-gradient"></div>
 
@@ -24,7 +25,8 @@
     </div>
 
     <div class="register_container">
-        <h2 class="register_subtitle">ACCOUNT RECOVERY: SELECT YOUR <span style="color: CornflowerBlue;">SECURITY QUESTION</span> </h2>
+        <h2 class="register_subtitle">ACCOUNT RECOVERY:</h2>
+        <h2 class="register_subtitle">SELECT YOUR <span style="color: CornflowerBlue;">SECURITY QUESTION</span> </h2>
         <div class="register_separator"></div>
 
          <!-- ../assets/php/security_question_controller.php -->
@@ -47,11 +49,11 @@
                 <label for="answer" class="register_label">Answer</label>
                 <input type="text" id="answer" name="answer" class="register_input" required placeholder="Enter your answer">
             </div>
-
-            <button type="submit" class="register_button">Confirm</button>
-
         </form>
     </div>
+
+    <!-- Move the confirm button outside the register_container -->
+    <button type="submit" class="register_button">Confirm</button>
 
 </body>
 </html>
