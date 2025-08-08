@@ -1,23 +1,9 @@
 <?php
 session_start();
 
-// Database connection
 // TODO: Replace redundant db connection code with function call
 // Database configuration
-// require_once('../includes/dbconfig.php');
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bahaynikuya_db";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once('../includes/dbconfig.php');
 
 // Initialize cart if it doesn't exist
 if (!isset($_SESSION['cart'])) {
