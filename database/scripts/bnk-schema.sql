@@ -77,7 +77,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `bahaynikuya_db`.`currencies` ;
 
 CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`currencies` (
-  `curremcy_id` INT NOT NULL,
+  `currency_id` INT NOT NULL,
   `currency_code` VARCHAR(3) NULL,
   `symbol` VARCHAR(2) NULL,
   `exchange_rate_to_usd` DECIMAL(10,2) NULL,
