@@ -30,7 +30,7 @@
 
     
     <div class="register_container">
-        <h2 class="register_subtitle">ACCOUNT RECOVERY:</h2>
+        <h2 class="register_subtitle">ACCOUNT RECOVERY: <?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></h2>
         <h2 class="register_subtitle">Answer the <span style="color: CornflowerBlue;">SECURITY QUESTION</span> </h2>
         <div class="register_separator"></div>
        

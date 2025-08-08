@@ -32,9 +32,9 @@
                     $success = "Password changed successfully!";
 
                     // Store password in OLD_PASSWORDS TABLE to prevent future reuse
-                    // $pass_stmt = $conn->prepare("CALL sp_record_password(?, ?)");
-                    // $pass_stmt->bind_param("ss", $email, $hash);
-                    // $pass_stmt->execute();
+                    $pass_stmt = $conn->prepare("CALL sp_record_password(?, ?)");
+                    $pass_stmt->bind_param("ss", $email, $hash);
+                    $pass_stmt->execute();
 
                 }
 

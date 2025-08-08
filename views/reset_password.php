@@ -1,4 +1,6 @@
 <?php
+    session_start();
+
     // Database configuration
     require_once('../includes/dbconfig.php');
     include('../assets/php/reset_password_controller.php');
@@ -25,9 +27,8 @@
     </div>
 
     <div class="register_container">
-        <h2 class="register_subtitle">RESET YOUR <span style="color: CornflowerBlue;">PASSWORD</span></h2>
+        <h2 class="register_subtitle">RESET YOUR <span style="color: CornflowerBlue;">PASSWORD</span> FOR <?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></h2>
         <div class="register_separator"></div>
-<p>Email: <?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></p>
 
         <?php
             changePassword($conn, $email); // ../assets/php/reset_password_controller.php
