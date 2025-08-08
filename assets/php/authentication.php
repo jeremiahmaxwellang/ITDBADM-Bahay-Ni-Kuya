@@ -16,4 +16,15 @@
         }
     }
 
+    // Log successful authentication to EVENT_LOGS table
+    function logAuthentication(&$conn, $email, $status) {
+
+        $type = 'A'; // Authentication Log
+
+        $log_stmt = $conn->prepare("CALL sp_log_event(?, ?, ?)");
+
+        $log_stmt->bind_param("sss", $type, $email, $status);
+        $log_stmt->execute();
+    
+   }
 ?>

@@ -1,8 +1,3 @@
--- Bahay Ni Kuya CREATE SCHEMA Script
-
--- ITDBADM S13 Group 7 Project
--- Jeremiah Ang, Charles Duelas, Justin Lee, Marcus Mendoza
-
 -- MySQL Workbench Forward Engineering
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -46,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`users` (
   `question_id` INT NULL,
   `question_answer` TEXT NULL,
   `account_disabled` ENUM('Y', 'N') NULL,
-  `userscol` VARCHAR(45) NULL,
   PRIMARY KEY (`email`),
   INDEX `fk_users_security_questions1_idx` (`question_id` ASC) ,
   CONSTRAINT `fk_users_security_questions1`
@@ -223,7 +217,7 @@ DROP TABLE IF EXISTS `bahaynikuya_db`.`event_logs` ;
 CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`event_logs` (
   `log_id` INT NOT NULL AUTO_INCREMENT,
   `type` ENUM('I', 'A', 'C') NULL,
-  `datetime` TIMESTAMP NULL,
+  `datetime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `user_email` VARCHAR(254) NULL,
   `result` ENUM('Success', 'Fail') NULL,
   PRIMARY KEY (`log_id`))
