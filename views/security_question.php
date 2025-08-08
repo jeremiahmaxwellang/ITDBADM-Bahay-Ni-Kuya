@@ -24,6 +24,7 @@
         BAHAY NI KUYA
     </div>
 
+    <form method="post" action="">
     <div class="register_container">
         <h2 class="register_subtitle">ACCOUNT RECOVERY:</h2>
         <h2 class="register_subtitle">SELECT YOUR <span style="color: CornflowerBlue;">SECURITY QUESTION</span> </h2>
@@ -32,7 +33,7 @@
          <!-- ../assets/php/security_question_controller.php -->
         <?php submitQuestions($conn); ?>
        
-        <form method="post" action="">
+        
             <div class="register_name_row">
                 <div class="register_name_column">
                     <label for="security_question" class="register_label">Choose your security question</label>
@@ -49,11 +50,12 @@
                 <label for="answer" class="register_label">Answer</label>
                 <input type="text" id="answer" name="answer" class="register_input" required placeholder="Enter your answer">
             </div>
-        </form>
+        
     </div>
 
-    <!-- Move the confirm button outside the register_container -->
-    <button type="submit" class="register_button">Confirm</button>
+        <!-- Move the confirm button outside the register_container -->
+        <button type="submit" class="register_button">Confirm</button>
+    </form>
 
 </body>
 </html>
