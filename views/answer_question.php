@@ -6,6 +6,8 @@
     include('../assets/php/security_question_controller.php');
 
     $email = $_GET['email'] ?? '';
+    $_SESSION['recovery_email'] = $email;
+
 ?>
 
 <!DOCTYPE html>
@@ -57,12 +59,18 @@
                 <label for="answer" class="register_label">Answer</label>
                 <input type="text" id="answer" name="answer" class="register_input" required placeholder="Enter your answer">
            
-                <button type="submit" class="register_button">Confirm</button>
+                
             </div>
 
+        
 
-
+        <button type="submit" class="register_button">Confirm</button>
         </form>
+
+        <p class="register_prompt">
+            Already have an account? <a href="login.php">Login</a>
+        </p>
+    </div>
 
 </body>
 </html>

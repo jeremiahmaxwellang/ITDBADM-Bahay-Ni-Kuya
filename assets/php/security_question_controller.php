@@ -105,8 +105,8 @@
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             // If answer is correct
             if (strcasecmp(trim($userAnswer), trim($answer)) === 0){
-                $success = 'Correct';
-                echo "<p class='error-message'>{$success}</p>";
+                header("Location: reset_password.php");
+                exit();
             }
 
             // Incorrect answer
