@@ -28,7 +28,7 @@
             }
 
             // Validate Password
-            elseif( passwordIsValid($password, $confirm_password, $error) ){
+            elseif( passwordIsValid($conn, $email, $password, $confirm_password, $error) ){
 
                 // STORED PROCEDURE: CALL sp_add_user
                 $stmt = $conn->prepare("CALL sp_add_user(?, ?, ?, ?)");
