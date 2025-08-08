@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`currencies` (
   `currency_code` VARCHAR(3) NULL,
   `symbol` VARCHAR(2) NULL,
   `exchange_rate_to_usd` DECIMAL(10,2) NULL,
-  PRIMARY KEY (`curremcy_id`))
+  PRIMARY KEY (`currency_id`))
 ENGINE = InnoDB;
 
 
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`orders` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_orders_currencies1`
     FOREIGN KEY (`currency_id`)
-    REFERENCES `bahaynikuya_db`.`currencies` (`curremcy_id`)
+    REFERENCES `bahaynikuya_db`.`currencies` (`currency_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -201,7 +201,7 @@ DROP TABLE IF EXISTS `bahaynikuya_db`.`property_archive` ;
 CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`property_archive` (
   `property_id` INT NOT NULL,
   `property_name` TEXT NULL,
-  `adress` TEXT NULL,
+  `address` TEXT NULL,
   `price` DECIMAL(10,2) NULL,
   `description` TEXT NULL,
   `deleted_on` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
