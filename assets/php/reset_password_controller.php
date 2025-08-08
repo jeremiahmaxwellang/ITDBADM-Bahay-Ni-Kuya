@@ -20,7 +20,7 @@
             $confirm_password = $_POST['confirm_password'];
 
             // Validate Password
-            if( passwordIsValid($password, $confirm_password, $error) && !isReused($conn, $email, $password, $error)){
+            if( passwordIsValid($conn, $email, $password, $confirm_password, $error) ){
 
                 // STORED PROCEDURE: CALL sp_add_user
                 $stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE email = ?");

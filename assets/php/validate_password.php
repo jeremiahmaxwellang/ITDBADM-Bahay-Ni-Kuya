@@ -12,7 +12,8 @@
     $specialchar_regex  = '/[-!"#$%&()*<>\/:;?@\[\]^_`{|}~+<>]/'; // Special characters 
 
     // Checks validity of password
-    function passwordIsValid($password, $confirm_password, &$error) { // reference &$error to change the msg
+    // Called in: register_controller.php, reset_password_controller.php
+    function passwordIsValid(&$conn, $email, $password, $confirm_password, &$error) { // reference &$error to change the msg
         global $uppercase_regex, $lowercase_regex, $digit_regex, $specialchar_regex, $minLength;
 
         // If either [Password] or [Confirm Password] is empty
@@ -58,6 +59,11 @@
         // If either [Password] and [Confirm Password] do not match
         if($password != $confirm_password) {
             $error = "Passwords do not match";
+            return false;
+        }
+
+        // If password is being reused
+        if (isReused($conn, $email, $password, $error)) {
             return false;
         }
 
