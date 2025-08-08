@@ -65,4 +65,30 @@
         return true;
 
     }
+
+    // Check if password is being reused
+    function isReused(&$conn, $email, $new_password, &$error) {
+
+        $stmt = $conn->prepare("SELECT password_hash
+        FROM old_passwords
+        WHERE email=?");
+
+        if($stmt) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->bind_result($old_hash);
+
+            while($stmt->fetch()){
+                if(password_verify($new_password, $old_hash)) {
+                    $error = "You cannot reuse passwords!";
+                    $stmt->close();
+                    return true;
+                }
+            }
+            $stmt->close();
+            return false; // Not reused
+        }
+        
+        return false; // query failed
+    }
 ?>
