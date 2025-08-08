@@ -135,6 +135,13 @@ This typically occurs when MySQL cannot remove the database folder from the file
 
 ## ✅ Solution Steps
 
+### 0. Try dropping the Database first
+
+On the SQL tab in myphpadmin, use the following SQL statement:
+```  DROP SCHEMA bahaynikuya_db;  ```
+
+## If Schema is not dropping:
+
 ### 1. Stop MySQL Service
 
 Before making any changes:
@@ -190,18 +197,6 @@ If the folder contains leftover files like:
 - triggers.sql
 
 Your database should now be removed from phpMyAdmin.
-
----
-
-You can safely delete them **only if you're sure** the data is no longer needed.
-
----
-
-## 🧪 Need to Recreate the Database?
-
-If you'd like to reinitialize the database and restore your schema, consider creating a fresh SQL script to define tables and relationships.
-
----
 
 
 ## Authors
