@@ -62,4 +62,59 @@
 
         }
     }
+
+    // Fetch the question selected by the user
+    function fetchUserQuestion(&$conn, $email) {
+        $stmt = $conn->prepare("SELECT s.question, u.question_answer
+        FROM security_questions s 
+        JOIN users u ON s.question_id = u.question_id 
+        WHERE u.email=?");
+
+        if($stmt) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->bind_result($question, $answer);
+
+            if($stmt->fetch()) {
+                $stmt->close();
+
+                // Return question & answer for checking
+                return [
+                    'question' => htmlspecialchars($question, ENT_QUOTES, 'UTF-8'),
+                    'answer' => $answer
+                ];
+
+            } else {
+                $stmt->close();
+                
+                return null;
+            }
+
+
+        } else {
+            return null; // No security question found
+        }
+        
+
+    }
+
+    // Check if answer matches the user's security question answer
+    function verifyAnswer($answer) {
+        $userAnswer = $_POST['answer'] ?? '';
+
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            // If answer is correct
+            if (strcasecmp(trim($userAnswer), trim($answer)) === 0){
+                $success = 'Correct';
+                echo "<p class='error-message'>{$success}</p>";
+            }
+
+            // Incorrect answer
+            else {
+                $error = 'Wrong answer!';
+                echo "<p class='error-message'>{$error}</p>";
+            }
+        }
+    }
+
 ?>

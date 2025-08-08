@@ -16,8 +16,8 @@
         $user = get_user_by_email($email);
 
         if ($user) {
-            // Redirect to security_question.php with the email as a query parameter
-            header("Location: security_question.php?email=" . urlencode($email));
+            // Redirect to answer_question.php with the email as a query parameter
+            header("Location: answer_question.php?email=" . urlencode($email));
             exit; // Ensure no further code is executed
         } else {
             // Handle the case where the email is not found (Optional)
