@@ -13,11 +13,11 @@
 
     // Checks validity of password
     // Called in: register_controller.php, reset_password_controller.php
-    function passwordIsValid(&$conn, $email, $password, $confirm_password, &$error) { // reference &$error to change the msg
+    function passwordIsValid(&$conn, $email, $password, $confirm_password, &$error) {
         global $uppercase_regex, $lowercase_regex, $digit_regex, $specialchar_regex, $minLength;
 
         // If password is NOT older than 1 day
-        if(!isOld($conn, $email, $error)) {
+        if (!isOld($conn, $email, $error)) {
             return false;
         }
 
@@ -27,12 +27,11 @@
             return false;
         }
 
-        // =========== PASSWORD COMPLEXITY =============
-
+        // =========== PASSWORD COMPLEXITY CHECKS =============
         $invalid = 0;
 
         // If password is shorter than 8 characters
-        if (strlen(($password)) < $minLength) {
+        if (strlen($password) < $minLength) {
             $invalid++;
         }
 
@@ -50,19 +49,20 @@
         if (!preg_match($digit_regex, $password)) {
             $invalid++;
         }
-        
+
         // If password lacks special characters
         if (!preg_match($specialchar_regex, $password)) {
             $invalid++;
         }
 
-        if($invalid > 0) {
+        // If any of the complexity checks failed
+        if ($invalid > 0) {
             $error = "Password must be at least $minLength characters long and contain:\n- at least one letter\n- at least one digit\n- at least one uppercase letter\n- and at least one symbol.";
             return false;
         }
 
         // If either [Password] and [Confirm Password] do not match
-        if($password != $confirm_password) {
+        if ($password != $confirm_password) {
             $error = "Passwords do not match";
             return false;
         }
@@ -74,7 +74,6 @@
 
         // Password is completely VALID
         return true;
-
     }
 
     // Check if password is being reused
