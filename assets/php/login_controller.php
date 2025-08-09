@@ -22,7 +22,7 @@
 
             // Check for valid email format
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                echo "<p class='error-message'>Invalid email format</p>";
+                echo "<script>alert('Invalid email format');</script>";
             } else {
                 // Check the number of failed login attempts in the last 5 minutes in the event_logs table
                 $stmt = $conn->prepare("
@@ -46,7 +46,7 @@
                     $stmt->execute();
                     $stmt->close();
 
-                    echo "<p class='error-message'>Your account has been locked due to too many failed login attempts in the last 5 minutes. Please contact support.</p>";
+                    echo "<script>alert('Your account has been locked due to too many failed login attempts in the last 5 minutes. Please contact support.');</script>";
                     return;
                 }
 
@@ -68,7 +68,7 @@
 
                     // Check if the account is disabled
                     if ($user['account_disabled'] == 'Y') {
-                        echo "<p class='error-message'>Your account is disabled. Please contact support.</p>";
+                        echo "<script>alert('Your account is disabled. Please contact support.');</script>";
                         $stmt->close();
                         $conn->close();
                         return;
@@ -102,12 +102,12 @@
                         $stmt->bind_param("s", $email);
                         $stmt->execute();
 
-                        echo "<p class='error-message'>Invalid email or password</p>";
+                        echo "<script>alert('Invalid email or password');</script>";
                         $status = "Fail";
                         logAuthentication($conn, $user['email'], $status);
                     }
                 } else {
-                    echo "<p class='error-message'>Invalid email or password</p>";
+                    echo "<script>alert('Invalid email or password');</script>";
                 }
 
                 $stmt->close();
@@ -116,16 +116,12 @@
         }
 
         // Display system messages
-        if (isset($_GET['logout'])) {
-            echo "<p class='success-message'>You have been successfully logged out.</p>";
-        }
-
         if (isset($_GET['registered'])) {
-            echo "<p class='success-message'>Registration successful! Please login.</p>";
+            echo "<script>alert('Registration successful! Please login.');</script>";
         }
 
         if (isset($_GET['error'])) {
-            echo "<p class='error-message'>" . htmlspecialchars($_GET['error']) . "</p>";
+            echo "<script>alert('" . htmlspecialchars($_GET['error']) . "');</script>";
         }
     }
 ?>
