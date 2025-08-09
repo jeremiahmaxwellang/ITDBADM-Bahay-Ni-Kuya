@@ -20,20 +20,25 @@
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $password = $_POST['password'];
 
+            // Check for valid email format
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 echo "<p class='error-message'>Invalid email format</p>";
-            } 
-
-            else {
-                // Check the number of failed login attempts in the event_logs table
-                $stmt = $conn->prepare("SELECT COUNT(*) AS fail_count FROM event_logs WHERE user_email = ? AND result = 'Fail'");
+            } else {
+                // Check the number of failed login attempts in the last 5 minutes in the event_logs table
+                $stmt = $conn->prepare("
+                    SELECT COUNT(*) AS fail_count 
+                    FROM event_logs 
+                    WHERE user_email = ? 
+                    AND result = 'Fail' 
+                    AND datetime > NOW() - INTERVAL 5 MINUTE
+                ");
                 $stmt->bind_param("s", $email);
                 $stmt->execute();
                 $stmt->bind_result($fail_count);
                 $stmt->fetch();
                 $stmt->close();
 
-                // If the user has exceeded 5 failed login attempts, lock the account
+                // If the user has exceeded 5 failed login attempts in the last 5 minutes, lock the account
                 if ($fail_count >= 5) {
                     // Update account_disabled to 'Y' in the users table
                     $stmt = $conn->prepare("UPDATE users SET account_disabled = 'Y' WHERE email = ?");
@@ -41,7 +46,7 @@
                     $stmt->execute();
                     $stmt->close();
 
-                    echo "<p class='error-message'>Your account has been locked due to too many failed login attempts. Please contact support.</p>";
+                    echo "<p class='error-message'>Your account has been locked due to too many failed login attempts in the last 5 minutes. Please contact support.</p>";
                     return;
                 }
 
@@ -50,12 +55,12 @@
                 $stmt->bind_param("s", $email);
 
                 // Execute SQL statement
-                if($stmt->execute()){
+                if ($stmt->execute()) {
                     $success = "Sign-in successful!";
+                } else {
+                    $error = "Error: " . $stmt->error;
                 }
 
-                else $error = "Error: " . $stmt->error;
-                
                 $result = $stmt->get_result();
 
                 if ($result->num_rows == 1) {
@@ -70,8 +75,7 @@
                     }
 
                     // Verify password by comparing the hash of the input vs the actual password hash
-                    if( password_verify($password, $user['password_hash']) ){
-
+                    if (password_verify($password, $user['password_hash'])) {
                         // Reset login attempts on successful login
                         $_SESSION['login_attempts'] = 0;
 
@@ -87,12 +91,9 @@
                         logAuthentication($conn, $user['email'], $status);
 
                         // If user has no prior security questions, prompt if user wants to set it
-                        if($user['question_id'] == null) {
+                        if ($user['question_id'] == null) {
                             header("Location: login_success.php");
-                        }
-
-                        // user_redirect.php
-                        else{
+                        } else {
                             redirectUser($user);
                         }
                     } else {
@@ -108,7 +109,7 @@
                 } else {
                     echo "<p class='error-message'>Invalid email or password</p>";
                 }
-                
+
                 $stmt->close();
                 $conn->close();
             }
@@ -126,5 +127,5 @@
         if (isset($_GET['error'])) {
             echo "<p class='error-message'>" . htmlspecialchars($_GET['error']) . "</p>";
         }
-   }
+    }
 ?>
