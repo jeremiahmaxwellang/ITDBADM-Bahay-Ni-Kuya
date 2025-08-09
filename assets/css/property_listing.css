@@ -34,7 +34,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 0;
+    z-index: -1;
     pointer-events: none;
     background: linear-gradient(
         135deg,
@@ -43,10 +43,19 @@ body {
     );
 }
 
-/* Ensure main content is above the gradient */
-body > *:not(.property-bg-gradient) {
-    position: relative;
-    z-index: 1;
+/* Ensure overlay-content is visible when the class is active */
+body.overlay-content-visible .overlay-content {
+    display: flex;
+}
+
+/* Show the gradient overlay when overlay is visible */
+body.overlay-content-visible .property-bg-gradient {
+    display: flex;  /* Ensure gradient overlay is shown when the overlay is visible */
+}
+
+/* When overlay-content is visible, unset position for all other elements */
+body.overlay-content-visible > *:not(.property-bg-gradient):not(.overlay-content) {
+    position: unset;
 }
 
 header {
@@ -339,4 +348,54 @@ footer {
         .logout-btn:hover {
             background-color: #c11a1f;
         }
+}
+
+/* Overlay styles */
+.overlay { 
+    background-color: rgba(0, 0, 0, 0.5);  /* Black background with 50% opacity */
+    z-index: 1000; /* Ensure the overlay is above other content */
+    display: none;  /* Initially hide the overlay */
+    position: fixed; /* Make the overlay fixed to cover the entire screen */
+    top: 0; /* Start from the top of the screen */
+    left: 0; /* Start from the left of the screen */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Content inside the overlay */
+.overlay-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 60%;
+}
+
+.overlay h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.overlay p {
+    font-size: 18px;
+    color: #555;
+}
+
+.overlay button {
+    background-color: #0476D0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.overlay button:hover {
+    background-color: #045a8d;
 }

@@ -1,57 +1,97 @@
 <?php
-session_start();
-// Database configuration
-require_once('../includes/dbconfig.php');
+    session_start();
 
-// Get search input
-$search_location = isset($_GET['search_location']) ? trim($_GET['search_location']) : '';
-$price_filter = isset($_GET['price_filter']) ? $_GET['price_filter'] : '';
+    // Database configuration
+    require_once('../includes/dbconfig.php');
 
-// Count items in cart
-$cartCount = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
+    // Get search input
+    $search_location = isset($_GET['search_location']) ? trim($_GET['search_location']) : '';
+    $price_filter = isset($_GET['price_filter']) ? $_GET['price_filter'] : '';
 
-// Check if 'properties' table exists
-$tableExists = false;
-$checkTable = $conn->query("SHOW TABLES LIKE 'properties'");
-if ($checkTable && $checkTable->num_rows > 0) {
-    $tableExists = true;
-}
+    // Count items in cart
+    $cartCount = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
 
-$properties = [];
-if ($tableExists) {
-    // Determine min and max price based on filter
-    $min_price = 0;
-    $max_price = 999999999; // effectively no upper limit
-
-    if ($price_filter === '1') {
-        $max_price = 5000000;
-    } elseif ($price_filter === '2') {
-        $min_price = 5000000;
-        $max_price = 10000000;
-    } elseif ($price_filter === '3') {
-        $min_price = 10000000;
+    // Check if 'properties' table exists
+    $tableExists = false;
+    $checkTable = $conn->query("SHOW TABLES LIKE 'properties'");
+    if ($checkTable && $checkTable->num_rows > 0) {
+        $tableExists = true;
     }
 
-    // Use stored procedure to search
-    $stmt = $conn->prepare("CALL sp_search_properties(?, ?, ?)");
-    $stmt->bind_param("sdd", $search_location, $min_price, $max_price);
-    $stmt->execute();
+    $properties = [];
+    if ($tableExists) {
+        // Determine min and max price based on filter
+        $min_price = 0;
+        $max_price = 999999999; // effectively no upper limit
 
-    $result = $stmt->get_result();
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $properties[] = $row;
+        if ($price_filter === '1') {
+            $max_price = 5000000;
+        } elseif ($price_filter === '2') {
+            $min_price = 5000000;
+            $max_price = 10000000;
+        } elseif ($price_filter === '3') {
+            $min_price = 10000000;
         }
-        $result->close();
+
+        // Use stored procedure to search
+        $stmt = $conn->prepare("CALL sp_search_properties(?, ?, ?)");
+        $stmt->bind_param("sdd", $search_location, $min_price, $max_price);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $properties[] = $row;
+            }
+            $result->close();
+        }
+
+        $conn->next_result(); // Required to flush results after calling stored procedure
+    } else {
+        $properties = false; // Indicate table missing
     }
 
-    $stmt->close();
-    $conn->next_result(); // Required to flush results after calling stored procedure
-} else {
-    $properties = false; // Indicate table missing
-}
+    // Default values for login variables
+    $last_success = 'No successful logins yet.';
+    $last_fail = 'No failed logins yet.';
 
-$conn->close();
+    // Check if user is logged in and email exists in the session
+    if (isset($_SESSION['user_email'])) {
+        $user_email = $_SESSION['user_email'];  // Assuming the user's email is stored in session
+
+        // Fetch the last successful and unsuccessful login attempts for the user
+        $query = "SELECT * FROM event_logs WHERE user_email = ? ORDER BY datetime DESC LIMIT 2";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("s", $user_email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Assuming there's a table with the columns: log_id, type (I, A, C), datetime, user_email, result
+        $last_logins = [];
+        while ($row = $result->fetch_assoc()) {
+            $last_logins[] = $row;
+        }
+
+        // Display the information
+        if (count($last_logins) > 0) {
+            foreach ($last_logins as $login) {
+                if ($login['result'] == 'Success') {
+                    $last_success = $login['datetime'];
+                } elseif ($login['result'] == 'Fail') {
+                    $last_fail = $login['datetime'];
+                }
+            }
+        }
+
+        $stmt->close();
+    }
+
+    // Check if the user has just logged in and show the overlay once
+    $showOverlay = isset($_SESSION['show_overlay']) && $_SESSION['show_overlay'] === true;
+
+    if ($showOverlay) {
+        unset($_SESSION['show_overlay']); // Unset after showing to prevent multiple displays
+    }
 ?>
 
 <!DOCTYPE html>
@@ -62,6 +102,7 @@ $conn->close();
     <title>Prime Properties - Find Your Dream Home</title>
     <link rel="stylesheet" href="../assets/css/property_listing.css">
 </head>
+
 <body>
     <div class="property-bg-gradient"></div>
     <header>
@@ -83,21 +124,21 @@ $conn->close();
     </nav>
 
     <div class="container">
-            <div class="search-bar">
-                <div class="properties-header">
-                    <h2>Featured Properties</h2>
-                    <p class="properties-count">
-                        <?php
-                        if ($properties === false) {
-                            echo "Table 'properties' does not exist";
-                        } else {
-                            echo count($properties) . " properties available";
-                        }
-                        ?>
-                    </p>
-                </div>
-                <div class="searchbar-section">
-                        <form action="#" method="GET">
+        <div class="search-bar">
+            <div class="properties-header">
+                <h2>Featured Properties</h2>
+                <p class="properties-count">
+                    <?php
+                    if ($properties === false) {
+                        echo "Table 'properties' does not exist";
+                    } else {
+                        echo count($properties) . " properties available";
+                    }
+                    ?>
+                </p>
+            </div>
+            <div class="searchbar-section">
+                <form action="#" method="GET">
                     <input type="text" name="search_location" placeholder="Search by location." value="<?php echo htmlspecialchars($search_location); ?>">
                     <select name="price_filter">
                         <option value="">Any Price</option>
@@ -107,8 +148,8 @@ $conn->close();
                     </select>
                     <button type="submit">Search</button>
                 </form>
-                </div>
             </div>
+        </div>
 
         <?php if ($properties === false): ?>
             <div class="no-properties">
@@ -139,7 +180,40 @@ $conn->close();
             </div>
         <?php endif; ?>
     </div>
+    
+    <!-- Overlay for last login information -->
+    <?php if ($showOverlay): ?>
+        <div id="loginOverlay" class="overlay show-overlay">
+            <div class="overlay-content">
+                <h2>Last Login Information</h2>
+                <p><strong>Last Successful Login:</strong> <?= htmlspecialchars($last_success) ?></p>
+                <p><strong>Last Failed Login:</strong> <?= htmlspecialchars($last_fail) ?></p>
+                <button onclick="closeOverlay()">Close</button>
+            </div>
+        </div>
+    <?php endif; ?>
 
+    <script>
+        // Function to close the overlay
+        function closeOverlay() {
+            document.getElementById("loginOverlay").style.display = "none";
+        }
+
+        // Optional: add a click outside overlay functionality for better UX
+        window.addEventListener('click', function (e) {
+            var overlay = document.getElementById("loginOverlay");
+            if (e.target === overlay) {
+                closeOverlay();  // Close overlay if clicked outside the content box
+            }
+        });
+
+        // Show overlay based on PHP session variable
+        <?php if ($showOverlay): ?>
+            document.getElementById("loginOverlay").style.display = "flex";
+        <?php endif; ?>
+    </script>
+
+    <!-- Page Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-section">
@@ -167,5 +241,14 @@ $conn->close();
             <p>&copy; 2023 Prime Properties. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Print the value of session variable 'show_overlay' in the console
+        <?php if (isset($_SESSION['show_overlay'])): ?>
+            console.log("show_overlay: <?= $_SESSION['show_overlay'] ?>");
+        <?php else: ?>
+            console.log("show_overlay is not set.");
+        <?php endif; ?>
+    </script>
 </body>
 </html>
