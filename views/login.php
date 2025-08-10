@@ -78,7 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="login_formDiv">
             <?php
+                echo "<script>console.log('Will be running the login function now!');</script>";
                 login($conn);
+                echo "<script>console.log('Login function is done running now!');</script>";
             ?>
 
             <form method="post" action="" class="login_form" id="loginForm">
@@ -101,11 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();  // Prevent form submission to ensure we check the session variable first
 
+            // Check if the session variable 'show_overlay' is set
             <?php if (isset($_SESSION['show_overlay'])): ?>
-                // Print the value of session variable 'show_overlay' in the console
-                console.log("show_overlay: <?= $_SESSION['show_overlay'] ?>");
-            <?php else: ?>
-                console.log("show_overlay is not set.");
+                console.log("overlay is set");
             <?php endif; ?>
 
             // Continue with the form submission after the log

@@ -15,15 +15,22 @@ function login(&$conn) {
         session_start();
     }
 
+    echo "<script>console.log('Session is starting!!!');</script>";
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Sanitize and validate input
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+
+        //Collect the password and hash it
         $password = $_POST['password'];
 
+        echo "<script>console.log('Checking for valid email format!!!');</script>";
         // Check for valid email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo "<script>alert('Invalid email format');</script>";
+
         } else {
+
             // Check the number of failed login attempts in the last 5 minutes in the event_logs table
             $stmt = $conn->prepare("
                 SELECT COUNT(*) AS fail_count 
@@ -50,12 +57,18 @@ function login(&$conn) {
                 return;
             }
 
+            echo "<script>console.log('Preparing SQL Statement to check for user credentials!!!');</script>";
+
+            // ==================================================================
+            // Code for Logging the login attempt to event_logs table 
+            // ==================================================================
+
             // Prepare SQL statement to check user credentials
             $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
             $stmt->bind_param("s", $email);
 
             // Execute SQL statement
-            if ($stmt->execute()) {
+            if($stmt->execute()){
                 $success = "Sign-in successful!";
             } else {
                 $error = "Error: " . $stmt->error;
@@ -65,6 +78,9 @@ function login(&$conn) {
 
             if ($result->num_rows == 1) {
                 $user = $result->fetch_assoc();
+                $stored_hash = $user['password_hash'];
+
+                echo "<script>console.log('User found, checking password hash!');</script>";
 
                 // Check if the account is disabled
                 if ($user['account_disabled'] == 'Y') {
@@ -73,13 +89,13 @@ function login(&$conn) {
                     return;
                 }
 
-                // Verify password by comparing the hash of the input vs the actual password hash
-                if (password_verify($password, $user['password_hash'])) {
-                    // Reset login attempts on successful login
-                    $_SESSION['login_attempts'] = 0;
+                echo "<script>console.log('Verifying password by comparing the hash of the input ');</script>";
 
+                // Verify password by comparing the hash of the input vs the actual password hash
+                if( password_verify($password, $user['password_hash']) ){
+                    
                     // Set session variables
-                    $_SESSION['user_email'] = $user['user_email'];
+                    $_SESSION['user_email'] = $user['email'];
                     $_SESSION['first_name'] = $user['first_name'];
                     $_SESSION['last_name'] = $user['last_name'];
                     $_SESSION['user_role'] = $user['role'];
@@ -87,40 +103,45 @@ function login(&$conn) {
 
                     // Log successful authentication to EVENT_LOGS table
                     $status = "Success";
-                    logAuthentication($conn, $user['user_email'], $status);
-
+                    logAuthentication($conn, $user['email'], $status);
+                    
                     // If user has no prior security questions, prompt if user wants to set it
-                    if ($user['question_id'] == null) {
-                        header("Location: login_success.php");
+                        if($user['question_id'] == null) {
+                            header("Location: login_success.php");
+                        }
+
+                        // user_redirect.php
+                        else{
+                            redirectUser($user);
+                        }
+                        
                     } else {
-                        redirectUser($user);
+                        // Fail
+                        echo "<p class='error-message'>Invalid email or password</p>";
+                        $status = "Fail";
+                        logAuthentication($conn, $user['email'], $status);
                     }
                 } else {
-                    // Log failed login attempt
-                    $stmt = $conn->prepare("INSERT INTO event_logs (type, user_email, result) VALUES ('I', ?, 'Fail')");
-                    $stmt->bind_param("s", $email);
-                    $stmt->execute();
-
-                    echo "<script>alert('Invalid email or password');</script>";
-                    $status = "Fail";
-                    logAuthentication($conn, $user['email'], $status);
+                    echo "<p class='error-message'>Invalid email or password</p>";
                 }
-            } else {
-                echo "<script>alert('Invalid email or password');</script>";
+                
+                $stmt->close();
+                $conn->close();
             }
-
-            $stmt->close();
         }
-    }
 
-    // Display system messages
-    if (isset($_GET['registered'])) {
-        echo "<script>alert('Registration successful! Please login.');</script>";
-    }
+        // Display system messages
+        if (isset($_GET['logout'])) {
+            echo "<p class='success-message'>You have been successfully logged out.</p>";
+        }
 
-    if (isset($_GET['error'])) {
-        echo "<script>alert('" . htmlspecialchars($_GET['error']) . "');</script>";
-    }
+        if (isset($_GET['registered'])) {
+            echo "<p class='success-message'>Registration successful! Please login.</p>";
+        }
+
+        if (isset($_GET['error'])) {
+            echo "<p class='error-message'>" . htmlspecialchars($_GET['error']) . "</p>";
+        }
 }
 
 // Validate user login credentials
@@ -153,5 +174,4 @@ function validate_user_login($email, $password) {
         return false;
     }
 }
-
 ?>
