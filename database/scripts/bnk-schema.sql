@@ -219,6 +219,8 @@ CREATE TABLE IF NOT EXISTS `bahaynikuya_db`.`event_logs` (
   `type` ENUM('I', 'A', 'C') NULL,
   `datetime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `user_email` VARCHAR(254) NULL,
+  `resource` TEXT NULL,
+  `reason` TEXT NULL,
   `result` ENUM('Success', 'Fail') NULL,
   PRIMARY KEY (`log_id`))
 ENGINE = InnoDB;

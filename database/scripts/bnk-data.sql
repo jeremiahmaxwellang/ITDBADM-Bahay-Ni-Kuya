@@ -11,6 +11,7 @@ VALUES
 -- admin user account
 ("admin@gmail.com", "Admin", "Man", "$2y$10$Dp/xoXZfHyllSajLIWoMGOSwIEJGFsn3/O09v5CmOSKXotHQm6GYK", 'A'),
 
+-- CUSTOMER user account
 ("customer@gmail.com", "Custom", "Murr", "$2y$10$03DepZqvrCMJk.Pa9.VNb.Td3JmqVexn8ZDHiykxJe2.Q9tEfXoES", 'C'),
 
 -- staff user account
@@ -47,3 +48,16 @@ VALUES
 (5, "What was the name of your first manager at your first job?"),
 (6, "Who is your crush?")
 ;
+
+-- INSERT OLD_PASSWORDS
+USE bahaynikuya_db;
+INSERT INTO old_passwords(email, password_hash)
+VALUES 
+-- admin user account
+("admin@gmail.com", "$2y$10$Dp/xoXZfHyllSajLIWoMGOSwIEJGFsn3/O09v5CmOSKXotHQm6GYK"),
+
+-- CUSTOMER user account
+("customer@gmail.com", "$2y$10$03DepZqvrCMJk.Pa9.VNb.Td3JmqVexn8ZDHiykxJe2.Q9tEfXoES"),
+
+-- staff user account
+("staff@gmail.com", "$2y$10$vxyMJWxx2qR16gcyuKZZze9U3IWXv9cPgsdermeXbVnB7Md2IbJFe");

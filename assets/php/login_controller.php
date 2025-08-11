@@ -7,6 +7,8 @@
 include('authentication.php');
 
 function login(&$conn) {
+    $resource = "/login";
+    $reason = "Wrong password entered";
     $status = "Fail";
     $fail_count = 0;
 
@@ -95,8 +97,9 @@ function login(&$conn) {
                 if( password_verify($password, $user['password_hash']) ){
 
                     // Log successful authentication to EVENT_LOGS table
+                    $reason = "Correct password submitted";
                     $status = "Success";
-                    logAuthentication($conn, $user['email'], $status);
+                    logAuthentication($conn, $user['email'], $resource, $reason, $status);
                     
                     // Set session variables
                     $_SESSION['user_email'] = $user['email'];
@@ -115,7 +118,9 @@ function login(&$conn) {
                     
                     echo "<p class='error-message'>Invalid email or password</p>";
                     $status = "Fail";
-                    logAuthentication($conn, $user['email'], $status);
+
+                    // logAuthentication(&$conn, $email, $resource, $reason, $status)
+                    logAuthentication($conn, $user['email'], $resource, $reason, $status);
                 }
 
             } // end of if ($result->num_rows == 1)

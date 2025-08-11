@@ -249,10 +249,12 @@ DELIMITER $$
 CREATE PROCEDURE sp_log_event(
     IN this_type VARCHAR(1),
     IN this_user_email VARCHAR(254),
-    IN this_result VARCHAR(10) 
+    IN this_resource TEXT,
+    IN this_reason TEXT,
+    IN this_result VARCHAR(10)
 )
 BEGIN
-    INSERT INTO event_logs(type, user_email, result)  
-    VALUES(this_type, this_user_email, this_result);
+    INSERT INTO event_logs(type, user_email, resource, reason, result)  
+    VALUES(this_type, this_user_email, this_resource, this_reason, this_result);
 END
 $$ DELIMITER ;
