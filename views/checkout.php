@@ -16,38 +16,52 @@ if (!isset($_SESSION['cart'])) {
 $orderSuccess = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     if (!empty($_SESSION['cart'])) {
+        
         // Get customer information from form
-        $fullname = $_POST['fullname'];
-        $email = $_POST['email'];
-        $phone = $_POST['phone'];
+        $fullname = trim($_POST['fullname'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
         
-        // Start transaction
-        $conn->begin_transaction();
-        
-        try {
-            // Update each property in the cart to "Sold"
-            foreach (array_keys($_SESSION['cart']) as $propertyId) {
-                $stmt = $conn->prepare("UPDATE properties SET offer_type = 'Sold' WHERE property_id = ?");
-                $stmt->bind_param("i", $propertyId);
-                $stmt->execute();
-                $stmt->close();
+        // Validation rules
+        if (!preg_match("/^[A-Za-z\s'-]{2,100}$/", $fullname)) {
+            $error = "Invalid full name. Only letters, spaces, apostrophes, and hyphens are allowed (2–100 characters).";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Invalid email address format.";
+        } elseif (!preg_match("/^\+?\d{7,15}$/", $phone)) {
+            $error = "Invalid phone number. Must contain 7–15 digits, optional '+' at start.";
+        }
+
+        // Proceed only if no validation errors
+        if (!isset($error)) {
+            // Start transaction
+            $conn->begin_transaction();
+            
+            try {
+                // Update each property in the cart to "Sold"
+                foreach (array_keys($_SESSION['cart']) as $propertyId) {
+                    $stmt = $conn->prepare("UPDATE properties SET offer_type = 'Sold' WHERE property_id = ?");
+                    $stmt->bind_param("i", $propertyId);
+                    $stmt->execute();
+                    $stmt->close();
+                }
+                
+                // Commit transaction
+                $conn->commit();
+                
+                // Clear the cart
+                $_SESSION['cart'] = [];
+                
+                // Set success flag
+                $orderSuccess = true;
+            } catch (Exception $e) {
+                // Rollback transaction on error
+                $conn->rollback();
+                $error = "Error processing your order. Please try again.";
             }
-            
-            // Commit transaction
-            $conn->commit();
-            
-            // Clear the cart
-            $_SESSION['cart'] = [];
-            
-            // Set success flag
-            $orderSuccess = true;
-        } catch (Exception $e) {
-            // Rollback transaction on error
-            $conn->rollback();
-            $error = "Error processing your order. Please try again.";
         }
     }
 }
+
 
 // Get cart items details from database
 $cartItems = [];
