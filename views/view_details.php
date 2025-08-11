@@ -1,6 +1,9 @@
 <?php
 // Start the session to store the cart data
 session_start();
+// Check if user is logged in and is a customer
+include('../assets/php/authorization.php');
+customerAccess();
 
 // Database configuration
 require_once('../includes/dbconfig.php');

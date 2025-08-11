@@ -1,6 +1,10 @@
 <?php
     session_start();
 
+    // Check if user is logged in and is a customer
+    include('../assets/php/authorization.php');
+    customerAccess();
+
     // Database configuration
     require_once('../includes/dbconfig.php');
     include('../assets/php/property_listing_controller.php');

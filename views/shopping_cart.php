@@ -1,5 +1,8 @@
 <?php
 session_start();
+// Check if user is logged in and is a customer
+include('../assets/php/authorization.php');
+customerAccess();
 
 // Database connection
 require_once('../includes/dbconfig.php');

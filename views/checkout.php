@@ -1,7 +1,9 @@
 <?php
 session_start();
+// Check if user is logged in and is a customer
+include('../assets/php/authorization.php');
+customerAccess();
 
-// TODO: Replace redundant db connection code with function call
 // Database configuration
 require_once('../includes/dbconfig.php');
 
