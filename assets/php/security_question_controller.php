@@ -3,6 +3,7 @@
     security_question_controller.php
     - backend for views/security_question.php
 */
+    include('authentication.php');
 
     // Fetch premade security questions from the DB
     function fetchQuestions(&$conn) {
@@ -45,7 +46,7 @@
                     $conn->close();
                     $success = "Account recovery all set!";
 
-                    header("Location: login.php");
+                    header("Location: profile.php");
                     exit();
                 } else {
                     $error = "Error: " . $stmt->error;

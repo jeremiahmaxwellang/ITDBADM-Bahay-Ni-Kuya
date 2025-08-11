@@ -104,16 +104,8 @@ function login(&$conn) {
                     // Log successful authentication to EVENT_LOGS table
                     $status = "Success";
                     logAuthentication($conn, $user['email'], $status);
-                    
-                    // If user has no prior security questions, prompt if user wants to set it
-                        if($user['question_id'] == null) {
-                            header("Location: login_success.php");
-                        }
-
-                        // user_redirect.php
-                        else{
-                            redirectUser($user);
-                        }
+                    redirectUser($user);
+                        
                         
                     } else {
                         // Fail

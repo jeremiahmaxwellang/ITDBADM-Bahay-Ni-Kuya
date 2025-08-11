@@ -170,6 +170,11 @@ $conn->close();
         <p class="profile-info"><strong>Last Name:</strong> <?php echo htmlspecialchars($user['last_name']); ?></p>
         <p class="profile-info"><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
         <p class="profile-info">
+            <strong>Set Up Account Recovery:</strong>
+        </p>
+        <button id="securityQuestionBtn" class="change-password-btn">Set Security Question</button>
+
+        <p class="profile-info">
             <strong>Type Current Password:</strong>
             <input class="login_input" type="password" id="currentPassword" name="current_password" placeholder="Enter current password">
         </p>
@@ -197,6 +202,10 @@ document.getElementById('changePasswordBtn').addEventListener('click', function(
             document.getElementById('errorMsg').textContent = 'Incorrect password.';
         }
     });
+});
+
+document.getElementById('securityQuestionBtn').addEventListener('click', function() {
+    window.location.href = 'security_question.php';
 });
 </script>
 

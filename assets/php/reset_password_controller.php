@@ -4,7 +4,6 @@
     Handles password reset and records old passwords
 */
 
-session_start();
 include('validate_password.php');
 
 function changePassword(&$conn) {
