@@ -4,7 +4,13 @@ function adminAccess(&$conn){
     $reason = "Non-admin user attempted unauthorized access";
     $status = "Fail";
 
-    if ($_SESSION['user_role'] != 'A' || $_SESSION['user_role'] != 'S') {
+    if ($_SESSION['user_role'] == 'A' || $_SESSION['user_role'] == 'S') {
+        $reason = "Authorized admin user accessed resource";
+        $status = "Success";
+        logAuthorization($conn, $_SESSION['user_email'], $resource, $reason, $status);
+    }
+    
+    else {
         // Log access control failure
         logAuthorization($conn, $_SESSION['user_email'], $resource, $reason, $status);
 
@@ -16,11 +22,7 @@ function adminAccess(&$conn){
             header("Location: login.php");
             exit();
         } 
-    }
-    else {
-        $reason = "Authorized admin user accessed resource";
-        $status = "Success";
-        logAuthorization($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
     }
 }
 
