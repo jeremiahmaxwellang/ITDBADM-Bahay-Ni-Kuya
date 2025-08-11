@@ -93,6 +93,10 @@ function login(&$conn) {
 
                 // Verify password by comparing the hash of the input vs the actual password hash
                 if( password_verify($password, $user['password_hash']) ){
+
+                    // Log successful authentication to EVENT_LOGS table
+                    $status = "Success";
+                    logAuthentication($conn, $user['email'], $status);
                     
                     // Set session variables
                     $_SESSION['user_email'] = $user['email'];
@@ -100,22 +104,25 @@ function login(&$conn) {
                     $_SESSION['last_name'] = $user['last_name'];
                     $_SESSION['user_role'] = $user['role'];
                     $_SESSION['logged_in'] = true;
+                    $_SESSION['show_overlay'] = true; // Ensure overlay is set after login
 
-                    // Log successful authentication to EVENT_LOGS table
-                    $status = "Success";
-                    logAuthentication($conn, $user['email'], $status);
                     redirectUser($user);
                         
                         
-                    } else {
-                        // Fail
-                        echo "<p class='error-message'>Invalid email or password</p>";
-                        $status = "Fail";
-                        logAuthentication($conn, $user['email'], $status);
-                    }
-                } else {
+                } 
+                // If login attempt Failed
+                else {
+                    
                     echo "<p class='error-message'>Invalid email or password</p>";
+                    $status = "Fail";
+                    logAuthentication($conn, $user['email'], $status);
                 }
+
+            } // end of if ($result->num_rows == 1)
+
+            else {
+                echo "<p class='error-message'>Invalid email or password</p>";
+            }
                 
                 $stmt->close();
                 $conn->close();
@@ -136,34 +143,4 @@ function login(&$conn) {
         }
 }
 
-// Validate user login credentials
-function validate_user_login($email, $password) {
-    global $conn;
-
-    // Sanitize and prepare the input
-    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-    $password = trim($password);
-
-    // Check if email exists in the database
-    $stmt = $conn->prepare("SELECT email, password_hash, role FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        // User exists, now check the password
-        $user = $result->fetch_assoc();
-
-        if (password_verify($password, $user['password_hash'])) {
-            // Password is correct, return user data
-            return ['role' => $user['role']];  // Can also return additional data if needed
-        } else {
-            // Incorrect password
-            return false;
-        }
-    } else {
-        // User not found
-        return false;
-    }
-}
 ?>

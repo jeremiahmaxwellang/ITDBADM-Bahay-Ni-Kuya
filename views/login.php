@@ -22,38 +22,7 @@ if (isset($_SESSION['user_email'])) {
     }
 }
 
-// Process the login form
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get the posted login credentials (email and password)
-    $user_email = $_POST['email'];
-    $password = $_POST['password'];
 
-    // Assuming the login validation is handled in login_controller.php
-    $login_success = validate_user_login($user_email, $password);
-
-    if ($login_success) {
-        // Set session variables upon successful login
-        $_SESSION['user_email'] = $user_email;
-        $_SESSION['user_role'] = $login_success['role'];  // assuming this returns role information
-        $_SESSION['logged_in'] = true;  // Flag indicating the user just logged in
-        $_SESSION['show_overlay'] = true; // Ensure overlay is set after login
-
-        // Redirect to the appropriate page after successful login
-        if ($_SESSION['user_role'] === 'A') {
-            header("Location: admin.php");
-            exit();
-        } elseif ($_SESSION['user_role'] === 'S') {
-            header("Location: admin.php");
-            exit();
-        } else {
-            // Redirect to property listing page
-            header("Location: property_listing.php");
-            exit();
-        }
-    } else {
-        $error_message = "Invalid email or password.";
-    }
-}
 ?>
 
 <!DOCTYPE html>
