@@ -1,61 +1,74 @@
 <?php
 /*
-    register_controller.php
-    - backend of views/register.php
- */
+    reset_password_controller.php
+    Handles password reset and records old passwords
+*/
 
-    include('validate_password.php');
+session_start();
+include('validate_password.php');
 
-    // Change password
-    function changePassword(&$conn, $email) {
+function changePassword(&$conn) {
 
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Collect and sanitize user input
-            $error = "";
+    // Get email from session (recovery or logged-in session)
+    $email = $_SESSION['recovery_email'] ?? $_SESSION['user_email'] ?? '';
 
-            // Hash Passwords
-            $password = $_POST['password'];
-            $hash = password_hash($password, PASSWORD_DEFAULT); 
+    if (empty($email)) {
+        echo "<p class='error-message'>No account found for this reset process.</p>";
+        return;
+    }
 
-            $confirm_password = $_POST['confirm_password'];
+    // Process only on POST
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $error = "";
+        $success = "";
 
-            // Validate Password
-            if( passwordIsValid($conn, $email, $password, $confirm_password, $error) ){
+        // Get form inputs
+        $password = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+        $hash = password_hash($password, PASSWORD_DEFAULT);
 
-                // STORED PROCEDURE: CALL sp_add_user
-                $stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE email = ?");
+        // Check if email exists in the database before updating
+        $checkStmt = $conn->prepare("SELECT 1 FROM users WHERE email = ?");
+        $checkStmt->bind_param("s", $email);
+        $checkStmt->execute();
+        $exists = $checkStmt->get_result()->num_rows > 0;
+        $checkStmt->close();
 
-                // Bind the strings to the ?, ?
-                $stmt->bind_param("ss", $hash, $email);
-
-                if($stmt->execute()){
-                    $success = "Password changed successfully!";
-
-                    // Store password in OLD_PASSWORDS TABLE to prevent future reuse
-                    $pass_stmt = $conn->prepare("CALL sp_record_password(?, ?)");
-                    $pass_stmt->bind_param("ss", $email, $hash);
-                    $pass_stmt->execute();
-
-                }
-
-                else $error = "Error: " . $stmt->error;
-
-                $stmt->close();
-            }
-
-            $conn->close();
-
-        } 
-
-        // If Successful, user proceeds to login
-        if(isset($success)){
-            header("Location: logout.php"); // terminate session to reauthenticate
-            exit();
+        if (!$exists) {
+            echo "<p class='error-message'>This account does not exist.</p>";
+            return;
         }
 
-        elseif(isset($error)){
+        // Validate password using your existing function
+        if (passwordIsValid($conn, $email, $password, $confirm_password, $error)) {
+
+            // Update password in users table
+            $stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE email = ?");
+            $stmt->bind_param("ss", $hash, $email);
+
+            if ($stmt->execute()) {
+                // Record password in old_passwords (via stored procedure)
+                $pass_stmt = $conn->prepare("CALL sp_record_password(?, ?)");
+                $pass_stmt->bind_param("ss", $email, $hash);
+                $pass_stmt->execute();
+                $pass_stmt->close();
+
+                $success = "Password changed successfully!";
+                // Redirect to logout to force re-login
+                header("Location: logout.php");
+                exit();
+
+            } else {
+                $error = "Error updating password: " . $stmt->error;
+            }
+
+            $stmt->close();
+        }
+
+        // Show errors if any
+        if (!empty($error)) {
             echo "<p class='error-message'>{$error}</p>";
         }
     }
-
+}
 ?>

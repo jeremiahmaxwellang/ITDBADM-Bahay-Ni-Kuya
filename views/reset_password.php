@@ -31,7 +31,7 @@
         <div class="register_separator"></div>
 
         <?php
-            changePassword($conn, $email); // ../assets/php/reset_password_controller.php
+            changePassword($conn); // ../assets/php/reset_password_controller.php
         ?>
 
         <form method="post" action="">
