@@ -1,19 +1,12 @@
 <?php
+session_start();
+
 // Database configuration
 require_once('../includes/dbconfig.php');
 
-session_start();
-
 // Check if user is logged in and is an admin
-if (!isset($_SESSION['user_email'])) {
-    header("Location: login.php");
-    exit();
-}
-
-if ($_SESSION['user_role'] == 'C') {
-    header("Location: property_listing.php");
-    exit();
-}
+include('../assets/php/authorization.php');
+adminAccess();
 
 
 ?>

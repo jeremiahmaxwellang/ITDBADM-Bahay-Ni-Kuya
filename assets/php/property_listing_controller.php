@@ -1,6 +1,10 @@
 <?php
 require_once('../includes/dbconfig.php');
 
+// Check if user is logged in and is a customer
+include('../assets/php/authorization.php');
+customerAccess();
+
 // Default values for login variables
 $last_login = 'No previous logins yet.';
 

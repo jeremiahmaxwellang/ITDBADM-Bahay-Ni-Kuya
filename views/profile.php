@@ -2,11 +2,9 @@
 session_start();
 require_once('../includes/dbconfig.php');
 
-// Check if user is logged in
-if (!isset($_SESSION['user_email'])) {
-    header("Location: login.php");
-    exit;
-}
+// Check if user is logged in and is a customer
+include('../assets/php/authorization.php');
+customerAccess();
 
 $email = $_SESSION['user_email'];
 
