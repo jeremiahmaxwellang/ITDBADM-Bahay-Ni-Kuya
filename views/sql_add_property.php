@@ -6,6 +6,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $address = $_POST['address'];
     $price = $_POST['price'];
+
+    // Validate price: must be numeric and between 1 and 999,999,999
+    $price = isset($_POST['price']) ? str_replace([',', ' '], '', $_POST['price']) : '';
+    if ($price === '' || !is_numeric($price)) {
+        echo "<script>alert('Error: Price must be a numeric value.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    $price = (float)$price;
+    if ($price < 1 || $price > 999999999) {
+        echo "<script>alert('Error: Price must be between 1 and 999,000,000.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+
     $description = $_POST['description'];
         $photo = null;
     
@@ -17,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tempname = $_FILES['image']['tmp_name'];
         $folder = '../assets/images/'.$file_name;
 
-        // Set photo column
+        // Save file path to photo variable
         $photo = $folder;
 
         if(move_uploaded_file($tempname, $folder)){
@@ -30,14 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert new property
     // CALL PROCEDURE: sp_add_property
     $stmt = $conn->prepare("CALL sp_add_property(?, ?, ?, ?, ?)");
-    
     $stmt->bind_param("ssdss", $name, $address, $price, $description, $photo);
 
     if ($stmt->execute()) {
         $_SESSION['admin_message'] = "Property added successfully";
         $_SESSION['admin_message_type'] = "success";
     } else {
-        $_SESSION['admin_message'] = "Error updating property: " . $conn->error;
+        $_SESSION['admin_message'] = "Error adding property: " . $conn->error;
         $_SESSION['admin_message_type'] = "error";
     }
     
