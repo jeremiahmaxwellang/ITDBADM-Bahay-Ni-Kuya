@@ -48,7 +48,7 @@ function login(&$conn) {
             // If the user has exceeded 5 failed login attempts in the last 5 minutes, lock the account
             if ($fail_count >= 5) {
                 // Update account_disabled to 'Y' in the users table
-                $stmt = $conn->prepare("UPDATE users SET account_disabled = 'Y' WHERE user_email = ?");
+                $stmt = $conn->prepare("UPDATE users SET account_disabled = 'Y' WHERE email = ?");
                 $stmt->bind_param("s", $email);
                 $stmt->execute();
                 $stmt->close();
