@@ -4,7 +4,7 @@ require_once('../includes/dbconfig.php');
 
 // Check if user is logged in and is a customer
 include('../assets/php/authorization.php');
-customerAccess();
+customerAccess($conn, "/profile");
 
 $email = $_SESSION['user_email'];
 

@@ -1,18 +1,13 @@
 <?php
 // Start the session to store the cart data
 session_start();
-// Check if user is logged in and is a customer
-include('../assets/php/authorization.php');
-customerAccess();
 
 // Database configuration
 require_once('../includes/dbconfig.php');
 
-// Ensure user is logged in
-if (!isset($_SESSION['user_email'])) {
-    header("Location: login.php");
-    exit();
-}
+// Check if user is logged in and is a customer
+include('../assets/php/authorization.php');
+customerAccess($conn, "/view_details");
 
 // Get the user's email from the session
 $userEmail = $_SESSION['user_email'];

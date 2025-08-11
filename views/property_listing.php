@@ -5,6 +5,10 @@
     require_once('../includes/dbconfig.php');
     include('../assets/php/property_listing_controller.php');
 
+    // Check if user is logged in and is a customer
+    include('../assets/php/authorization.php');
+    customerAccess($conn, "/property_listing");
+
     // Get search input
     $search_location = isset($_GET['search_location']) ? trim($_GET['search_location']) : '';
     $price_filter = isset($_GET['price_filter']) ? $_GET['price_filter'] : '';

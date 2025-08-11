@@ -6,7 +6,7 @@ require_once('../includes/dbconfig.php');
 
 // Check if user is logged in and is an admin
 include('../assets/php/authorization.php');
-adminAccess();
+adminAccess($conn);
 
 
 ?>

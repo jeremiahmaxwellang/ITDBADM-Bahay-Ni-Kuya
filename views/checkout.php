@@ -1,11 +1,12 @@
 <?php
 session_start();
-// Check if user is logged in and is a customer
-include('../assets/php/authorization.php');
-customerAccess();
 
 // Database configuration
 require_once('../includes/dbconfig.php');
+
+// Check if user is logged in and is a customer
+include('../assets/php/authorization.php');
+customerAccess($conn, "/checkout");
 
 // Initialize cart if it doesn't exist
 if (!isset($_SESSION['cart'])) {
