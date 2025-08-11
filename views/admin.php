@@ -28,7 +28,7 @@ adminAccess($conn);
         const userRole = '<?php echo $_SESSION['user_role']; ?>';
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Hide Action Column for Staff
+            // Hide Action Column and Event Logs from Staff
             if(userRole == 'S'){
                 document.querySelectorAll('th.action-buttons').forEach(th => {
                     th.style.display = 'none';
@@ -39,6 +39,8 @@ adminAccess($conn);
                 });
 
                 document.querySelector('#add-property-btn').style.display = 'none';
+
+                document.querySelector('#logs-btn').style.display = 'none';
          
             }
 
@@ -76,6 +78,10 @@ adminAccess($conn);
             </button>
             <button id="add-property-btn" class="tab-btn" onclick="openTab('add-property', event)">
                 <i class="fas fa-plus-circle"></i> Add Property
+            </button>
+
+            <button id="logs-btn" class="tab-btn" onclick="openTab('logs', event)">
+                <i class="fas fa-clipboard-list"></i> Event Logs
             </button>
         </div>
         
@@ -192,7 +198,6 @@ adminAccess($conn);
                         echo "<tr><td colspan='7'>No orders found</td></tr>";
                     }
                     
-                    $conn->close();
                     ?>
                 </tbody>
             </table>
@@ -241,7 +246,66 @@ adminAccess($conn);
             </form>
         </div>
     </div>
-    
+
+    <!-- Logs Tab -->
+    <div id="logs" class="tab-content">
+        <h2><i class="fas fa-clipboard-list"></i> Event Logs</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Datetime</th>
+                    <th>User Email</th>
+                    <th>Reason</th>
+                    <th>Resource</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                
+                // Fetch EVENT LOGS
+                $sql = "SELECT *
+                    FROM event_logs
+                    ORDER BY datetime DESC";
+                $result = $conn->query($sql);
+                
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        switch($row['type']) {
+                            case 'A':
+                                $type_label = 'Authorization';
+                                break;
+                            case 'C':
+                                $type_label = 'Access Control';
+                                break;
+                            case 'I':
+                                $type_label = 'Input Validation';
+                                break;
+                            default:
+                                $type_label = 'Unknown';
+                        }
+                        echo "<tr>
+                            <td>{$row['log_id']}</td>
+                            <td>{$type_label}</td>
+                            <td>{$row['datetime']}</td>
+                            <td>{$row['user_email']}</td>
+                            <td>{$row['resource']}</td>
+                            <td>{$row['reason']}</td>
+                            <td>{$row['result']}</td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='7'>No logs found</td></tr>";
+                }
+                
+                $conn->close();
+                ?>
+            </tbody>
+        </table>
+    </div>
+
 
     <!-- Edit Property Modal -->
 <div id="editPropertyModal" class="modal" style="display:none;">
