@@ -3,6 +3,7 @@
 
     // Database configuration
     require_once('../includes/dbconfig.php');
+    include('../assets/php/property_listing_controller.php');
 
     // Get search input
     $search_location = isset($_GET['search_location']) ? trim($_GET['search_location']) : '';
@@ -49,48 +50,6 @@
         $conn->next_result(); // Required to flush results after calling stored procedure
     } else {
         $properties = false; // Indicate table missing
-    }
-
-    // Default values for login variables
-    $last_success = 'No successful logins yet.';
-    $last_fail = 'No failed logins yet.';
-
-    // Check if user is logged in and email exists in the session
-    if (isset($_SESSION['user_email'])) {
-        $user_email = $_SESSION['user_email'];  // Assuming the user's email is stored in session
-
-        // Fetch the last successful and unsuccessful login attempts for the user
-        $query = "SELECT * FROM event_logs WHERE user_email = ? ORDER BY datetime DESC LIMIT 2";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("s", $user_email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        // Assuming there's a table with the columns: log_id, type (I, A, C), datetime, user_email, result
-        $last_logins = [];
-        while ($row = $result->fetch_assoc()) {
-            $last_logins[] = $row;
-        }
-
-        // Display the information
-        if (count($last_logins) > 0) {
-            foreach ($last_logins as $login) {
-                if ($login['result'] == 'Success') {
-                    $last_success = $login['datetime'];
-                } elseif ($login['result'] == 'Fail') {
-                    $last_fail = $login['datetime'];
-                }
-            }
-        }
-
-        $stmt->close();
-    }
-
-    // Check if the user has just logged in and show the overlay once
-    $showOverlay = isset($_SESSION['show_overlay']) && $_SESSION['show_overlay'] === true;
-
-    if ($showOverlay) {
-        unset($_SESSION['show_overlay']); // Unset after showing to prevent multiple displays
     }
 ?>
 
@@ -186,8 +145,7 @@
         <div id="loginOverlay" class="overlay show-overlay">
             <div class="overlay-content">
                 <h2>Last Login Information</h2>
-                <p><strong>Last Successful Login:</strong> <?= htmlspecialchars($last_success) ?></p>
-                <p><strong>Last Failed Login:</strong> <?= htmlspecialchars($last_fail) ?></p>
+                <p><?= htmlspecialchars($last_login) ?></p>
                 <button onclick="closeOverlay()">Close</button>
             </div>
         </div>

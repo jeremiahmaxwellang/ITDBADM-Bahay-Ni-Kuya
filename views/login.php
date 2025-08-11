@@ -5,24 +5,6 @@ include('../assets/php/login_controller.php');
 
 session_start();
 
-// Check if user is already logged in and set the session variables
-if (isset($_SESSION['user_email'])) {
-    $_SESSION['show_overlay'] = true;  // Set the overlay to true after login
-
-    // Redirect if already logged in
-    if ($_SESSION['user_role'] === 'A') {
-        header("Location: admin.php");
-        exit();
-    } elseif ($_SESSION['user_role'] === 'S') {
-        header("Location: admin.php");
-        exit();
-    } else {
-        header("Location: property_listing.php");
-        exit();
-    }
-}
-
-
 ?>
 
 <!DOCTYPE html>
