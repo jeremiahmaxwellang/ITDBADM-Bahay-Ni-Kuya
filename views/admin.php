@@ -356,8 +356,8 @@ adminAccess($conn);
                     <th>Type</th>
                     <th>Datetime</th>
                     <th>User Email</th>
-                    <th>Reason</th>
                     <th>Resource</th>
+                    <th>Reason</th>
                     <th>Result</th>
                 </tr>
             </thead>
