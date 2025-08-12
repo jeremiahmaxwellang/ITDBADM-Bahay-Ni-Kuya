@@ -8,6 +8,12 @@ require_once('../includes/dbconfig.php');
 include('../assets/php/authorization.php');
 customerAccess($conn, "/checkout");
 
+include('../assets/php/validation.php');
+
+$resource = "/checkout";
+$reason = "";
+$status = "Fail";
+
 // Initialize cart if it doesn't exist
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
@@ -25,11 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         
         // Validation rules
         if (!preg_match("/^[A-Za-z\s'-]{2,100}$/", $fullname)) {
-            $error = "Invalid full name. Only letters, spaces, apostrophes, and hyphens are allowed (2–100 characters).";
+            $reason = "Invalid full name entered";
+            logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
+            $error = "Invalid full name. Only letters, spaces, apostrophes, and hyphens are allowed (2-100 characters).";
+
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = "Invalid email address format.";
+            logValidation($conn, $_SESSION['user_email'], $resource, $error, $status);
+
         } elseif (!preg_match("/^\+?\d{7,15}$/", $phone)) {
-            $error = "Invalid phone number. Must contain 7–15 digits, optional '+' at start.";
+            $error = "Invalid phone number. Must contain 7-15 digits, optional '+' at start.";
+            logValidation($conn, $_SESSION['user_email'], $resource, $error, $status);
         }
 
         // Proceed only if no validation errors

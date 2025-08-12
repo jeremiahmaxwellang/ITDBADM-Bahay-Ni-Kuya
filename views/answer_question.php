@@ -52,7 +52,7 @@
                     echo '<em>No security question has been set for this email</em>';
                 }
                 
-                if($answer) {
+                if($answer != "") {
                     verifyAnswer($answer); 
                 }
                 
