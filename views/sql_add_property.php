@@ -51,6 +51,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Normalize and validate location length (max 75 chars)
+    $address = isset($_POST['address']) ? trim($_POST['address']) : '';
+    $maxAddress = 75;
+
+    // Names with accents/UTF-8 characters are counted correctly
+    $addressLen = function_exists('mb_strlen') ? mb_strlen($address, 'UTF-8') : strlen($address);
+
+    if ($address === '') {
+        echo "<script>alert('Location is required.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    if ($addressLen > $maxAddress) {
+        echo "<script>alert('Location must not exceed 75 characters.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+
     $description = $_POST['description'];
         $photo = null;
     
