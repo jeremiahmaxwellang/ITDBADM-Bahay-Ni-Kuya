@@ -35,6 +35,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Normalize and validate description length (max 1,500 chars)
+    $description = isset($_POST['description']) ? trim($_POST['description']) : '';
+    $maxDesc = 1500;
+
+    // Names with accents/UTF-8 characters are counted correctly
+    $descLen = function_exists('mb_strlen') ? mb_strlen($description, 'UTF-8') : strlen($description);
+
+    if ($description === '') {
+        echo "<script>alert('Description is required.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    if ($descLen > $maxDesc) {
+        echo "<script>alert('Description must not exceed 1,500 characters.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+
     $description = $_POST['description'];
         $photo = null;
     
