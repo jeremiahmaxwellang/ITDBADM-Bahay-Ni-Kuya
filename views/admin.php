@@ -214,6 +214,8 @@ adminAccess($conn);
                     <input type="text" id="name" name="name" maxlength="200" required>
                 </div>
 
+                <!-- Front-end error thrower -->
+                <!-- This script will only show if the error has sucesfully entered more than 200 characters -->
                 <script>
                     const nameInput = document.getElementById('name');
                     const maxLen = 200;
@@ -236,11 +238,13 @@ adminAccess($conn);
                     });
                 </script>
 
+                    <!-- Minimum of 1 to 999,999,999,999 for the price -->
                     <div class="form-group">
                     <label for="price">Price (₱):</label>
                     <input type="number" id="price" name="price" step="0.01" min="1" max="999999999999" required>
                 </div>
 
+                <!-- Front-end error thrower for property price -->
                 <script>
                     const priceInput = document.getElementById('price');
 
@@ -265,8 +269,35 @@ adminAccess($conn);
                 <!-- Description -->
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <textarea id="description" name="description" rows="4" required></textarea>
+
+                    <!-- Limits the character inputs to 1500 only -->
+                    <!-- Once the character limit is reached, it will not let the user to enter anymore input -->
+                    <textarea id="description" name="description" rows="4" maxlength="1500" required></textarea>
                 </div>
+
+                <!-- Front-end error thrower for description -->
+                <!-- Will only run if the user somehow bypasses the character input limiter -->
+                <script>
+                    const descriptionInput = document.getElementById('description');
+                    const maxDescLen = 1500;
+
+                    descriptionInput.addEventListener('input', function () {
+                        this.setCustomValidity(''); // reset any old message
+                        if (this.value.length > maxDescLen) {
+                            this.setCustomValidity(`Description must not exceed ${maxDescLen} characters.`);
+                        }
+                    });
+
+                    descriptionInput.addEventListener('invalid', function () {
+                        if (this.validity.valueMissing) {
+                            this.setCustomValidity('Please enter a description.');
+                        } else if (this.value.length > maxDescLen) {
+                            this.setCustomValidity(`Description must not exceed ${maxDescLen} characters.`);
+                        } else {
+                            this.setCustomValidity('');
+                        }
+                    });
+                </script>
                 
                 <!-- Location -->
                 <div class="form-group">

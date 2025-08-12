@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Normalize and validate property name length (max 200 chars)
     $name = isset($_POST['name']) ? trim($_POST['name']) : '';
     $maxLen = 200;
+
+    // Names with accents/UTF-8 characters are counted correctly
     $len = function_exists('mb_strlen') ? mb_strlen($name, 'UTF-8') : strlen($name);
 
     if ($name === '') {
