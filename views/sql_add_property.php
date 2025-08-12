@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     $price = (float)$price;
-    if ($price < 1 || $price > 999999999) {
-        echo "<script>alert('Error: Price must be between 1 and 999,000,000.'); window.location.href='admin.php';</script>";
+    if ($price < 100000 || $price > 999999999) {
+        echo "<script>alert('Error: Price must be between 100000 and 999,000,000.'); window.location.href='admin.php';</script>";
         exit;
     }
 
