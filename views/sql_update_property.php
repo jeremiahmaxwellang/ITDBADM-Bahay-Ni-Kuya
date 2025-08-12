@@ -9,6 +9,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $description = $_POST['description'];
     $photo = null;
+
+    // Validate price: must be numeric and between 1 and 999,999,999
+    $price = isset($_POST['price']) ? str_replace([',', ' '], '', $_POST['price']) : '';
+    if ($price === '' || !is_numeric($price)) {
+        echo "<script>alert('Error: Price must be a numeric value.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    $price = (float)$price;
+    if ($price < 1 || $price > 999999999) {
+        echo "<script>alert('Error: Price must be between 1 and 999,000,000.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+
+    // Normalize and validate property name length (max 200 chars)
+    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+    $maxLen = 200;
+
+    // Names with accents/UTF-8 characters are counted correctly
+    $len = function_exists('mb_strlen') ? mb_strlen($name, 'UTF-8') : strlen($name);
+
+    if ($name === '') {
+        echo "<script>alert('Property name is required.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    if ($len > $maxLen) {
+        echo "<script>alert('Property name must not exceed 200 characters.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+
+    // Normalize and validate description length (max 1,500 chars)
+    $description = isset($_POST['description']) ? trim($_POST['description']) : '';
+    $maxDesc = 1500;
+
+    // Names with accents/UTF-8 characters are counted correctly
+    $descLen = function_exists('mb_strlen') ? mb_strlen($description, 'UTF-8') : strlen($description);
+
+    if ($description === '') {
+        echo "<script>alert('Description is required.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    if ($descLen > $maxDesc) {
+        echo "<script>alert('Description must not exceed 1,500 characters.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+
+    // Normalize and validate address length (max 75 chars)
+    $address = isset($_POST['address']) ? trim($_POST['address']) : '';
+    $maxAddress = 75;
+
+    // Names with accents/UTF-8 characters are counted correctly
+    $addressLen = function_exists('mb_strlen') ? mb_strlen($address, 'UTF-8') : strlen($address);
+
+    if ($address === '') {
+        echo "<script>alert('Address is required.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    if ($addressLen > $maxAddress) {
+        echo "<script>alert('Address must not exceed 75 characters.'); window.location.href='admin.php';</script>";
+        exit;
+    }
     
 
     // Photo upload
