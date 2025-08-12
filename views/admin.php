@@ -302,10 +302,37 @@ adminAccess($conn);
                 <!-- Location -->
                 <div class="form-group">
                     <label for="location">Location:</label>
-                    <input type="text" id="address" name="address" required>
+
+                    <!-- Limits the character inputs to 1500 only -->
+                    <!-- Once the character limit is reached, it will not let the user to enter anymore input -->
+                    <input type="text" id="address" name="address" maxlength="75" required>
                 </div>
+
+                <!-- Front-end error thrower for description -->
+                <!-- Will only run if the user somehow bypasses the character input limiter -->
+                <script>
+                    const addressInput = document.getElementById('address');
+                    const maxAddressLen = 75;
+
+                    addressInput.addEventListener('input', function () {
+                        this.setCustomValidity(''); // reset message
+                        if (this.value.length > maxAddressLen) {
+                            this.setCustomValidity(`Location must not exceed ${maxAddressLen} characters.`);
+                        }
+                    });
+
+                    addressInput.addEventListener('invalid', function () {
+                        if (this.validity.valueMissing) {
+                            this.setCustomValidity('Please enter the location.');
+                        } else if (this.value.length > maxAddressLen) {
+                            this.setCustomValidity(`Location must not exceed ${maxAddressLen} characters.`);
+                        } else {
+                            this.setCustomValidity('');
+                        }
+                    });
+                </script>
                 
-                <!-- Location -->
+                <!-- Property Image -->
                 <div class="form-group">
                     <label for="image">Property Image:</label>
                     <input type="file" id="image" name="image" accept="image/*" required onchange="previewImage(this)">
