@@ -40,6 +40,7 @@
             <?php 
             //  ../assets/php/security_question_controller.php
                 $data = fetchUserQuestion($conn, $email);
+                $answer = "";
 
                 if($data) {
                     $question = $data['question'];
@@ -51,7 +52,10 @@
                     echo '<em>No security question has been set for this email</em>';
                 }
                 
-                verifyAnswer($answer); 
+                if($answer) {
+                    verifyAnswer($answer); 
+                }
+                
             ?>
             </p>
     
