@@ -210,9 +210,31 @@ adminAccess($conn);
                 <!-- Name -->
                 <div class = "form-group">
                     <div class="form-group">
-                        <label for="name">Property Name:</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
+                    <label for="name">Property Name:</label>
+                    <input type="text" id="name" name="name" maxlength="200" required>
+                </div>
+
+                <script>
+                    const nameInput = document.getElementById('name');
+                    const maxLen = 200;
+
+                    nameInput.addEventListener('input', function () {
+                        this.setCustomValidity(''); // reset message
+                        if (this.value.length > maxLen) {
+                            this.setCustomValidity(`Property name must not exceed ${maxLen} characters.`);
+                        }
+                    });
+
+                    nameInput.addEventListener('invalid', function () {
+                        if (this.validity.valueMissing) {
+                            this.setCustomValidity('Please enter a property name.');
+                        } else if (this.value.length > maxLen) {
+                            this.setCustomValidity(`Property name must not exceed ${maxLen} characters.`);
+                        } else {
+                            this.setCustomValidity('');
+                        }
+                    });
+                </script>
 
                     <div class="form-group">
                     <label for="price">Price (₱):</label>
