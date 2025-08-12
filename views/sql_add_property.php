@@ -7,6 +7,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $_POST['address'];
     $price = $_POST['price'];
 
+    // Validate price: must be numeric and between 1 and 999,999,999
+    $price = isset($_POST['price']) ? str_replace([',', ' '], '', $_POST['price']) : '';
+    if ($price === '' || !is_numeric($price)) {
+        echo "<script>alert('Error: Price must be a numeric value.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    $price = (float)$price;
+    if ($price < 1 || $price > 999999999) {
+        echo "<script>alert('Error: Price must be between 1 and 999,000,000.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+
+    // Normalize and validate property name length (max 200 chars)
+    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+    $maxLen = 200;
+    $len = function_exists('mb_strlen') ? mb_strlen($name, 'UTF-8') : strlen($name);
+
+    if ($name === '') {
+        echo "<script>alert('Property name is required.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+    if ($len > $maxLen) {
+        echo "<script>alert('Property name must not exceed 200 characters.'); window.location.href='admin.php';</script>";
+        exit;
+    }
+
     $description = $_POST['description'];
         $photo = null;
     
