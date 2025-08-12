@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     if ($descLen > $maxDesc) {
-        $reason = "Description exceeds 200 characters";
+        $reason = "Description exceeds 1500 characters";
         logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
         echo "<script>alert('Description must not exceed 1,500 characters.'); window.location.href='admin.php';</script>";
         exit;

@@ -1,6 +1,13 @@
 <?php
+session_start();
+
 // Database configuration
 require_once('../includes/dbconfig.php');
+include('../assets/php/validation.php');
+
+$resource = "/admin_update_property";
+$reason = "";
+$status = "Fail";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
@@ -13,11 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate price: must be numeric and between 1 and 999,999,999
     $price = isset($_POST['price']) ? str_replace([',', ' '], '', $_POST['price']) : '';
     if ($price === '' || !is_numeric($price)) {
+        $reason = "Price entered is not a numeric value";
+        logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
         echo "<script>alert('Error: Price must be a numeric value.'); window.location.href='admin.php';</script>";
         exit;
     }
     $price = (float)$price;
     if ($price < 100000 || $price > 999999999) {
+        $reason = "Entered price not between 100000 and 999,000,000";
+        logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
         echo "<script>alert('Error: Price must be between 100000 and 999,000,000.'); window.location.href='admin.php';</script>";
         exit;
     }
@@ -30,10 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $len = function_exists('mb_strlen') ? mb_strlen($name, 'UTF-8') : strlen($name);
 
     if ($name === '') {
+        $reason = "Entered empty property name";
+        logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
         echo "<script>alert('Property name is required.'); window.location.href='admin.php';</script>";
         exit;
     }
     if ($len > $maxLen) {
+        $reason = "Property name exceeds 200 characters";
+        logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
         echo "<script>alert('Property name must not exceed 200 characters.'); window.location.href='admin.php';</script>";
         exit;
     }
@@ -46,10 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descLen = function_exists('mb_strlen') ? mb_strlen($description, 'UTF-8') : strlen($description);
 
     if ($description === '') {
+        $reason = "Entered empty description";
+        logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
         echo "<script>alert('Description is required.'); window.location.href='admin.php';</script>";
         exit;
     }
     if ($descLen > $maxDesc) {
+        $reason = "Description exceeds 1500 characters";
+        logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
         echo "<script>alert('Description must not exceed 1,500 characters.'); window.location.href='admin.php';</script>";
         exit;
     }
@@ -62,10 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $addressLen = function_exists('mb_strlen') ? mb_strlen($address, 'UTF-8') : strlen($address);
 
     if ($address === '') {
+        $reason = "Entered empty address";
+        logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
         echo "<script>alert('Address is required.'); window.location.href='admin.php';</script>";
         exit;
     }
     if ($addressLen > $maxAddress) {
+        $reason = "Address exceeds 75 characters";
+        logValidation($conn, $_SESSION['user_email'], $resource, $reason, $status);
+
         echo "<script>alert('Address must not exceed 75 characters.'); window.location.href='admin.php';</script>";
         exit;
     }
