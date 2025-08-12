@@ -214,11 +214,30 @@ adminAccess($conn);
                         <input type="text" id="name" name="name" required>
                     </div>
 
-                    <!-- Price -->
                     <div class="form-group">
-                        <label for="price">Price (₱):</label>
-                        <input type="number" id="price" name="price" step="0.01" min="0" required>
-                    </div>
+                    <label for="price">Price (₱):</label>
+                    <input type="number" id="price" name="price" step="0.01" min="1" max="999999999999" required>
+                </div>
+
+                <script>
+                    const priceInput = document.getElementById('price');
+
+                    priceInput.addEventListener('invalid', function () {
+                        if (this.validity.rangeUnderflow) {
+                            this.setCustomValidity('Price must be at least ₱1.');
+                        } else if (this.validity.rangeOverflow) {
+                            this.setCustomValidity('Price must not exceed ₱999,999,999,999.');
+                        } else if (this.validity.valueMissing) {
+                            this.setCustomValidity('Please enter a price.');
+                        } else {
+                            this.setCustomValidity('');
+                        }
+                    });
+
+                    priceInput.addEventListener('input', function () {
+                        this.setCustomValidity('');
+                    });
+                    </script>
                 </div>
                 
                 <!-- Description -->

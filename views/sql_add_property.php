@@ -7,18 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $_POST['address'];
     $price = $_POST['price'];
 
-    // Validate price: must be numeric and between 1 and 999,999,999
-    $price = isset($_POST['price']) ? str_replace([',', ' '], '', $_POST['price']) : '';
-    if ($price === '' || !is_numeric($price)) {
-        echo "<script>alert('Error: Price must be a numeric value.'); window.location.href='admin.php';</script>";
-        exit;
-    }
-    $price = (float)$price;
-    if ($price < 1 || $price > 999999999) {
-        echo "<script>alert('Error: Price must be between 1 and 999,000,000.'); window.location.href='admin.php';</script>";
-        exit;
-    }
-
     $description = $_POST['description'];
         $photo = null;
     
